@@ -1019,5 +1019,22 @@ LANG.update({
     'gui.buildcraft.builder.no_plan': 'Put in a template or blueprint',
 })
 
+# List
+for state in ['clean', 'used']:
+    tex_exists(f'{NS}:item/list/{state}')
+    write(f'models/item/list_{state}.json', {'parent': 'minecraft:item/generated', 'textures': {'layer0': f'{NS}:item/list/{state}'}})
+write('items/list.json', {'model': {'type': 'minecraft:condition', 'property': 'minecraft:has_component', 'component': f'{NS}:list',
+                                    'on_true': {'type': 'minecraft:model', 'model': f'{NS}:item/list_used'},
+                                    'on_false': {'type': 'minecraft:model', 'model': f'{NS}:item/list_clean'}}})
+name('item', 'list', 'List')
+shaped('list', ['ppp', 'pgp', 'ppp'], {'p': 'minecraft:paper', 'g': '#c:dyes/green'})
+LANG.update({
+    'gui.buildcraft.list.precise.on': 'Matching exactly (including item data)', 'gui.buildcraft.list.precise.off': 'Ignoring item data',
+    'gui.buildcraft.list.type.on': 'Matching items of the same type as the first item',
+    'gui.buildcraft.list.type.off': 'Not matching by type',
+    'gui.buildcraft.list.material.on': 'Matching items of the same material as the first item',
+    'gui.buildcraft.list.material.off': 'Not matching by material',
+})
+
 finish()
 print('Resources generated')
