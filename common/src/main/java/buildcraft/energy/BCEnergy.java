@@ -7,6 +7,7 @@ public final class BCEnergy {
         BCEnergyFluids.init();
         BCEnergyBlocks.init();
         BCEnergyMenus.init();
+        BCEnergyWorldGen.init();
     }
 
     public static void setup() {

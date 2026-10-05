@@ -654,5 +654,48 @@ for block in ['distiller', 'heat_exchange']:
     tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
 
 
+# ---------------------------------------------------------------- markers
+
+TORCH_ELEMENT = [{'from': [7, 0, 7], 'to': [9, 9, 9], 'shade': False, 'faces': {
+    'east': {'uv': [2, 5, 4, 14], 'texture': '#all'}, 'north': {'uv': [4, 5, 6, 14], 'texture': '#all'},
+    'west': {'uv': [6, 5, 8, 14], 'texture': '#all'}, 'south': {'uv': [0, 5, 2, 14], 'texture': '#all'},
+    'down': {'uv': [0, 14, 2, 16], 'texture': '#all'}, 'up': {'uv': [0, 3, 2, 5], 'texture': '#all'}}}]
+tex_exists(f'{NS}:block/marker/volume')
+write('models/block/marker_volume.json', {'textures': {'particle': f'{NS}:block/marker/volume', 'all': f'{NS}:block/marker/volume'},
+                                          'elements': TORCH_ELEMENT})
+write('blockstates/marker_volume.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/marker_volume', **rot} for d, rot in FACING_ROTATIONS.items()}})
+simple_item('marker_volume')
+name('block', 'marker_volume', 'Volume Marker')
+drops_self('marker_volume')
+shaped('marker_volume', ['l', 't'], {'l': '#c:dyes/blue', 't': 'minecraft:redstone_torch'})
+
+# ---------------------------------------------------------------- builders
+
+cube('quarry', particle='quarry/normal/side', down='quarry/normal/bottom', up='quarry/normal/top', north='quarry/normal/front',
+     east='quarry/normal/side', south='quarry/normal/back', west='quarry/normal/side')
+write('blockstates/quarry.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/quarry', **({'y': y} if y else {})}
+    for d, y in [('north', 0), ('east', 90), ('south', 180), ('west', 270)]}})
+block_item('quarry')
+name('block', 'quarry', 'Quarry')
+drops_self('quarry')
+shaped('quarry', ['iri', 'gig', 'dpd'], {'i': '#c:gears/iron', 'r': '#c:dusts/redstone', 'g': '#c:gears/gold',
+                                         'd': '#c:gears/diamond', 'p': 'minecraft:diamond_pickaxe'})
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:quarry')
+
+tex_exists(f'{NS}:block/frame/default')
+FRAME_TEX = {'particle': f'{NS}:block/frame/default', 'all': f'{NS}:block/frame/default'}
+write('models/block/frame/base.json', {'textures': FRAME_TEX, 'elements': [{'from': [4, 4, 4], 'to': [12, 12, 12], 'faces': {
+    d: {'texture': '#all'} for d in ['down', 'up', 'north', 'south', 'west', 'east']}}]})
+write('models/block/frame/connection.json', {'textures': FRAME_TEX, 'elements': [{'from': [4, 4, 0], 'to': [12, 12, 4], 'faces': {
+    d: {'texture': '#all'} for d in ['down', 'up', 'west', 'east']}}]})
+FROM_NORTH = {'north': {}, 'south': {'y': 180}, 'east': {'y': 90}, 'west': {'y': 270}, 'up': {'x': 270}, 'down': {'x': 90}}
+parts = [{'apply': {'model': f'{NS}:block/frame/base'}}]
+parts += [{'when': {f'connected_{d}': 'true'}, 'apply': {'model': f'{NS}:block/frame/connection', **rot}} for d, rot in FROM_NORTH.items()]
+write('blockstates/frame.json', {'multipart': parts})
+name('block', 'frame', 'Frame')
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:frame')
+
 finish()
 print('Resources generated')

@@ -6,6 +6,9 @@ import net.minecraft.client.resources.model.sprite.Material;
 import buildcraft.BuildCraft;
 import buildcraft.client.render.RenderEngine;
 import buildcraft.core.BCCoreBlocks;
+import buildcraft.builders.BCBuildersBlocks;
+import buildcraft.builders.client.render.RenderQuarry;
+import buildcraft.core.client.render.RenderMarkerVolume;
 import buildcraft.energy.BCEnergyBlocks;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.BCFactoryMenus;
@@ -35,6 +38,8 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_STIRLING_TILE.get(), ctx -> new RenderEngine<>(ctx, "stone"));
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_COMBUSTION_TILE.get(), ctx -> new RenderEngine<>(ctx, "iron"));
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
+        registrar.blockEntityRenderer(BCCoreBlocks.MARKER_VOLUME_TILE.get(), RenderMarkerVolume::new);
+        registrar.blockEntityRenderer(BCBuildersBlocks.QUARRY_TILE.get(), RenderQuarry::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.TANK_TILE.get(), RenderTank::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.DISTILLER_TILE.get(), RenderDistiller::new);
     }

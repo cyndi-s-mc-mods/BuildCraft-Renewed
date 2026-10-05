@@ -6,8 +6,10 @@
     "buildcraft:engine_creative",
     "buildcraft:engine_stirling",
     "buildcraft:flood_gate",
+    "buildcraft:frame",
     "buildcraft:heat_exchange",
     "buildcraft:mining_well",
-    "buildcraft:pump"
+    "buildcraft:pump",
+    "buildcraft:quarry"
   ]
 }

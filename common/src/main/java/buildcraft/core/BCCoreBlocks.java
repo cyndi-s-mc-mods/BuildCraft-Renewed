@@ -4,8 +4,11 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
+import buildcraft.core.block.BlockMarkerVolume;
 import buildcraft.core.tile.TileEngineCreative;
+import buildcraft.core.tile.TileMarkerVolume;
 import buildcraft.core.tile.TileEngineRedstone;
 import buildcraft.lib.engine.BlockEngine;
 import buildcraft.lib.registry.RegistryEntry;
@@ -19,7 +22,10 @@ public final class BCCoreBlocks {
     public static RegistryEntry<Block, BlockEngine<TileEngineRedstone>> ENGINE_REDSTONE;
     public static RegistryEntry<Block, BlockEngine<TileEngineCreative>> ENGINE_CREATIVE;
 
+    public static RegistryEntry<Block, BlockMarkerVolume> MARKER_VOLUME;
+
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileEngineRedstone>> ENGINE_REDSTONE_TILE;
+    public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileMarkerVolume>> MARKER_VOLUME_TILE;
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileEngineCreative>> ENGINE_CREATIVE_TILE;
 
     private BCCoreBlocks() {}
@@ -30,6 +36,11 @@ public final class BCCoreBlocks {
         ENGINE_CREATIVE = blockWithItem("engine_creative", props -> new BlockEngine<>(props, () -> ENGINE_CREATIVE_TILE.get()),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(-1, 3600000).sound(SoundType.METAL));
 
+        MARKER_VOLUME = blockWithItem("marker_volume", props -> new BlockMarkerVolume(props, () -> MARKER_VOLUME_TILE.get()),
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.NONE).instabreak().lightLevel(state -> 7).sound(SoundType.WOOD)
+                .pushReaction(PushReaction.POPPED));
+
+        MARKER_VOLUME_TILE = tile("marker_volume", TileMarkerVolume::new, () -> MARKER_VOLUME.get());
         ENGINE_REDSTONE_TILE = tile("engine_redstone", TileEngineRedstone::new, () -> ENGINE_REDSTONE.get());
         ENGINE_CREATIVE_TILE = tile("engine_creative", TileEngineCreative::new, () -> ENGINE_CREATIVE.get());
     }
