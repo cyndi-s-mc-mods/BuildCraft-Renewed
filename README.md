@@ -9,7 +9,7 @@ BuildCraft 7.99 (the Minecraft 1.12.2 version, "BuildCraft 8"), whose code is ke
 | Forge    | 66.0.9                                    |
 | NeoForge | 26.3.0.48-beta                            |
 
-Java 25 is needed to build and run it.
+Java 25 is needed to build and run it. If it isn't installed, Gradle downloads it for the build.
 
 ### What's in it
 
