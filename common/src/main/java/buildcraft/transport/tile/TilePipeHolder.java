@@ -107,6 +107,7 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
             }
         });
         Map<Direction, PipePluggable> old = new EnumMap<>(pluggables);
+        old.values().forEach(eventBus::unregisterHandler);
         pluggables.clear();
         input.child("plugs").ifPresent(plugs -> {
             for (Direction side : Direction.values()) {
@@ -119,6 +120,7 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
                 });
             }
         });
+        pluggables.values().forEach(eventBus::registerHandler);
         if (!old.keySet().equals(pluggables.keySet())) {
             pipe.markForUpdate();
         }
@@ -348,7 +350,11 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     public @Nullable PipePluggable replacePluggable(Direction side, @Nullable PipePluggable with) {
         PipePluggable old = with == null ? pluggables.remove(side) : pluggables.put(side, with);
         if (old != null && old != with) {
+            eventBus.unregisterHandler(old);
             old.onRemove();
+        }
+        if (with != null && with != old) {
+            eventBus.registerHandler(with);
         }
         pipe.markForUpdate();
         scheduleNetworkUpdate();

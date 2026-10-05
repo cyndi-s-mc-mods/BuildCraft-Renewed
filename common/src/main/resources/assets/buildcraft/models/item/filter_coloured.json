@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "buildcraft:item/lens/transparent",
+    "layer1": "buildcraft:item/lens/filter_frame"
+  }
+}

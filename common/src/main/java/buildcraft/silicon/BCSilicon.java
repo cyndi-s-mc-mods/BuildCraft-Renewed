@@ -9,6 +9,7 @@ public final class BCSilicon {
         BCSiliconBlocks.init();
         BCSiliconItems.init();
         BCSiliconMenus.init();
+        buildcraft.silicon.statement.BCSiliconStatements.init();
     }
 
     public static void setup() {

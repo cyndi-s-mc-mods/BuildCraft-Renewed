@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.resources.Identifier;
 
-/** A box in a pluggable's model, in pixels (0-16), as it would be on the west side of the pipe. The renderer turns it
+/** A box in a pluggable's model. Parts whose colour isn't fully opaque are drawn translucent. Its coordinates are in pixels (0-16), as it would be on the west side of the pipe. The renderer turns it
  * to face the pluggable's real side.
  * @param faces Indexed by {@link net.minecraft.core.Direction#get3DDataValue()}. Null faces aren't drawn. */
 public record PlugModelPart(float x0, float y0, float z0, float x1, float y1, float z1, @Nullable Face[] faces, int colour) {

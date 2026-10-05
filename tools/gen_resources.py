@@ -856,5 +856,33 @@ for colour in ['white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pi
     tex_exists(f'{NS}:block/wires/{tex}')
     name('item', f'pipe_wire_{colour}', colour.replace('_', ' ').title() + ' Pipe Wire')
 
+# Silicon pluggables
+for item, tex, english in [('plug_pulsar', 'block/plugs/pulsar_static', 'Pulsar'), ('plug_light_sensor', 'block/plugs/daylight_sensor', 'Light Sensor'),
+                           ('plug_timer', 'block/plugs/timer', 'Timer')]:
+    plug_item(item, tex, [([7, 5, 5], [9, 11, 11])])
+    name('item', item, english)
+
+DYE_RGB = {'white': 0xF9FFFE, 'orange': 0xF9801D, 'magenta': 0xC74EBD, 'light_blue': 0x3AB3DA, 'yellow': 0xFED83D, 'lime': 0x80C71F,
+           'pink': 0xF38BAA, 'gray': 0x474F52, 'light_gray': 0x9D9D97, 'cyan': 0x169C9C, 'purple': 0x8932B8, 'blue': 0x3C44AA,
+           'brown': 0x835432, 'green': 0x5E7C16, 'red': 0xB02E26, 'black': 0x1D1D21}
+for item, frame, english in [('lens', 'lens_frame', 'Lens'), ('filter', 'filter_frame', 'Filter')]:
+    tex_exists(f'{NS}:item/lens/{frame}')
+    write(f'models/item/{item}.json', {'parent': 'minecraft:item/generated',
+                                        'textures': {'layer0': f'{NS}:item/lens/clear', 'layer1': f'{NS}:item/lens/{frame}'}})
+    write(f'models/item/{item}_coloured.json', {'parent': 'minecraft:item/generated',
+                                                 'textures': {'layer0': f'{NS}:item/lens/transparent', 'layer1': f'{NS}:item/lens/{frame}'}})
+    cases = [{'when': colour, 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}_coloured',
+                                        'tints': [{'type': 'minecraft:constant', 'value': rgb}, {'type': 'minecraft:constant', 'value': -1}]}}
+             for colour, rgb in DYE_RGB.items()]
+    write(f'items/{item}.json', {'model': {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': f'{NS}:lens_colour',
+                                           'cases': cases, 'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}'}}})
+    name('item', item, english)
+LANG['item.buildcraft.lens.coloured'] = '%s %s'
+LANG.update({
+    'gate.buildcraft.trigger.light.bright': 'Bright', 'gate.buildcraft.trigger.light.dark': 'Dark',
+    'gate.buildcraft.trigger.timer': '%s Second Timer',
+    'gate.buildcraft.action.pulsar.constant': 'Power Pulsar', 'gate.buildcraft.action.pulsar.single': 'Single Power Pulse',
+})
+
 finish()
 print('Resources generated')

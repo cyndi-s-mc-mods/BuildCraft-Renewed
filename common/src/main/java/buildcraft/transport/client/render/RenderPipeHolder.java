@@ -281,7 +281,19 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
             default -> {}
         }
         poseStack.translate(-0.5, -0.5, -0.5);
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS), (pose, buf) -> {
+        submitPluggableParts(model.stream().filter(p -> (p.colour() >>> 24) == 0xFF).toList(), light, poseStack, collector,
+            RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS));
+        List<PlugModelPart> translucent = model.stream().filter(p -> (p.colour() >>> 24) != 0xFF).toList();
+        if (!translucent.isEmpty()) {
+            submitPluggableParts(translucent, light, poseStack, collector, RenderTypes.entityTranslucent(TextureAtlas.LOCATION_BLOCKS));
+        }
+        poseStack.popPose();
+    }
+
+    private void submitPluggableParts(List<PlugModelPart> model, int light, PoseStack poseStack, SubmitNodeCollector collector,
+        net.minecraft.client.renderer.rendertype.RenderType type) {
+        if (model.isEmpty()) return;
+        collector.submitCustomGeometry(poseStack, type, (pose, buf) -> {
             for (PlugModelPart part : model) {
                 PlugModelPart.Face[] src = part.faces();
                 Face[] faces = new Face[6];
@@ -295,7 +307,6 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
                 BoxRenderer.box(pose, buf, part.x0(), part.y0(), part.z0(), part.x1(), part.y1(), part.z1(), faces, light, part.colour());
             }
         });
-        poseStack.popPose();
     }
 
     private static Face[] faces(Face face) {
