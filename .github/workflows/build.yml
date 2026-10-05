@@ -51,9 +51,18 @@ jobs:
 
       - name: Find the run directory
         run: |
-          # The first start stops at the EULA, which shows where the server runs
-          timeout 900 ./gradlew :${{ matrix.loader }}:runServer < /dev/null > first-start.log 2>&1 || true
-          eula=$(find ${{ matrix.loader }} -name eula.txt -not -path '*/build/*' | head -1)
+          # The first start makes the run directory (stopping at the EULA): wait for its eula.txt, then stop Gradle
+          ./gradlew :${{ matrix.loader }}:runServer < /dev/null > first-start.log 2>&1 &
+          gradle=$!
+          eula=""
+          for i in $(seq 1 240); do
+            eula=$(find ${{ matrix.loader }} -name eula.txt -not -path '*/build/*' | head -1)
+            if [ -n "$eula" ] || ! kill -0 $gradle 2>/dev/null; then break; fi
+            sleep 5
+          done
+          kill $gradle 2>/dev/null || true
+          ./gradlew --stop > /dev/null 2>&1 || true
+          pkill -f 'net.minecraft|minecraftforge|neoforged|fabricmc' || true
           if [ -z "$eula" ]; then
             tail -n 100 first-start.log
             echo "The server didn't start"
@@ -71,6 +80,7 @@ jobs:
           timeout 900 ./gradlew :${{ matrix.loader }}:runServer < /dev/null 2>&1 | tee server.log || true
           grep "SMOKE" server.log || true
           if ! grep -q "SMOKE done" server.log; then
+            tail -n 100 server.log
             echo "The smoke test didn't finish"
             exit 1
           fi
