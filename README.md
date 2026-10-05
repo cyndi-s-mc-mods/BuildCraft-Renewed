@@ -1,135 +1,54 @@
-## Welcome to BuildCraft on GitHub
+## BuildCraft Renewed
 
-### Reporting an issue
+BuildCraft for Minecraft 26.3, running on **Fabric**, **Forge** and **NeoForge** from one codebase. It is a port of
+BuildCraft 7.99 (the Minecraft 1.12.2 version, "BuildCraft 8"), whose code is kept for reference in `legacy/`.
 
-Please open an issue for a bug report only if:
+| Loader   | Version                                   |
+|----------|-------------------------------------------|
+| Fabric   | Loader 0.19.5, Fabric API 0.161.0+26.3    |
+| Forge    | 66.0.9                                    |
+| NeoForge | 26.3.0.48-beta                            |
 
-* you are sure the bug is caused by BuildCraft and not by any other mod,
-* you have at least one of the following:
-  * a crash report, 
-  * means of reproducing the bug in question,
-  * screenshots/videos/etc. to demonstrate the bug.
+Java 25 is needed to build and run it.
 
-**If you are not sure if a bug report is valid, please use the "Ask Help!" subforum.**
+### What's in it
 
-Please only use **official BuildCraft releases** for any kind of bug reports unless otherwise told to do by the BuildCraft team. Custom builds (for instance from Jenkins) are unsupported, often buggy and will **not** get any support from the developers.
+* **Core:** wrench, gears, paintbrush, list, volume markers, engines (redstone and creative), water and oil springs,
+  power tester and decorated blocks.
+* **Energy:** Stirling and combustion engines, oil and fuels, and oil wells, spouts and lakes in world generation.
+* **Transport:** item, fluid and power pipes of every kind, pipe wires, painting, and pluggables (pipe plugs, power
+  adapters, gates, pulsars, sensors, lenses, filters and facades).
+* **Factory:** mining well, pump, flood gate, tank, chute, distiller, heat exchanger, auto workbench and water gel.
+* **Silicon:** laser, assembly table, advanced crafting table, chipsets, and gates with their triggers and actions.
+* **Builders:** quarry, filler (all 19 patterns, which gates can set), architect table, builder, electronic library,
+  templates and blueprints. Quarries, fillers and builders keep the chunks they work in loaded.
 
-Please check if the bug has been reported beforehand. Also, provide the version of BuildCraft used - if it's a version compiled from source, link to the commit/tree you complied from.
+Not ported (yet): the replacer, path markers, map locations, goggles, the zone planner and the guide book.
 
-Please mention if you are using MCPC+, Cauldron, OptiFine, FastCraft or any other mods which optimize or otherwise severely modify the functioning of the Minecraft engine. That is very helpful when trying to reproduce a bug.
+Settings are in `config/buildcraft.properties`. The game writes it each time it starts, keeping the values set in it and
+adding any missing settings with their defaults.
 
-Please do not open issues for features unless you are a member of the BuildCraft team. For that, use the "Feature Requests" subforum.
+### Building
 
-BuildCraft, being an open-source project, gives you the right to submit a pull request if a particular fix or feature is important to you. However, if the change in question is major, please contact the team beforehand - we wish to prevent wasted effort.
-
-### Contributing
-
-If you wish to submit a pull request to fix bugs or broken behaviour feel free to do so. If you would like to add 
-features or change existing behaviour or balance, please discuss it on discord before submitting a PR (https://discord.gg/v4geqgA).
-
-Do not submit pull requests which solely "fix" formatting. As these kinds of changes are usually very intrusive in commit history and everyone has their own idea what "proper formatting" is, they should be done by one of the main contributors. 
-Please only submit "code cleanup", if the changes actually have a substantial impact on readability.
-
-PR implementing new features or changing large portions of code are helpful. But if you're doing such a change and if it gets accepted, please don't "fire and forget". Complex changes are introducing bugs, and as thorough as testing and peer review may be, there will be bugs. Please carry on playing your changes after initial commit and fix residual issues. It is extremely frustrating for others to spend days fixing regressions introduced by unmaintained submissions.
-
-#### Frequently reported
-
-* java.lang.AbstractMethodError, java.lang.NoSuchMethodException
-  * A mod has not updated to the current BuildCraft API
-  * You are not using the correct version of BuildCraft for your Forge/Minecraft versions
-  * You are using the dev version on a normal game instance (or vice versa)
-* Render issue (Quarry causes flickering) - Try without OptiFine first! This is a known issue with some versions of OptiFine.
-
-### Compiling and packaging BuildCraft
-1. Ensure that `Java` (found [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)), `Git` (found [here](http://git-scm.com/)) are installed correctly on your system.
- * Optional: Install `Gradle` (found [here](http://www.gradle.org/downloads)). You probably want to install version 4.3.1.
-2. Create a base directory for the build
-3. Clone the BuildCraft repository into 'baseDir/BuildCraft/'
-4. Clone (and update) the submodules into 'baseDir/BuildCraft with 'git submodule init' and 'git submodule update'
-5. Navigate to basedir/BuildCraft in a shell and run one of two commands:
-    * `./gradlew setupCIWorkspace build` to just build a current jar (this may take a while).
-    * `./gradlew setupDecompWorkspace` to setup a complete development environment.
-    * With `Gradle` installed: use `gradle` instead of `./gradlew`
-    * On Windows: use `gradlew.bat` instead of `./gradlew`
-6. The compiles and obfuscated module jars will be in 'baseDir/BuildCraft/build/libs/&lt;build number&gt;/modules'
-
-Your directory structure should look like this before running gradle:
-***
-
-    baseDir
-    \- BuildCraft
-     |- buildcraft_resources
-     |- common
-     |- ...
-     \- BuildCraftAPI
-      |- api
-      |- ...
-     \- BuildCraft-Localization
-      |- lang
-      |- ...
-
-***
-
-And like this after running gradle:
-***
-
-    basedir
-    \- BuildCraft
-     |- .gradle
-     |- build
-     |- buildcraft_resources
-     |- common
-     |- ...
-     \- BuildCraftAPI
-      |- api
-      |- ...
-     \- BuildCraft-Localization
-      |- lang
-      |- ...
-
-***
-
-### Localizations
-
-Localizations can be submitted [here](https://github.com/BuildCraft/BuildCraft-Localization). Localization PRs against
-this repository will have to be rejected.
-
-### Depending on BuildCraft
-
-Instructions for depending on BC 7.1.x can be found [here](https://github.com/BuildCraft/BuildCraft/blob/7.1.x/README.md) (for 1.7.10).
-
-8.0.x hasn't been finished yet, so there are no instructions for depending on it :(
-
-The following instructions are for BC 7.99.12 (1.12.2):
-
-Add the following to your build.gradle file:
 ```
-repositories {
-    maven {
-        name "BuildCraft"
-        url = "https://mod-buildcraft.com/maven"
-    }
-}
-````
-
-If you want to depend on JUST the API then do this:
-````
-dependencies {
-    deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.12"
-}
-````
-
-If you want to depend on JUST the lib then do this:
-````
-dependencies {
-    deobfCompile "com.mod-buildcraft:buildcraft-lib:7.99.12"
-}
-````
-
-If you want to depend on the whole of buildcraft do this:
+./gradlew build
 ```
-dependencies {
-    deobfCompile "com.mod-buildcraft:buildcraft:7.99.12"
-}
-```
-Where `7.99.12` is the desired version of BuildCraft.
+
+The jars end up in `fabric/build/libs`, `forge/build/libs` and `neoforge/build/libs`. `./gradlew :<loader>:runClient`
+and `./gradlew :<loader>:runServer` start the game with the mod.
+
+### Layout
+
+* `common/` holds nearly all the code and every asset. It only uses Minecraft's own classes (Mojang's names); each
+  loader project compiles it into its own jar.
+* `fabric/`, `forge/` and `neoforge/` hold the small part that differs between loaders: registration, item, fluid and
+  energy transfer, world generation, and client setup. They implement `buildcraft.lib.platform.Platform`.
+* `tools/gen_resources.py` generates the block states, models, item models, recipes, loot tables, tags and English
+  names in `common/src/main/resources`. Edit it rather than the generated files, and run it after changing it.
+* `.github/smoke-test` is a datapack that CI uses to check, on every loader, that a dedicated server starts and that a
+  few machines work.
+
+### Licence
+
+BuildCraft's code is under the Mozilla Public License 2.0 (`LICENSE-NEW`); older parts of the original code and assets
+are under the Minecraft Mod Public License (`LICENSE`), as noted in the files themselves.
