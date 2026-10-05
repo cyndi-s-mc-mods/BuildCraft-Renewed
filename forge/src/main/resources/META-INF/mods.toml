@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[66,)"
+license = "MPL-2.0"
+
+[[mods]]
+modId = "buildcraft"
+version = "${version}"
+displayName = "BuildCraft"
+authors = "SpaceToad, the BuildCraft team, Cyndi's MC Mods"
+description = '''
+Pipes, engines, quarries and automation.
+'''
+
+[[dependencies.buildcraft]]
+modId = "forge"
+mandatory = true
+versionRange = "[66,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.buildcraft]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "BOTH"

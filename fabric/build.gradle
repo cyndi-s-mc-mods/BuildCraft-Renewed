@@ -1,0 +1,11 @@
+// Minecraft 26.x ships unobfuscated, so this uses the non-remapping Loom plugin
+// and needs no mappings.
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+}
