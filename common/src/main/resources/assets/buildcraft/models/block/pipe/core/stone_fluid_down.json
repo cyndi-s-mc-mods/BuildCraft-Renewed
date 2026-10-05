@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_down",
+  "textures": {
+    "t": "buildcraft:block/pipes/stone_fluid"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/arm_north",
+  "textures": {
+    "t": "buildcraft:block/pipes/lapis_item_light_blue"
+  }
+}

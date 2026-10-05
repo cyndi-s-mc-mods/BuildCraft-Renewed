@@ -11,6 +11,12 @@ import buildcraft.energy.BCEnergyMenus;
 import buildcraft.energy.client.gui.GuiEngineIron;
 import buildcraft.energy.client.gui.GuiEngineStone;
 import buildcraft.lib.fluid.BCFluidDefinition;
+import buildcraft.transport.BCTransportBlocks;
+import buildcraft.transport.BCTransportMenus;
+import buildcraft.transport.client.gui.GuiDiamondPipe;
+import buildcraft.transport.client.gui.GuiDiamondWoodPipe;
+import buildcraft.transport.client.gui.GuiEmzuliPipe;
+import buildcraft.transport.client.render.RenderPipeHolder;
 
 /** Client-side setup. Each loader calls the methods here when its client registration events fire. */
 public final class BCClient {
@@ -21,6 +27,7 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCCoreBlocks.ENGINE_CREATIVE_TILE.get(), ctx -> new RenderEngine<>(ctx, "creative"));
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_STIRLING_TILE.get(), ctx -> new RenderEngine<>(ctx, "stone"));
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_COMBUSTION_TILE.get(), ctx -> new RenderEngine<>(ctx, "iron"));
+        registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
     }
 
     /** @return The world model for a BuildCraft fluid. */
@@ -32,5 +39,8 @@ public final class BCClient {
     public static void registerScreens(ClientRegistrar registrar) {
         registrar.screen(BCEnergyMenus.ENGINE_STIRLING.get(), GuiEngineStone::new);
         registrar.screen(BCEnergyMenus.ENGINE_COMBUSTION.get(), GuiEngineIron::new);
+        registrar.screen(BCTransportMenus.PIPE_DIAMOND.get(), GuiDiamondPipe::new);
+        registrar.screen(BCTransportMenus.PIPE_DIAMOND_WOOD.get(), GuiDiamondWoodPipe::new);
+        registrar.screen(BCTransportMenus.PIPE_EMZULI.get(), GuiEmzuliPipe::new);
     }
 }

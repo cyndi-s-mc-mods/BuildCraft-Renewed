@@ -9,6 +9,7 @@ import buildcraft.core.BCCore;
 import buildcraft.energy.BCEnergy;
 import buildcraft.lib.BCLib;
 import buildcraft.lib.platform.Platform;
+import buildcraft.transport.BCTransport;
 
 /** Loader-independent entry point. Each loader calls {@link #init} while the mod is constructed, before registration. */
 public final class BuildCraft {
@@ -30,6 +31,7 @@ public final class BuildCraft {
         BCLib.init();
         BCCore.init();
         BCEnergy.init();
+        BCTransport.init();
     }
 
     private static boolean setUp = false;
@@ -39,5 +41,6 @@ public final class BuildCraft {
         if (setUp) return;
         setUp = true;
         BCEnergy.setup();
+        BCTransport.setup();
     }
 }

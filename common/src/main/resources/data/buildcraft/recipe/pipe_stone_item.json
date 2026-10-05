@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "minecraft:stone",
+    "g": "#c:glass_blocks/colorless",
+    "r": "minecraft:stone"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_stone_item",
+    "count": 8
+  }
+}

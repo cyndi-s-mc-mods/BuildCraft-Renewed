@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "buildcraft:oil_residue_bucket"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_sealant",
+    "count": 8
+  }
+}

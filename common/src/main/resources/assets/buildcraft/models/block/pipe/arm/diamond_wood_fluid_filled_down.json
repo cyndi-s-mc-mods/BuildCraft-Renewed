@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/arm_down",
+  "textures": {
+    "t": "buildcraft:block/pipes/diamond_wood_fluid_filled"
+  }
+}

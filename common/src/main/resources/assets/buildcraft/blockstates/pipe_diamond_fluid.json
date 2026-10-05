@@ -1,0 +1,100 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_down"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_down_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_up"
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_up_up"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_north"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_north_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_south"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_south_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_west"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_west_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/diamond_fluid_east"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/diamond_fluid_east_east"
+      }
+    }
+  ]
+}

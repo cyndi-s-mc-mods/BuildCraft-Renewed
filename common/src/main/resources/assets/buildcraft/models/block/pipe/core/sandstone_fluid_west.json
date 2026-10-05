@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_west",
+  "textures": {
+    "t": "buildcraft:block/pipes/sandstone_fluid"
+  }
+}

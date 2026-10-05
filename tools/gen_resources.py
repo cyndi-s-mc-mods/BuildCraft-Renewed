@@ -225,5 +225,221 @@ for fluid, (english, colour) in FLUIDS.items():
         name('item', f'{id}_bucket', HEAT_PREFIX[heat] + english + ' Bucket')
         tag('fluid', f'{NS}:{fluid}', f'{NS}:{id}', f'{NS}:flowing_{id}')
 
+# ---------------------------------------------------------------- pipes
+
+DIRS = ['down', 'up', 'north', 'south', 'west', 'east']
+OPPOSITE = {'down': 'up', 'up': 'down', 'north': 'south', 'south': 'north', 'west': 'east', 'east': 'west'}
+TEXTURE_ROOT = os.path.join(ROOT, 'textures')
+
+
+def tex_exists(tex):
+    path = os.path.join(TEXTURE_ROOT, tex.split(':')[1] + '.png')
+    if not os.path.exists(path):
+        print('WARNING: missing texture', tex)
+
+
+def face_box(direction):
+    """The core box face pointing in a direction, plus an inward-facing wall behind it."""
+    lo, hi = 4, 12
+    outer = {'from': [lo, lo, lo], 'to': [hi, hi, hi], 'faces': {direction: {'texture': '#t'}}}
+    # A flat element on the same wall, facing into the pipe so the far side shows through the glass
+    pos = {'down': (1, lo), 'up': (1, hi), 'north': (2, lo), 'south': (2, hi), 'west': (0, lo), 'east': (0, hi)}[direction]
+    frm, to = [lo, lo, lo], [hi, hi, hi]
+    frm[pos[0]] = to[pos[0]] = pos[1]
+    inner = {'from': frm, 'to': to, 'faces': {OPPOSITE[direction]: {'texture': '#t'}}}
+    return [outer, inner]
+
+
+def arm_box(direction):
+    """The four walls of the arm going towards a direction, outside and inside."""
+    axis = {'down': 1, 'up': 1, 'north': 2, 'south': 2, 'west': 0, 'east': 0}[direction]
+    start, end = (0, 4) if direction in ('down', 'north', 'west') else (12, 16)
+    frm, to = [4, 4, 4], [12, 12, 12]
+    frm[axis], to[axis] = start, end
+    sides = [d for d in DIRS if d != direction and d != OPPOSITE[direction]]
+    elements = [{'from': frm, 'to': to, 'faces': {d: {'texture': '#t'} for d in sides}}]
+    for d in sides:
+        a = {'down': 1, 'up': 1, 'north': 2, 'south': 2, 'west': 0, 'east': 0}[d]
+        f, t = list(frm), list(to)
+        val = 4 if d in ('down', 'north', 'west') else 12
+        f[a] = t[a] = val
+        elements.append({'from': f, 'to': t, 'faces': {OPPOSITE[d]: {'texture': '#t'}}})
+    return elements
+
+
+for d in DIRS:
+    write(f'models/block/pipe/core_{d}.json', {'textures': {'particle': '#t'}, 'elements': face_box(d)})
+    write(f'models/block/pipe/arm_{d}.json', {'textures': {'particle': '#t'}, 'elements': arm_box(d)})
+write('models/block/pipe/item.json', {
+    'parent': 'minecraft:block/block', 'textures': {'particle': '#t'},
+    'elements': [e for d in DIRS if d not in ('up', 'down') for e in face_box(d)] + arm_box('up') + arm_box('down')})
+
+
+def pipe_model(kind, d, texture):
+    """A core face or arm model for one texture. Returns the model id."""
+    name = texture.split('/')[-1]
+    model = f'block/pipe/{kind}/{name}_{d}'
+    tex_exists(f'{NS}:{texture}')
+    write(f'models/{model}.json', {'parent': f'{NS}:block/pipe/{kind}_{d}', 'textures': {'t': f'{NS}:{texture}'}})
+    return f'{NS}:{model}'
+
+
+COLOURS = ['white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink', 'gray', 'light_gray', 'cyan',
+           'purple', 'blue', 'brown', 'green', 'red', 'black']
+LEGACY_COLOUR = {'light_gray': 'silver'}
+LIMIT_SUFFIX = ['_m0', '_m4', '_m8', '_m16', '_m32', '_m64', '_m128']
+DIR_VALUES = DIRS + ['center']
+
+PIPES = {
+    # id: (English name, style, textures)
+    'structure': ('Structure Pipe', 'plain', 'structure'),
+    'wood_item': ('Wooden Transport Pipe', 'directional', ('wood_item_clear', 'wood_item_filled')),
+    'wood_fluid': ('Wooden Fluid Pipe', 'directional', ('wood_fluid_clear', 'wood_fluid_filled')),
+    'wood_power': ('Wooden Kinesis Pipe', 'plain', 'wood_power_clear'),
+    'stone_item': ('Stone Transport Pipe', 'plain', 'stone_item'),
+    'stone_fluid': ('Stone Fluid Pipe', 'plain', 'stone_fluid'),
+    'stone_power': ('Stone Kinesis Pipe', 'plain', 'stone_power'),
+    'cobblestone_item': ('Cobblestone Transport Pipe', 'plain', 'cobblestone_item'),
+    'cobblestone_fluid': ('Cobblestone Fluid Pipe', 'plain', 'cobblestone_fluid'),
+    'cobblestone_power': ('Cobblestone Kinesis Pipe', 'plain', 'cobblestone_power'),
+    'quartz_item': ('Quartz Transport Pipe', 'plain', 'quartz_item'),
+    'quartz_fluid': ('Quartz Fluid Pipe', 'plain', 'quartz_fluid'),
+    'quartz_power': ('Quartz Kinesis Pipe', 'plain', 'quartz_power'),
+    'gold_item': ('Golden Transport Pipe', 'plain', 'gold_item'),
+    'gold_fluid': ('Golden Fluid Pipe', 'plain', 'gold_fluid'),
+    'gold_power': ('Golden Kinesis Pipe', 'plain', 'gold_power'),
+    'sandstone_item': ('Sandstone Transport Pipe', 'plain', 'sandstone_item'),
+    'sandstone_fluid': ('Sandstone Fluid Pipe', 'plain', 'sandstone_fluid'),
+    'sandstone_power': ('Sandstone Kinesis Pipe', 'plain', 'sandstone_power'),
+    'iron_item': ('Iron Transport Pipe', 'iron', ('iron_item_clear', 'iron_item_filled')),
+    'iron_fluid': ('Iron Fluid Pipe', 'iron', ('iron_fluid_clear', 'iron_fluid_filled')),
+    'iron_power': ('Iron Kinesis Pipe', 'limiter', 'iron_power'),
+    'diamond_item': ('Diamond Transport Pipe', 'diamond', 'diamond_item'),
+    'diamond_fluid': ('Diamond Fluid Pipe', 'diamond', 'diamond_fluid'),
+    'diamond_power': ('Diamond Kinesis Pipe', 'limiter', 'diamond_power'),
+    'diamond_wood_item': ('Emerald Transport Pipe', 'directional', ('diamond_wood_item_clear', 'diamond_wood_item_filled')),
+    'diamond_wood_fluid': ('Emerald Fluid Pipe', 'directional', ('diamond_wood_fluid_clear', 'diamond_wood_fluid_filled')),
+    'diamond_wood_power': ('Emerald Kinesis Pipe', 'plain', 'diamond_wood_power_clear'),
+    'clay_item': ('Clay Transport Pipe', 'plain', 'clay_item'),
+    'clay_fluid': ('Clay Fluid Pipe', 'plain', 'clay_fluid'),
+    'void_item': ('Void Transport Pipe', 'plain', 'void_item'),
+    'void_fluid': ('Void Fluid Pipe', 'plain', 'void_fluid'),
+    'obsidian_item': ('Obsidian Transport Pipe', 'plain', 'obsidian_item'),
+    'lapis_item': ('Lapis Transport Pipe', 'lapis', 'lapis_item'),
+    'daizuli_item': ('Daizuli Transport Pipe', 'daizuli', 'daizuli_item'),
+    'emzuli_item': ('Emzuli Transport Pipe', 'directional', ('emzuli_item_clear', 'emzuli_item_filled')),
+    'stripes_item': ('Stripes Transport Pipe', 'plain', 'stripes_item'),
+}
+
+
+def other_dirs(d):
+    return '|'.join(v for v in DIR_VALUES if v != d)
+
+
+for pipe_id, (english, style, textures) in PIPES.items():
+    block = f'pipe_{pipe_id}'
+    parts = []
+    item_texture = None
+    if style == 'plain':
+        tex = f'block/pipes/{textures}'
+        item_texture = tex
+        for d in DIRS:
+            parts.append({'when': {d: 'false'}, 'apply': {'model': pipe_model('core', d, tex)}})
+            parts.append({'when': {d: 'true'}, 'apply': {'model': pipe_model('arm', d, tex)}})
+    elif style in ('directional', 'iron'):
+        clear, filled = f'block/pipes/{textures[0]}', f'block/pipes/{textures[1]}'
+        # Wooden pipes: the extraction side is filled. Iron pipes: every side but the output is filled.
+        special, normal = (filled, clear) if style == 'directional' else (clear, filled)
+        core = clear if style == 'directional' else filled
+        item_texture = clear
+        for d in DIRS:
+            parts.append({'when': {d: 'false'}, 'apply': {'model': pipe_model('core', d, core)}})
+            parts.append({'when': {d: 'true', 'dir': d}, 'apply': {'model': pipe_model('arm', d, special)}})
+            parts.append({'when': {d: 'true', 'dir': other_dirs(d)}, 'apply': {'model': pipe_model('arm', d, normal)}})
+    elif style == 'diamond':
+        base = f'block/pipes/{textures}'
+        item_texture = base
+        for d in DIRS:
+            parts.append({'when': {d: 'false'}, 'apply': {'model': pipe_model('core', d, base)}})
+            parts.append({'when': {d: 'true'}, 'apply': {'model': pipe_model('arm', d, f'{base}_{d}')}})
+    elif style == 'limiter':
+        for limit in range(7):
+            tex = f'block/pipes/{textures}{LIMIT_SUFFIX[6 - limit]}'
+            if limit == 0:
+                item_texture = tex
+            for d in DIRS:
+                parts.append({'when': {d: 'false', 'limit': str(limit)}, 'apply': {'model': pipe_model('core', d, tex)}})
+                parts.append({'when': {d: 'true', 'limit': str(limit)}, 'apply': {'model': pipe_model('arm', d, tex)}})
+    elif style == 'lapis':
+        for colour in COLOURS:
+            tex = f'block/pipes/{textures}_{LEGACY_COLOUR.get(colour, colour)}'
+            if colour == 'white':
+                item_texture = tex
+            for d in DIRS:
+                parts.append({'when': {d: 'false', 'colour': colour}, 'apply': {'model': pipe_model('core', d, tex)}})
+                parts.append({'when': {d: 'true', 'colour': colour}, 'apply': {'model': pipe_model('arm', d, tex)}})
+    elif style == 'daizuli':
+        filled = f'block/pipes/{textures}_filled'
+        for colour in COLOURS:
+            tex = f'block/pipes/{textures}_{LEGACY_COLOUR.get(colour, colour)}'
+            if colour == 'white':
+                item_texture = tex
+            for d in DIRS:
+                parts.append({'when': {d: 'false', 'colour': colour}, 'apply': {'model': pipe_model('core', d, tex)}})
+                parts.append({'when': {d: 'true', 'dir': d, 'colour': colour}, 'apply': {'model': pipe_model('arm', d, tex)}})
+        for d in DIRS:
+            parts.append({'when': {d: 'true', 'dir': other_dirs(d)}, 'apply': {'model': pipe_model('arm', d, filled)}})
+    write(f'blockstates/{block}.json', {'multipart': parts})
+    tex_exists(f'{NS}:{item_texture}')
+    write(f'models/item/{block}.json', {'parent': f'{NS}:block/pipe/item', 'textures': {'t': f'{NS}:{item_texture}'}})
+    item_def(block)
+    name('block', block, english)
+    drops_self(block)
+
+# Pipe recipes: material, glass, material makes 8 pipes
+PIPE_MATERIALS = {
+    'wood_item': ('#minecraft:planks', None),
+    'cobblestone_item': ('#c:cobblestones', None),
+    'stone_item': ('minecraft:stone', None),
+    'quartz_item': ('minecraft:quartz_block', None),
+    'iron_item': ('#c:ingots/iron', None),
+    'gold_item': ('#c:ingots/gold', None),
+    'clay_item': ('minecraft:clay', None),
+    'sandstone_item': ('#minecraft:sandstone', None),
+    'void_item': ('minecraft:black_dye', '#c:dusts/redstone'),
+    'obsidian_item': ('minecraft:obsidian', None),
+    'diamond_item': ('#c:gems/diamond', None),
+    'lapis_item': ('minecraft:lapis_block', None),
+    'daizuli_item': ('minecraft:lapis_block', '#c:gems/diamond'),
+    'diamond_wood_item': ('#minecraft:planks', '#c:gems/diamond'),
+    'stripes_item': ('#c:gears/gold', None),
+}
+for pipe_id, (left, right) in PIPE_MATERIALS.items():
+    shaped(f'pipe_{pipe_id}', ['lgr'], {'l': left, 'g': '#c:glass_blocks/colorless', 'r': right or left}, count=8)
+shapeless('pipe_structure', ['buildcraft:pipe_cobblestone_item', 'minecraft:gravel'], count=1)
+shapeless('pipe_emzuli_item', ['buildcraft:pipe_diamond_wood_item', 'minecraft:lapis_block'])
+
+
+def upgrade(from_id, to_id, extra):
+    shapeless(f'pipe_{to_id}', [f'{NS}:pipe_{from_id}', extra])
+    shapeless(f'pipe_{to_id}_undo', [f'{NS}:pipe_{to_id}'], result=f'{NS}:pipe_{from_id}')
+
+
+for material in ['wood', 'cobblestone', 'stone', 'quartz', 'iron', 'gold', 'clay', 'sandstone', 'void', 'diamond', 'diamond_wood']:
+    upgrade(f'{material}_item', f'{material}_fluid', f'{NS}:pipe_sealant')
+for material in ['wood', 'cobblestone', 'stone', 'quartz', 'iron', 'gold', 'sandstone', 'diamond', 'diamond_wood']:
+    upgrade(f'{material}_item', f'{material}_power', '#c:dusts/redstone')
+
+simple_item('pipe_sealant', 'pipewaterproof')
+name('item', 'pipe_sealant', 'Pipe Sealant')
+shapeless('pipe_sealant', ['minecraft:green_dye'])
+shapeless('pipe_sealant_from_residue', [f'{NS}:oil_residue_bucket'], result=f'{NS}:pipe_sealant', count=8)
+
+LANG['chat.buildcraft.pipe.power.limit'] = 'Power limit: %s MJ/t'
+LANG['gui.buildcraft.pipe.emerald.whitelist'] = 'Whitelist: only extract the filtered items'
+LANG['gui.buildcraft.pipe.emerald.blacklist'] = 'Blacklist: extract everything except the filtered items'
+LANG['gui.buildcraft.pipe.emerald.roundrobin'] = 'Round robin: extract each filtered item in turn'
+LANG['gui.buildcraft.pipe.emzuli.nopaint'] = 'No paint'
+
 finish()
 print('Resources generated')

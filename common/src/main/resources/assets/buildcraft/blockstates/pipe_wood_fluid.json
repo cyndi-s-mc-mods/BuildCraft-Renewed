@@ -1,0 +1,160 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_down"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "dir": "down"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_down"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "dir": "up|north|south|west|east|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_up"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "dir": "up"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_up"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "dir": "down|north|south|west|east|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_up"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_north"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "dir": "north"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_north"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "dir": "down|up|south|west|east|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_south"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "dir": "south"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_south"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "dir": "down|up|north|west|east|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_west"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "dir": "west"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_west"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "dir": "down|up|north|south|east|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/wood_fluid_clear_east"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "dir": "east"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_filled_east"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "dir": "down|up|north|south|west|center"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/wood_fluid_clear_east"
+      }
+    }
+  ]
+}

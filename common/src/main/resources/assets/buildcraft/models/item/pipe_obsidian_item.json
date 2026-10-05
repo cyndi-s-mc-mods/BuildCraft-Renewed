@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/item",
+  "textures": {
+    "t": "buildcraft:block/pipes/obsidian_item"
+  }
+}

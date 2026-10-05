@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_east",
+  "textures": {
+    "t": "buildcraft:block/pipes/clay_fluid"
+  }
+}

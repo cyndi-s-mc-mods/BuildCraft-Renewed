@@ -73,6 +73,13 @@ public abstract class GuiBC<M extends ContainerBC<?>> extends AbstractContainerS
         graphics.setTooltipForNextFrame(lines.stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
     }
 
+    /** Tells the server's menu that a button was pressed (see {@link net.minecraft.world.inventory.AbstractContainerMenu#clickMenuButton}). */
+    protected void sendButtonClick(int id) {
+        if (minecraft != null && minecraft.gameMode != null) {
+            minecraft.gameMode.handleInventoryButtonClick(menu.containerId, id);
+        }
+    }
+
     protected boolean isHovering(int x, int y, int w, int h, double mouseX, double mouseY) {
         double mx = mouseX - leftPos;
         double my = mouseY - topPos;

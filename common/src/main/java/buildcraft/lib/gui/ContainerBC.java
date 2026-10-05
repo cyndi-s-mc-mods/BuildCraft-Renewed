@@ -7,6 +7,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +62,50 @@ public abstract class ContainerBC<T extends BlockEntity> extends AbstractContain
     }
 
     @Override
+    public void clicked(int slotIndex, int buttonNum, ContainerInput input, Player player) {
+        if (slotIndex >= 0 && slotIndex < slots.size() && slots.get(slotIndex) instanceof SlotPhantom phantom) {
+            clickPhantom(phantom, buttonNum, input);
+            return;
+        }
+        super.clicked(slotIndex, buttonNum, input, player);
+    }
+
+    /** Left click sets the filter to a copy of the held item (or clears it); right click changes the count. */
+    private void clickPhantom(SlotPhantom slot, int button, ContainerInput input) {
+        if (input != ContainerInput.PICKUP && input != ContainerInput.QUICK_MOVE) {
+            return;
+        }
+        ItemStack carried = getCarried();
+        ItemStack current = slot.getItem();
+        if (carried.isEmpty()) {
+            if (current.isEmpty()) return;
+            if (button == 1) {
+                current = current.copy();
+                current.shrink(1);
+                slot.set(current);
+            } else {
+                slot.set(ItemStack.EMPTY);
+            }
+        } else if (!current.isEmpty() && ItemStack.isSameItemSameComponents(carried, current)) {
+            current = current.copy();
+            if (button == 1) {
+                current.grow(1);
+            } else {
+                current.grow(carried.getCount());
+            }
+            current.setCount(Math.min(current.getCount(), current.getMaxStackSize()));
+            slot.set(current);
+        } else {
+            slot.set(carried.copyWithCount(button == 1 ? 1 : carried.getCount()));
+        }
+    }
+
+    @Override
+    public boolean canDragTo(Slot slot) {
+        return !(slot instanceof SlotPhantom) && super.canDragTo(slot);
+    }
+
+    @Override
     public boolean stillValid(Player player) {
         return tile == null || Container.stillValidBlockEntity(tile, player);
     }
@@ -77,7 +122,7 @@ public abstract class ContainerBC<T extends BlockEntity> extends AbstractContain
             if (!moveItemStackTo(stack, playerStart, playerEnd, true)) {
                 return ItemStack.EMPTY;
             }
-        } else if (machineSlots == 0 || !moveItemStackTo(stack, 0, machineSlots, false)) {
+        } else if (machineSlots == 0 || slots.get(0) instanceof SlotPhantom || !moveItemStackTo(stack, 0, machineSlots, false)) {
             // Move between the main inventory and the hotbar
             int hotbarStart = playerEnd - 9;
             if (index < hotbarStart) {

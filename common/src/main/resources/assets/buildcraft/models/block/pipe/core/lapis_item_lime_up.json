@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_up",
+  "textures": {
+    "t": "buildcraft:block/pipes/lapis_item_lime"
+  }
+}
