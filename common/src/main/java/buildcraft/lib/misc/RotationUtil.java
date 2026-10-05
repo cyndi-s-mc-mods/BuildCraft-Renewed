@@ -63,6 +63,12 @@ public final class RotationUtil {
         };
     }
 
+    /** @return The direction that a direction on the west side model points to once the model is turned to the given side. */
+    public static Direction directionFromWest(Direction local, Direction side) {
+        Vec3 v = rotateFromWest(new Vec3(local.getStepX(), local.getStepY(), local.getStepZ()), side);
+        return Direction.getApproximateNearest(v.x, v.y, v.z);
+    }
+
     /** @return A box (in pixels, as it would be on the west side) turned to the given side, in block coordinates. */
     public static AABB boxFromWest(double x0, double y0, double z0, double x1, double y1, double z1, Direction side) {
         Vec3 a = rotateFromWest(new Vec3(x0 / 16 - 0.5, y0 / 16 - 0.5, z0 / 16 - 0.5), side);

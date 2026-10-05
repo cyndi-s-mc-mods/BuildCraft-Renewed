@@ -901,5 +901,12 @@ LANG['item.buildcraft.paintbrush.clean'] = 'Paintbrush'
 LANG['item.buildcraft.paintbrush.coloured'] = '%s Paintbrush'
 name('item', 'paintbrush', 'Paintbrush')
 
+# Facades: drawn by a special item renderer, using the block the facade copies
+write('models/item/facade.json', {'parent': 'minecraft:block/block', 'textures': {'particle': 'minecraft:block/stone'}})
+write('items/facade.json', {'model': {'type': 'minecraft:special', 'base': f'{NS}:item/facade', 'model': {'type': f'{NS}:facade'}}})
+name('item', 'facade', 'Facade')
+LANG['item.buildcraft.facade.solid'] = '%s Facade'
+LANG['item.buildcraft.facade.hollow'] = 'Hollow %s Facade'
+
 finish()
 print('Resources generated')

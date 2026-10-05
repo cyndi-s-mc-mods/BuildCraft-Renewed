@@ -3,6 +3,14 @@ package buildcraft.forge;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.lang.reflect.Field;
+
+import com.mojang.serialization.MapCodec;
+
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderers;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -27,7 +35,21 @@ import buildcraft.lib.fluid.BCFluidDefinition;
 final class BuildCraftForgeClient {
     private BuildCraftForgeClient() {}
 
+    /** Forge has no event for special item renderers, and keeps vanilla's registry for them private. */
+    @SuppressWarnings("unchecked")
+    private static void registerSpecialItemRenderers() {
+        try {
+            Field field = SpecialModelRenderers.class.getDeclaredField("ID_MAPPER");
+            field.setAccessible(true);
+            var mapper = (ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends SpecialModelRenderer.Unbaked<?>>>) field.get(null);
+            BCClient.registerSpecialItemRenderers(mapper::put);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Couldn't register BuildCraft's special item renderers", e);
+        }
+    }
+
     static void init(FMLJavaModLoadingContext context) {
+        registerSpecialItemRenderers();
         ModelEvent.BakeFluidModels.BUS.addListener(event -> {
             for (BCFluidDefinition def : BCFluidDefinition.ALL) {
                 FluidModel model = BCClient.fluidModel(def).bake(event.materials(), def.source.get()::toString);

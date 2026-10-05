@@ -27,7 +27,18 @@ public final class AssemblyRecipes {
         }
     }
 
+    /** Makes recipes that depend on the items given, such as facades (one for each block). */
+    public interface IRecipeProvider {
+        /** @return The recipes that could use any of the given items. */
+        List<AssemblyRecipe> getRecipesFor(List<ItemStack> inputs);
+
+        /** @return The recipe with the given name, if this made it. */
+        @Nullable
+        AssemblyRecipe get(String name);
+    }
+
     private static final Map<String, AssemblyRecipe> RECIPES = new LinkedHashMap<>();
+    private static final List<IRecipeProvider> PROVIDERS = new java.util.ArrayList<>();
 
     private AssemblyRecipes() {}
 
@@ -39,12 +50,31 @@ public final class AssemblyRecipes {
         register(name, powerRequired, inputs, () -> new ItemStack(output, count));
     }
 
+    public static void registerProvider(IRecipeProvider provider) {
+        PROVIDERS.add(provider);
+    }
+
+    /** @return The fixed recipes, followed by the ones the providers make for the given items. */
+    public static List<AssemblyRecipe> getAllFor(List<ItemStack> inputs) {
+        List<AssemblyRecipe> list = new java.util.ArrayList<>(RECIPES.values());
+        for (IRecipeProvider provider : PROVIDERS) {
+            list.addAll(provider.getRecipesFor(inputs));
+        }
+        return list;
+    }
+
     public static Collection<AssemblyRecipe> getAll() {
         return Collections.unmodifiableCollection(RECIPES.values());
     }
 
     @Nullable
     public static AssemblyRecipe get(String name) {
-        return RECIPES.get(name);
+        AssemblyRecipe recipe = RECIPES.get(name);
+        if (recipe != null) return recipe;
+        for (IRecipeProvider provider : PROVIDERS) {
+            recipe = provider.get(name);
+            if (recipe != null) return recipe;
+        }
+        return null;
     }
 }

@@ -20,6 +20,7 @@ public final class BCSiliconRecipes {
     private BCSiliconRecipes() {}
 
     static void init() {
+        AssemblyRecipes.registerProvider(FacadeAssemblyRecipes.INSTANCE);
         IngredientStack redstone = IngredientStack.tag("c:dusts/redstone");
         AssemblyRecipes.register("redstone_chipset", 10_000 * MjAPI.MJ, List.of(redstone), BCSiliconItems.CHIPSET_REDSTONE.get(), 1);
         AssemblyRecipes.register("iron_chipset", 20_000 * MjAPI.MJ, List.of(redstone, IngredientStack.tag("c:ingots/iron")),

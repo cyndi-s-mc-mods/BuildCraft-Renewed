@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -25,6 +26,7 @@ import buildcraft.lib.fluid.BCFluidDefinition;
 @Mod(value = BuildCraft.MOD_ID, dist = Dist.CLIENT)
 public class BuildCraftNeoForgeClient {
     public BuildCraftNeoForgeClient(IEventBus modBus) {
+        modBus.addListener(RegisterSpecialModelRendererEvent.class, event -> BCClient.registerSpecialItemRenderers(event::register));
         modBus.addListener(RegisterFluidModelsEvent.class, event -> {
             for (BCFluidDefinition def : BCFluidDefinition.ALL) {
                 event.register(BCClient.fluidModel(def), def.source.get(), def.flowing.get());

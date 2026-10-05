@@ -6,6 +6,7 @@ import buildcraft.lib.registry.RegistryEntry;
 import buildcraft.api.mj.IMjRedstoneReceiver;
 import buildcraft.lib.item.ItemPluggableSimple;
 import buildcraft.silicon.item.ItemPluggableGate;
+import buildcraft.silicon.item.ItemPluggableFacade;
 import buildcraft.silicon.item.ItemPluggableLens;
 import buildcraft.silicon.plug.PluggablePulsar;
 
@@ -22,6 +23,7 @@ public final class BCSiliconItems {
     public static RegistryEntry<Item, ItemPluggableSimple> PLUG_LIGHT_SENSOR;
     public static RegistryEntry<Item, ItemPluggableSimple> PLUG_TIMER;
     public static RegistryEntry<Item, ItemPluggableLens> LENS;
+    public static RegistryEntry<Item, ItemPluggableFacade> FACADE;
     public static RegistryEntry<Item, ItemPluggableLens> FILTER;
 
     private BCSiliconItems() {}
@@ -40,5 +42,6 @@ public final class BCSiliconItems {
         PLUG_TIMER = item("plug_timer", props -> new ItemPluggableSimple(props, () -> BCSiliconPlugs.TIMER, BCSiliconPlugs::timer, null));
         LENS = item("lens", props -> new ItemPluggableLens(props, false));
         FILTER = item("filter", props -> new ItemPluggableLens(props, true));
+        FACADE = item("facade", ItemPluggableFacade::new);
     }
 }

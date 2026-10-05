@@ -1,5 +1,6 @@
 package buildcraft.fabric;
 
+import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -36,6 +37,7 @@ public class BuildCraftFabricClient implements ClientModInitializer {
         };
         BCClient.registerRenderers(registrar);
         BCClient.registerScreens(registrar);
+        BCClient.registerSpecialItemRenderers(SpecialModelRenderers.ID_MAPPER::put);
         for (BCFluidDefinition def : BCFluidDefinition.ALL) {
             FluidRenderingRegistry.register(def.source.get(), def.flowing.get(), BCClient.fluidModel(def));
         }

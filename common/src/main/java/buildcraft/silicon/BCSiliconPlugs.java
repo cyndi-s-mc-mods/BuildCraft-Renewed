@@ -3,6 +3,7 @@ package buildcraft.silicon;
 import buildcraft.BuildCraft;
 import buildcraft.api.transport.pluggable.PluggableDefinition;
 import buildcraft.silicon.plug.PluggableGate;
+import buildcraft.silicon.plug.PluggableFacade;
 import buildcraft.silicon.plug.PluggableLens;
 import buildcraft.silicon.plug.PluggablePulsar;
 import buildcraft.silicon.plug.PluggableSensor;
@@ -20,6 +21,8 @@ public final class BCSiliconPlugs {
         new PluggableDefinition(BuildCraft.id("timer"), BCSiliconPlugs::timer));
     public static final PluggableDefinition LENS = PluggableDefinition.register(
         new PluggableDefinition(BuildCraft.id("lens"), PluggableLens::load));
+    public static final PluggableDefinition FACADE = PluggableDefinition.register(
+        new PluggableDefinition(BuildCraft.id("facade"), PluggableFacade::load));
 
     public static PluggableSensor lightSensor(PluggableDefinition def, IPipeHolder holder, Direction side) {
         return new PluggableSensor(def, holder, side, BuildCraft.id("block/plugs/daylight_sensor"), () -> BCSiliconItems.PLUG_LIGHT_SENSOR.get());

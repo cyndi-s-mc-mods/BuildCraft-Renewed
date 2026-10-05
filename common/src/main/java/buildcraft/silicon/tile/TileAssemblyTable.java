@@ -90,13 +90,19 @@ public class TileAssemblyTable extends TileLaserTableBase implements WorldlyCont
     }
 
     private void updateRecipes() {
-        for (AssemblyRecipe recipe : AssemblyRecipes.getAll()) {
-            if (entries.stream().noneMatch(e -> e.recipe == recipe) && extract(inv, recipe.inputs(), true)) {
+        List<ItemStack> contents = new ArrayList<>();
+        for (int i = 0; i < SLOTS; i++) {
+            if (!inv.getItem(i).isEmpty()) contents.add(inv.getItem(i));
+        }
+        List<String> order = new ArrayList<>();
+        for (AssemblyRecipe recipe : AssemblyRecipes.getAllFor(contents)) {
+            order.add(recipe.name());
+            if (entries.stream().noneMatch(e -> e.recipe.name().equals(recipe.name())) && extract(inv, recipe.inputs(), true)) {
                 entries.add(new Entry(recipe, State.POSSIBLE));
             }
         }
-        List<AssemblyRecipe> order = new ArrayList<>(AssemblyRecipes.getAll());
-        entries.sort((a, b) -> Integer.compare(order.indexOf(a.recipe), order.indexOf(b.recipe)));
+        // Recipes that aren't listed any more (saved ones whose items have gone) go last
+        entries.sort((a, b) -> Integer.compare(indexOrMax(order, a.recipe.name()), indexOrMax(order, b.recipe.name())));
         boolean hasActive = false;
         for (var iterator = entries.iterator(); iterator.hasNext();) {
             Entry entry = iterator.next();
@@ -121,6 +127,11 @@ public class TileAssemblyTable extends TileLaserTableBase implements WorldlyCont
         for (int i = 0; i < SLOTS; i++) {
             display.setItem(i, i < entries.size() ? entries.get(i).recipe.output().copy() : ItemStack.EMPTY);
         }
+    }
+
+    private static int indexOrMax(List<String> order, String name) {
+        int index = order.indexOf(name);
+        return index < 0 ? Integer.MAX_VALUE : index;
     }
 
     /** Moves on to the next saved recipe that can be made, so several saved recipes take turns. */

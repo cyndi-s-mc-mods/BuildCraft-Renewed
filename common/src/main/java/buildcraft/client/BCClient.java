@@ -1,5 +1,12 @@
 package buildcraft.client;
 
+import java.util.function.BiConsumer;
+
+import com.mojang.serialization.MapCodec;
+
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.resources.Identifier;
+
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
 
@@ -33,12 +40,14 @@ import buildcraft.transport.client.gui.GuiDiamondPipe;
 import buildcraft.transport.client.gui.GuiDiamondWoodPipe;
 import buildcraft.transport.client.gui.GuiEmzuliPipe;
 import buildcraft.transport.client.render.RenderPipeHolder;
+import buildcraft.silicon.client.render.FacadeClient;
 
 /** Client-side setup. Each loader calls the methods here when its client registration events fire. */
 public final class BCClient {
     private BCClient() {}
 
     public static void registerRenderers(ClientRegistrar registrar) {
+        FacadeClient.init();
         registrar.blockEntityRenderer(BCCoreBlocks.ENGINE_REDSTONE_TILE.get(), ctx -> new RenderEngine<>(ctx, "wood"));
         registrar.blockEntityRenderer(BCCoreBlocks.ENGINE_CREATIVE_TILE.get(), ctx -> new RenderEngine<>(ctx, "creative"));
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_STIRLING_TILE.get(), ctx -> new RenderEngine<>(ctx, "stone"));
@@ -49,6 +58,11 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCSiliconBlocks.LASER_TILE.get(), RenderLaser::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.TANK_TILE.get(), RenderTank::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.DISTILLER_TILE.get(), RenderDistiller::new);
+    }
+
+    /** Special item renderers, for items whose looks depend on their data (such as facades). */
+    public static void registerSpecialItemRenderers(BiConsumer<Identifier, MapCodec<? extends SpecialModelRenderer.Unbaked<?>>> registry) {
+        registry.accept(BuildCraft.id("facade"), FacadeClient.Unbaked.MAP_CODEC);
     }
 
     /** @return The world model for a BuildCraft fluid. */

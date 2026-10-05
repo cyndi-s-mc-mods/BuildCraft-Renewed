@@ -37,6 +37,7 @@ import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.api.transport.pluggable.PlugModelPart;
 import buildcraft.client.render.BoxRenderer;
 import buildcraft.client.render.BoxRenderer.Face;
+import buildcraft.client.render.PlugPartRenderer;
 import buildcraft.lib.client.FluidRenderUtil;
 import buildcraft.lib.fluid.BCFluidStack;
 import buildcraft.transport.pipe.flow.PipeFlowFluids;
@@ -320,32 +321,8 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
             default -> {}
         }
         poseStack.translate(-0.5, -0.5, -0.5);
-        submitPluggableParts(model.stream().filter(p -> (p.colour() >>> 24) == 0xFF).toList(), light, poseStack, collector,
-            RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS));
-        List<PlugModelPart> translucent = model.stream().filter(p -> (p.colour() >>> 24) != 0xFF).toList();
-        if (!translucent.isEmpty()) {
-            submitPluggableParts(translucent, light, poseStack, collector, RenderTypes.entityTranslucent(TextureAtlas.LOCATION_BLOCKS));
-        }
+        PlugPartRenderer.submit(model, sprites, light, poseStack, collector);
         poseStack.popPose();
-    }
-
-    private void submitPluggableParts(List<PlugModelPart> model, int light, PoseStack poseStack, SubmitNodeCollector collector,
-        net.minecraft.client.renderer.rendertype.RenderType type) {
-        if (model.isEmpty()) return;
-        collector.submitCustomGeometry(poseStack, type, (pose, buf) -> {
-            for (PlugModelPart part : model) {
-                PlugModelPart.Face[] src = part.faces();
-                Face[] faces = new Face[6];
-                for (int f = 0; f < 6; f++) {
-                    PlugModelPart.Face face = src == null ? null : src[f];
-                    if (face != null) {
-                        TextureAtlasSprite sprite = sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, face.sprite()));
-                        faces[f] = new Face(sprite, face.u0(), face.v0(), face.u1(), face.v1());
-                    }
-                }
-                BoxRenderer.box(pose, buf, part.x0(), part.y0(), part.z0(), part.x1(), part.y1(), part.z1(), faces, light, part.colour());
-            }
-        });
     }
 
     private static Face[] faces(Face face) {
