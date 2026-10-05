@@ -31,6 +31,54 @@ jobs:
           name: buildcraft
           path: '*/build/libs/*.jar'
 
+  # Starts a dedicated server on each loader with a datapack that builds a few machines, checks they work, and stops
+  # the server (see .github/smoke-test).
+  server-smoke-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [fabric, forge, neoforge]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Find the run directory
+        run: |
+          # The first start stops at the EULA, which shows where the server runs
+          timeout 900 ./gradlew :${{ matrix.loader }}:runServer < /dev/null > first-start.log 2>&1 || true
+          eula=$(find ${{ matrix.loader }} -name eula.txt -not -path '*/build/*' | head -1)
+          if [ -z "$eula" ]; then
+            tail -n 100 first-start.log
+            echo "The server didn't start"
+            exit 1
+          fi
+          echo "RUN_DIR=$(dirname "$eula")" >> "$GITHUB_ENV"
+
+      - name: Run the smoke test
+        run: |
+          echo "eula=true" > "$RUN_DIR/eula.txt"
+          printf 'online-mode=false\nlevel-type=minecraft\\:flat\nspawn-protection=0\nfunction-permission-level=4\n' > "$RUN_DIR/server.properties"
+          rm -rf "$RUN_DIR/world"
+          mkdir -p "$RUN_DIR/world/datapacks"
+          cp -r .github/smoke-test/buildcraft_smoke "$RUN_DIR/world/datapacks/"
+          timeout 900 ./gradlew :${{ matrix.loader }}:runServer < /dev/null 2>&1 | tee server.log || true
+          grep "SMOKE" server.log || true
+          if ! grep -q "SMOKE done" server.log; then
+            echo "The smoke test didn't finish"
+            exit 1
+          fi
+          if grep -q "SMOKE FAIL" server.log; then
+            echo "The smoke test failed"
+            exit 1
+          fi
+
   # Temporary: publishes each loader's compile classpath to the claude/deps-cache-26.3 branch
   # so the port can be compiled outside of Gradle. Runs only for commits tagged [deps-cache].
   deps-cache:
