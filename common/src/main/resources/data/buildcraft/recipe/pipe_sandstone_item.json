@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "#c:sandstone/blocks",
+    "g": "#c:glass_blocks/colorless",
+    "r": "#c:sandstone/blocks"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_sandstone_item",
+    "count": 8
+  }
+}

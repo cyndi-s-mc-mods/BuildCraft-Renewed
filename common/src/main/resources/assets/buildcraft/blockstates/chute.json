@@ -1,0 +1,116 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "up"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute"
+      }
+    },
+    {
+      "when": {
+        "facing": "down"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute",
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute",
+        "x": 90,
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute",
+        "x": 90,
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "connected_up": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected",
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "connected_down": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected"
+      }
+    },
+    {
+      "when": {
+        "connected_north": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected",
+        "x": 90,
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "connected_south": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "connected_east": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected",
+        "x": 90,
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "connected_west": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/chute_connected",
+        "x": 90,
+        "y": 90
+      }
+    }
+  ]
+}

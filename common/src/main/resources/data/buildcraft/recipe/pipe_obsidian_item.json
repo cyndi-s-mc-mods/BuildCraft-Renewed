@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "minecraft:obsidian",
+    "g": "#c:glass_blocks/colorless",
+    "r": "minecraft:obsidian"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_obsidian_item",
+    "count": 8
+  }
+}

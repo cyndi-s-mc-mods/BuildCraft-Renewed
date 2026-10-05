@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "minecraft:paper",
+    "g": "#c:dyes/green"
+  },
+  "pattern": [
+    "ppp",
+    "pgp",
+    "ppp"
+  ],
+  "result": {
+    "id": "buildcraft:list"
+  }
+}

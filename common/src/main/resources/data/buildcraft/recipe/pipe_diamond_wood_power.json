@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "buildcraft:pipe_diamond_wood_item",
+    "#c:dusts/redstone"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_diamond_wood_power"
+  }
+}

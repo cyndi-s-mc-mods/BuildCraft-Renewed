@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/arm_up",
+  "textures": {
+    "t": "buildcraft:block/pipes/daizuli_item_light_blue"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_south",
+  "textures": {
+    "t": "buildcraft:block/pipes/daizuli_item_light_blue"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "#c:cobblestones",
+    "g": "#c:glass_blocks/colorless",
+    "r": "#c:cobblestones"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_cobblestone_item",
+    "count": 8
+  }
+}

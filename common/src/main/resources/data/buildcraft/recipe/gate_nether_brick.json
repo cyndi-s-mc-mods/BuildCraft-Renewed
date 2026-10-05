@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "m": "minecraft:nether_brick",
+    "r": "#c:dusts/redstone",
+    "b": "buildcraft:plug_blocker"
+  },
+  "pattern": [
+    " m ",
+    "mrm",
+    " b "
+  ],
+  "result": {
+    "id": "buildcraft:gate",
+    "components": {
+      "buildcraft:gate_variant": {
+        "logic": "and",
+        "material": "nether_brick",
+        "modifier": "no_modifier"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_west",
+  "textures": {
+    "t": "buildcraft:block/pipes/diamond_power_m4"
+  }
+}

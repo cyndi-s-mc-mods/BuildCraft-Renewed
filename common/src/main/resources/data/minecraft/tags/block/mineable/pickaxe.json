@@ -1,0 +1,28 @@
+{
+  "values": [
+    "buildcraft:advanced_crafting_table",
+    "buildcraft:architect",
+    "buildcraft:assembly_table",
+    "buildcraft:builder",
+    "buildcraft:chute",
+    "buildcraft:decorated_blueprint",
+    "buildcraft:decorated_destroy",
+    "buildcraft:decorated_laser_back",
+    "buildcraft:decorated_template",
+    "buildcraft:distiller",
+    "buildcraft:engine_combustion",
+    "buildcraft:engine_creative",
+    "buildcraft:engine_stirling",
+    "buildcraft:filler",
+    "buildcraft:flood_gate",
+    "buildcraft:frame",
+    "buildcraft:heat_exchange",
+    "buildcraft:laser",
+    "buildcraft:library",
+    "buildcraft:mining_well",
+    "buildcraft:power_tester",
+    "buildcraft:pump",
+    "buildcraft:quarry",
+    "buildcraft:replacer"
+  ]
+}

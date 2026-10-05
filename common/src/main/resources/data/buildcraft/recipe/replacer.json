@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "#c:dyes/black",
+    "m": "buildcraft:marker_volume",
+    "y": "#c:dyes/yellow",
+    "c": "buildcraft:blueprint",
+    "g": "#c:gears/gold",
+    "k": "#c:chests/wooden"
+  },
+  "pattern": [
+    "bmb",
+    "ycy",
+    "gkg"
+  ],
+  "result": {
+    "id": "buildcraft:replacer"
+  }
+}

@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
+
+package buildcraft.transport.plug;
+
+import java.util.List;
+
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+
+import buildcraft.BuildCraft;
+import buildcraft.api.transport.pipe.IPipeHolder;
+import buildcraft.api.transport.pluggable.PipePluggable;
+import buildcraft.api.transport.pluggable.PlugModelPart;
+import buildcraft.api.transport.pluggable.PluggableDefinition;
+import buildcraft.lib.misc.RotationUtil;
+import buildcraft.transport.BCTransportItems;
+
+/** Stops a pipe from connecting on one side. */
+public class PluggableBlocker extends PipePluggable {
+    private static final Identifier TEXTURE = BuildCraft.id("block/pipes/plug");
+    private static final List<PlugModelPart> MODEL = List.of(PlugModelPart.box(2, 4, 4, 4.01f, 12, 12, new PlugModelPart.Face[] {
+        new PlugModelPart.Face(TEXTURE, 2, 4, 4, 12), new PlugModelPart.Face(TEXTURE, 2, 4, 4, 12),
+        new PlugModelPart.Face(TEXTURE, 2, 4, 4, 12), new PlugModelPart.Face(TEXTURE, 2, 4, 4, 12),
+        new PlugModelPart.Face(TEXTURE, 4, 4, 12, 12), new PlugModelPart.Face(TEXTURE, 4, 4, 12, 12) }));
+
+    public PluggableBlocker(PluggableDefinition definition, IPipeHolder holder, Direction side) {
+        super(definition, holder, side);
+    }
+
+    @Override
+    public AABB getBoundingBox() {
+        return RotationUtil.boxFromWest(2, 4, 4, 4, 12, 12, side);
+    }
+
+    @Override
+    public boolean isBlocking() {
+        return true;
+    }
+
+    @Override
+    public ItemStack getPickStack() {
+        return new ItemStack(BCTransportItems.PLUG_BLOCKER.get());
+    }
+
+    @Override
+    public List<PlugModelPart> getModel() {
+        return MODEL;
+    }
+}

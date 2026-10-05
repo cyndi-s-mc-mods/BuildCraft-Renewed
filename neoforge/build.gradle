@@ -1,0 +1,22 @@
+plugins {
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = rootProject.neoforge_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        buildcraft {
+            sourceSet sourceSets.main
+        }
+    }
+}

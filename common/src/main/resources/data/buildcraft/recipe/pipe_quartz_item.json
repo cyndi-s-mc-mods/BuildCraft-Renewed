@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "minecraft:quartz_block",
+    "g": "#c:glass_blocks/colorless",
+    "r": "minecraft:quartz_block"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_quartz_item",
+    "count": 8
+  }
+}

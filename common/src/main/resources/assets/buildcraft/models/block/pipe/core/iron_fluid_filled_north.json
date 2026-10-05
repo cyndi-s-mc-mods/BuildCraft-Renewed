@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/core_north",
+  "textures": {
+    "t": "buildcraft:block/pipes/iron_fluid_filled"
+  }
+}

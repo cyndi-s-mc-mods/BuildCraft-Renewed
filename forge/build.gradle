@@ -1,0 +1,28 @@
+plugins {
+    id 'net.minecraftforge.gradle'
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+}
+
+// Forge loads the mod from its build output as a Java module, which has to be one folder: put the classes and
+// resources together (as Forge's MDK does), or they load as two modules with the same packages.
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
+}
+
+minecraft {
+    runs {
+        client {}
+        server {}
+    }
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}")
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": "minecraft:lapis_block",
+    "g": "#c:glass_blocks/colorless",
+    "r": "minecraft:lapis_block"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcraft:pipe_lapis_item",
+    "count": 8
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "buildcraft:block/pipe/arm_east",
+  "textures": {
+    "t": "buildcraft:block/pipes/diamond_power_m64"
+  }
+}

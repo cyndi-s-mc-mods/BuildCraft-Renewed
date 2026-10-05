@@ -1,0 +1,100 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_down"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_up"
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_up"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_north"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_south"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_west"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/core/stone_fluid_east"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/pipe/arm/stone_fluid_east"
+      }
+    }
+  ]
+}
