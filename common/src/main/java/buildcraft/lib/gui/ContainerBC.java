@@ -2,6 +2,7 @@ package buildcraft.lib.gui;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +11,10 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+
+import buildcraft.lib.fluid.BCFluidStack;
+import buildcraft.lib.fluid.Tank;
 
 /** Base menu for BuildCraft machines. On the server {@link #tile} is the machine; on the client it is null and
  * everything the screen shows comes from synced slots and {@link MenuData}. */
@@ -38,6 +43,21 @@ public abstract class ContainerBC<T extends BlockEntity> extends AbstractContain
             addSlot(new Slot(playerInventory, col, 8 + col * 18, y + 58));
         }
         addDataSlots(data);
+    }
+
+    /** The contents of a tank, synced to the client. */
+    public record TankView(MenuData.Field fluidId, MenuData.Field amount, int capacity) {
+        public BCFluidStack getFluid() {
+            Fluid fluid = BuiltInRegistries.FLUID.byId(fluidId.getInt());
+            return fluid == null ? BCFluidStack.EMPTY : BCFluidStack.of(fluid, amount.getInt());
+        }
+    }
+
+    /** Syncs a tank's contents to the client. Call in the same order on both sides; tank is null on the client. */
+    protected TankView addTank(@Nullable Tank tank, int capacity) {
+        MenuData.Field id = data.addInt(tank == null ? null : () -> BuiltInRegistries.FLUID.getId(tank.getFluid().getFluid()));
+        MenuData.Field amount = data.addInt(tank == null ? null : tank::getFluidAmount);
+        return new TankView(id, amount, capacity);
     }
 
     @Override

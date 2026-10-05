@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceKey;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.RegisterEvent;
@@ -20,6 +21,7 @@ public class BuildCraftForge {
         BuildCraft.init();
         RegisterEvent.getBus(context.getModBusGroup()).addListener(BuildCraftForge::register);
         ForgeTransfer.register();
+        FMLCommonSetupEvent.getBus(context.getModBusGroup()).addListener(event -> event.enqueueWork(BuildCraft::setup));
         if (FMLEnvironment.dist == Dist.CLIENT) {
             BuildCraftForgeClient.init(context);
         }

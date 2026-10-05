@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceKey;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -19,6 +20,7 @@ public class BuildCraftNeoForge {
         BuildCraft.init();
         modBus.addListener(RegisterEvent.class, BuildCraftNeoForge::register);
         modBus.addListener(RegisterCapabilitiesEvent.class, NeoForgeTransfer::registerCapabilities);
+        modBus.addListener(FMLCommonSetupEvent.class, event -> event.enqueueWork(BuildCraft::setup));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -167,7 +167,10 @@ shaped('engine_redstone', ENGINE_RECIPE, {'w': '#minecraft:planks', 'g': '#c:gla
                                          'G': '#c:gears/wood', 'p': 'minecraft:piston'}, category='redstone')
 shaped('engine_stirling', ENGINE_RECIPE, {'w': '#c:cobblestones', 'g': '#c:glass_blocks/colorless',
                                          'G': '#c:gears/stone', 'p': 'minecraft:piston'}, category='redstone')
-# TODO: combustion engine recipe once the engine is ported
+shaped('engine_combustion', ENGINE_RECIPE, {'w': '#c:ingots/iron', 'g': '#c:glass_blocks/colorless',
+                                           'G': '#c:gears/iron', 'p': 'minecraft:piston'}, category='redstone')
+LANG['gui.buildcraft.tank.empty'] = 'Empty (%s mB)'
+LANG['gui.buildcraft.tank.amount'] = '%s / %s mB'
 LANG['gui.buildcraft.engine.heat'] = 'Heat: %s \u00b0C'
 LANG['gui.buildcraft.engine.stored'] = 'Stored: %s / %s MJ'
 LANG['gui.buildcraft.engine.output'] = 'Output: %s MJ/t'

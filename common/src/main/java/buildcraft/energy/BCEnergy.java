@@ -8,4 +8,8 @@ public final class BCEnergy {
         BCEnergyBlocks.init();
         BCEnergyMenus.init();
     }
+
+    public static void setup() {
+        BCEnergyRecipes.init();
+    }
 }

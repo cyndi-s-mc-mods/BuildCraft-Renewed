@@ -31,4 +31,13 @@ public final class BuildCraft {
         BCCore.init();
         BCEnergy.init();
     }
+
+    private static boolean setUp = false;
+
+    /** Called by each loader once registration has finished. Sets up things that need registered objects. */
+    public static void setup() {
+        if (setUp) return;
+        setUp = true;
+        BCEnergy.setup();
+    }
 }

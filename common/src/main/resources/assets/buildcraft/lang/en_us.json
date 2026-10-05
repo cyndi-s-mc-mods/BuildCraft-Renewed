@@ -37,6 +37,8 @@
   "gui.buildcraft.engine.heat": "Heat: %s \u00b0C",
   "gui.buildcraft.engine.output": "Output: %s MJ/t",
   "gui.buildcraft.engine.stored": "Stored: %s / %s MJ",
+  "gui.buildcraft.tank.amount": "%s / %s mB",
+  "gui.buildcraft.tank.empty": "Empty (%s mB)",
   "item.buildcraft.fuel_dense_bucket": "Dense Fuel Bucket",
   "item.buildcraft.fuel_dense_heat_1_bucket": "Hot Dense Fuel Bucket",
   "item.buildcraft.fuel_dense_heat_2_bucket": "Searing Dense Fuel Bucket",
