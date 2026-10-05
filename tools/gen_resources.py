@@ -975,5 +975,50 @@ LANG.update({
     'gui.buildcraft.filler.locked': 'Set by a gate',
 })
 
+# Architect table, builder and electronic library
+FACINGS = [('north', 0), ('east', 90), ('south', 180), ('west', 270)]
+for valid in ['off', 'on']:
+    cube(f'architect_{valid}', particle='architect/back', down='architect/bottom', up='architect/top', north=f'architect/front_{valid}',
+         east='architect/left', south='architect/back', west='architect/right')
+write('blockstates/architect.json', {'variants': {
+    f'facing={d},valid={v}': {'model': f'{NS}:block/architect_{"on" if v == "true" else "off"}', **({'y': y} if y else {})}
+    for d, y in FACINGS for v in ['true', 'false']}})
+block_item('architect', f'{NS}:block/architect_off')
+cube('builder', particle='builder/side', down='builder/bottom', up='builder/top', north='builder/front', east='builder/side',
+     south='builder/back', west='builder/side')
+cube('library', particle='library/back', down='library/bottom', up='library/top', north='library/front', east='library/left',
+     south='library/back', west='library/right')
+for block in ['builder', 'library']:
+    write(f'blockstates/{block}.json', {'variants': {
+        f'facing={d}': {'model': f'{NS}:block/{block}', **({'y': y} if y else {})} for d, y in FACINGS}})
+    block_item(block)
+for block, english in [('architect', 'Architect Table'), ('builder', 'Builder'), ('library', 'Electronic Library')]:
+    name('block', block, english)
+    drops_self(block)
+    tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
+shaped('architect', ['bmb', 'ycy', 'dsd'], {'b': '#c:dyes/black', 'm': f'{NS}:marker_volume', 'y': '#c:dyes/yellow',
+                                            'c': 'minecraft:crafting_table', 'd': '#c:gears/diamond', 's': f'{NS}:blueprint'})
+shaped('builder', ['bmb', 'ycy', 'gkg'], {'b': '#c:dyes/black', 'm': f'{NS}:marker_volume', 'y': '#c:dyes/yellow',
+                                          'c': 'minecraft:crafting_table', 'g': '#c:gears/diamond', 'k': '#c:chests/wooden'})
+shaped('library', ['igi', 'bcb', 'igi'], {'i': '#c:ingots/iron', 'g': '#c:gears/gold', 'b': f'{NS}:blueprint',
+                                          'c': '#c:chests/wooden'})
+for item, english, dye in [('template', 'Template', '#c:dyes/black'), ('blueprint', 'Blueprint', '#c:gems/lapis')]:
+    for state in ['clean', 'used']:
+        tex_exists(f'{NS}:item/{item}/{state}')
+        write(f'models/item/{item}_{state}.json', {'parent': 'minecraft:item/generated', 'textures': {'layer0': f'{NS}:item/{item}/{state}'}})
+    write(f'items/{item}.json', {'model': {'type': 'minecraft:condition', 'property': 'minecraft:has_component',
+                                           'component': f'{NS}:snapshot',
+                                           'on_true': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}_used'},
+                                           'on_false': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}_clean'}}})
+    name('item', item, english)
+    shaped(item, ['ppp', 'pdp', 'ppp'], {'p': 'minecraft:paper', 'd': dye})
+LANG.update({
+    'item.buildcraft.snapshot.clean': 'Blank %s', 'item.buildcraft.snapshot.used': '%s (%s)',
+    'item.buildcraft.snapshot.named': '%s: %s',
+    'gui.buildcraft.architect.no_area': 'No area: place this with volume markers behind it',
+    'gui.buildcraft.architect.scanning': 'Scanning...', 'gui.buildcraft.architect.ready': 'Put in a blank template or blueprint',
+    'gui.buildcraft.builder.no_plan': 'Put in a template or blueprint',
+})
+
 finish()
 print('Resources generated')

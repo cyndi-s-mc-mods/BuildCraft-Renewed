@@ -22,15 +22,16 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
 
 import buildcraft.BuildCraft;
-import buildcraft.builders.tile.TileFiller;
+import buildcraft.builders.tile.IHasBuildBox;
 import buildcraft.client.render.LaserRenderer;
 
-/** Draws the outline of the filler's area. */
-public class RenderFiller implements BlockEntityRenderer<TileFiller, RenderFiller.State> {
+/** Draws the outline of the area a filler, builder or architect table works on. */
+public class RenderBuildBox<T extends BlockEntity & IHasBuildBox> implements BlockEntityRenderer<T, RenderBuildBox.State> {
     private static final SpriteId OUTLINE = new SpriteId(TextureAtlas.LOCATION_BLOCKS, BuildCraft.id("block/lasers/stripes_write"));
 
     public static class State extends BlockEntityRenderState {
@@ -39,7 +40,7 @@ public class RenderFiller implements BlockEntityRenderer<TileFiller, RenderFille
 
     private final SpriteGetter sprites;
 
-    public RenderFiller(BlockEntityRendererProvider.Context context) {
+    public RenderBuildBox(BlockEntityRendererProvider.Context context) {
         this.sprites = context.sprites();
     }
 
@@ -49,7 +50,7 @@ public class RenderFiller implements BlockEntityRenderer<TileFiller, RenderFille
     }
 
     @Override
-    public void extractRenderState(TileFiller tile, State state, float partialTicks, Vec3 cameraPosition,
+    public void extractRenderState(T tile, State state, float partialTicks, Vec3 cameraPosition,
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
         state.box = tile.getBox();

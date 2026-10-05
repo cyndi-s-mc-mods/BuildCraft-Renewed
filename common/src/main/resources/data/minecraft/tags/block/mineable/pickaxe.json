@@ -1,7 +1,9 @@
 {
   "values": [
     "buildcraft:advanced_crafting_table",
+    "buildcraft:architect",
     "buildcraft:assembly_table",
+    "buildcraft:builder",
     "buildcraft:chute",
     "buildcraft:decorated_blueprint",
     "buildcraft:decorated_destroy",
@@ -18,6 +20,7 @@
     "buildcraft:frame",
     "buildcraft:heat_exchange",
     "buildcraft:laser",
+    "buildcraft:library",
     "buildcraft:mining_well",
     "buildcraft:power_tester",
     "buildcraft:pump",

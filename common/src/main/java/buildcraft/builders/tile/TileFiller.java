@@ -7,7 +7,6 @@
 package buildcraft.builders.tile;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.jspecify.annotations.Nullable;
@@ -16,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Containers;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -26,13 +25,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 
 import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjConnectorProvider;
@@ -47,26 +45,20 @@ import buildcraft.api.tiles.IAreaProvider;
 import buildcraft.api.tiles.IControllable;
 import buildcraft.api.tiles.IHasWork;
 import buildcraft.builders.BCBuildersBlocks;
+import buildcraft.builders.BuildEngine;
 import buildcraft.builders.block.BlockFiller;
 import buildcraft.builders.container.ContainerFiller;
 import buildcraft.builders.filler.FilledTemplate;
 import buildcraft.builders.filler.Pattern;
 import buildcraft.builders.filler.Patterns;
+import buildcraft.lib.inventory.IContainerDelegate;
 import buildcraft.lib.inventory.ItemHandlerSimple;
-import buildcraft.lib.misc.BlockUtil;
-import buildcraft.lib.misc.InventoryUtil;
 import buildcraft.lib.tile.TileBC;
 
 /** Builds (or clears out) a pattern in the area marked out next to it, using the blocks in its inventory. */
-public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable {
+public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate {
     public static final int PARAM_COUNT = 4;
     public static final int INV_SIZE = 27;
-    private static final long MAX_POWER_PER_TICK = 256 * MjAPI.MJ;
-    private static final int MAX_SCAN_PER_TICK = 4096;
-    private static final int MAX_TASKS_PER_TICK = 4;
-
-    private static final byte UNKNOWN = 0, CORRECT = 1, TO_BREAK = 2, TO_PLACE = 3;
-
     public final ItemHandlerSimple inv = new ItemHandlerSimple(INV_SIZE, (slot, stack) -> stack.getItem() instanceof BlockItem,
         this::onInventoryChanged);
     private final MjBattery battery = new MjBattery(16000 * MjAPI.MJ);
@@ -81,23 +73,9 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     private Mode mode = Mode.UNKNOWN;
     private int lockedTicks = 0;
 
-    // Building state, worked out again after loading
+    // Worked out again after loading
     @Nullable
-    private FilledTemplate template;
-    private byte[] checks = new byte[0];
-    private int[] breakOrder = new int[0];
-    private int[] placeOrder = new int[0];
-    private int scanIndex = 0;
-    private boolean fullScanDone = false;
-    private int breakCursor = 0;
-    private int placeCursor = 0;
-    private int leftToBreak = 0;
-    private int leftToPlace = 0;
-    /** True when the last place attempt found nothing in the inventory to place. */
-    private boolean missingBlocks = false;
-    private int taskIndex = -1;
-    private boolean taskIsBreak;
-    private long taskPower;
+    private BuildEngine engine;
 
     public TileFiller(BlockPos pos, BlockState state) {
         super(BCBuildersBlocks.FILLER_TILE.get(), pos, state);
@@ -127,15 +105,15 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     }
 
     public int getLeftToBreak() {
-        return leftToBreak;
+        return engine == null ? 0 : engine.getLeftToBreak();
     }
 
     public int getLeftToPlace() {
-        return leftToPlace;
+        return engine == null ? 0 : engine.getLeftToPlace();
     }
 
     public boolean isFinished() {
-        return template != null && fullScanDone && leftToPlace == 0 && (leftToBreak == 0 || !canExcavate);
+        return engine != null && engine.isFinished(canExcavate);
     }
 
     public long getStoredPower() {
@@ -146,6 +124,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         return battery.getCapacity();
     }
 
+    @Override
     @Nullable
     public BoundingBox getBox() {
         return box;
@@ -228,7 +207,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     }
 
     private void onInventoryChanged() {
-        missingBlocks = false;
+        if (engine != null) engine.onResourcesChanged();
         setChanged();
     }
 
@@ -236,15 +215,8 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
 
     /** Works out the shape to build, and starts checking the area again. */
     private void rebuildTemplate() {
-        template = null;
-        checks = new byte[0];
-        breakOrder = placeOrder = new int[0];
-        taskIndex = -1;
-        scanIndex = 0;
-        fullScanDone = false;
-        breakCursor = placeCursor = 0;
-        leftToBreak = leftToPlace = 0;
-        if (box == null || level == null || level.isClientSide()) return;
+        engine = null;
+        if (box == null || !(level instanceof ServerLevel serverLevel)) return;
         FilledTemplate t = new FilledTemplate(box.getXSpan(), box.getYSpan(), box.getZSpan());
         IStatementParameter[] used = Arrays.copyOf(params, pattern.maxParameters());
         for (int i = 0; i < used.length; i++) {
@@ -252,54 +224,8 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         }
         if (!pattern.fillTemplate(t, used)) return;
         if (inverted) t.invert();
-        template = t;
-        int count = t.sizeX * t.sizeY * t.sizeZ;
-        checks = new byte[count];
-        double cx = t.sizeX / 2.0, cz = t.sizeZ / 2.0;
-        Integer[] indices = new Integer[count];
-        for (int i = 0; i < count; i++) indices[i] = i;
-        // Break from the top down, place from the bottom up; each layer from the middle outwards
-        Comparator<Integer> horizontal = Comparator.comparingDouble(i -> {
-            double dx = i % t.sizeX + 0.5 - cx, dz = (i / t.sizeX) % t.sizeZ + 0.5 - cz;
-            return dx * dx + dz * dz;
-        });
-        Comparator<Integer> byY = Comparator.comparingInt(i -> i / (t.sizeX * t.sizeZ));
-        Integer[] sorted = indices.clone();
-        Arrays.sort(sorted, byY.reversed().thenComparing(horizontal));
-        breakOrder = Arrays.stream(sorted).mapToInt(Integer::intValue).toArray();
-        Arrays.sort(sorted, byY.thenComparing(horizontal));
-        placeOrder = Arrays.stream(sorted).mapToInt(Integer::intValue).toArray();
-    }
-
-    private BlockPos posOf(int index) {
-        FilledTemplate t = template;
-        int x = index % t.sizeX, z = (index / t.sizeX) % t.sizeZ, y = index / (t.sizeX * t.sizeZ);
-        return new BlockPos(box.minX() + x, box.minY() + y, box.minZ() + z);
-    }
-
-    private static boolean isEmpty(BlockState state) {
-        return state.isAir() || (!state.getFluidState().isEmpty() && state.canBeReplaced());
-    }
-
-    private byte check(int index) {
-        BlockPos pos = posOf(index);
-        if (pos.equals(worldPosition) || !level.isLoaded(pos)) return CORRECT;
-        BlockState state = level.getBlockState(pos);
-        if (template.get(index)) {
-            return state.canBeReplaced() ? TO_PLACE : CORRECT;
-        }
-        if (isEmpty(state) || state.getDestroySpeed(level, pos) < 0) return CORRECT;
-        return TO_BREAK;
-    }
-
-    private void setCheck(int index, byte result) {
-        byte old = checks[index];
-        if (old == result) return;
-        if (old == TO_BREAK) leftToBreak--;
-        if (old == TO_PLACE) leftToPlace--;
-        if (result == TO_BREAK) leftToBreak++;
-        if (result == TO_PLACE) leftToPlace++;
-        checks[index] = result;
+        BlockState air = Blocks.AIR.defaultBlockState();
+        engine = new BuildEngine(serverLevel, worldPosition, box, index -> t.get(index) ? null : air);
     }
 
     @Override
@@ -307,119 +233,16 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         super.tick();
         if (level == null || level.isClientSide()) return;
         if (lockedTicks > 0) lockedTicks--;
-        if (template == null) {
-            if (box != null && pattern != Patterns.NONE && checks.length == 0 && level.getGameTime() % 20 == 0) {
-                rebuildTemplate();
-            }
-            return;
+        if (engine != null) {
+            engine.tick(battery, inv, canExcavate, mode != Mode.OFF);
         }
-        // Look over part of the area
-        int count = checks.length;
-        for (int n = 0; n < Math.min(MAX_SCAN_PER_TICK, count); n++) {
-            setCheck(scanIndex, check(scanIndex));
-            scanIndex++;
-            if (scanIndex >= count) {
-                scanIndex = 0;
-                fullScanDone = true;
-                breakCursor = placeCursor = 0;
-                missingBlocks = false;
-            }
-        }
-        if (mode == Mode.OFF || !fullScanDone) return;
-        long powerLeft = MAX_POWER_PER_TICK;
-        for (int t = 0; t < MAX_TASKS_PER_TICK && powerLeft > 0; t++) {
-            if (taskIndex < 0 && !pickTask()) break;
-            BlockPos pos = posOf(taskIndex);
-            long target = taskIsBreak ? BlockUtil.computeBlockBreakPower(level, pos)
-                : (long) (Math.sqrt(pos.distSqr(worldPosition)) * 10 * MjAPI.MJ);
-            long wanted = Math.min(target - taskPower, powerLeft);
-            long got = battery.extractPower(0, wanted);
-            taskPower += got;
-            powerLeft -= got;
-            if (taskPower < target) break;
-            doTask(pos);
-            taskIndex = -1;
-            taskPower = 0;
-        }
-    }
-
-    private boolean pickTask() {
-        if (canExcavate && leftToBreak > 0) {
-            for (; breakCursor < breakOrder.length; breakCursor++) {
-                int index = breakOrder[breakCursor];
-                if (checks[index] == TO_BREAK) {
-                    startTask(index, true);
-                    return true;
-                }
-            }
-        }
-        // Like the original, nothing is placed while there are still blocks to break
-        if (leftToPlace > 0 && (!canExcavate || leftToBreak == 0) && !missingBlocks) {
-            if (findBlockSlot() < 0) {
-                missingBlocks = true;
-                return false;
-            }
-            for (; placeCursor < placeOrder.length; placeCursor++) {
-                int index = placeOrder[placeCursor];
-                if (checks[index] == TO_PLACE) {
-                    startTask(index, false);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void startTask(int index, boolean isBreak) {
-        taskIndex = index;
-        taskIsBreak = isBreak;
-        taskPower = 0;
-    }
-
-    private int findBlockSlot() {
-        for (int i = 0; i < INV_SIZE; i++) {
-            if (inv.getItem(i).getItem() instanceof BlockItem) return i;
-        }
-        return -1;
-    }
-
-    private void doTask(BlockPos pos) {
-        byte now = check(taskIndex);
-        setCheck(taskIndex, now);
-        if (taskIsBreak) {
-            if (now != TO_BREAK) return;
-            List<ItemStack> drops = BlockUtil.breakBlockAndGetDrops((ServerLevel) level, pos);
-            if (drops != null) {
-                for (ItemStack drop : drops) {
-                    InventoryUtil.addToBestAcceptor(level, worldPosition, drop);
-                }
-            }
-        } else {
-            if (now != TO_PLACE) return;
-            int slot = findBlockSlot();
-            if (slot < 0) {
-                missingBlocks = true;
-                return;
-            }
-            ItemStack stack = inv.getItem(slot);
-            BlockItem item = (BlockItem) stack.getItem();
-            BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
-            InteractionResult result = item.place(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack, hit));
-            if (result.consumesAction()) {
-                inv.setChanged();
-            } else {
-                // Can't be placed here (for example, an entity is in the way): skip it until the next pass
-                placeCursor++;
-            }
-        }
-        setCheck(taskIndex, check(taskIndex));
     }
 
     // IHasWork
 
     @Override
     public boolean hasWork() {
-        return mode != Mode.OFF && template != null && !isFinished();
+        return mode != Mode.OFF && engine != null && !isFinished();
     }
 
     // IControllable
@@ -482,17 +305,13 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         } catch (IllegalArgumentException e) {
             mode = Mode.UNKNOWN;
         }
-        if (level != null && !level.isClientSide()) {
-            rebuildTemplate();
-        } else {
-            template = null;
-        }
+        rebuildTemplate();
     }
 
     @Override
     public void setLevel(net.minecraft.world.level.Level level) {
         super.setLevel(level);
-        if (!level.isClientSide() && template == null) {
+        if (!level.isClientSide() && engine == null) {
             rebuildTemplate();
         }
     }
@@ -518,10 +337,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     }
 
     @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        super.preRemoveSideEffects(pos, state);
-        if (level != null) {
-            Containers.dropContents(level, pos, inv);
-        }
+    public Container getDelegate() {
+        return inv;
     }
 }

@@ -34,14 +34,18 @@ public abstract class ContainerBC<T extends BlockEntity> extends AbstractContain
 
     /** Call after adding all machine slots and data fields. */
     protected void addPlayerInventory(int y) {
+        addPlayerInventory(8, y);
+    }
+
+    protected void addPlayerInventory(int x, int y) {
         machineSlots = slots.size();
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, y + row * 18));
+                addSlot(new Slot(playerInventory, col + row * 9 + 9, x + col * 18, y + row * 18));
             }
         }
         for (int col = 0; col < 9; col++) {
-            addSlot(new Slot(playerInventory, col, 8 + col * 18, y + 58));
+            addSlot(new Slot(playerInventory, col, x + col * 18, y + 58));
         }
         addDataSlots(data);
     }

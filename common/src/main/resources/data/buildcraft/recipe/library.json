@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "#c:ingots/iron",
+    "g": "#c:gears/gold",
+    "b": "buildcraft:blueprint",
+    "c": "#c:chests/wooden"
+  },
+  "pattern": [
+    "igi",
+    "bcb",
+    "igi"
+  ],
+  "result": {
+    "id": "buildcraft:library"
+  }
+}
