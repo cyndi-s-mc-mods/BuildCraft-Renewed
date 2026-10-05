@@ -30,6 +30,7 @@ import buildcraft.api.mj.MjAPI;
 import buildcraft.api.mj.MjBattery;
 import buildcraft.api.mj.MjBatteryReceiver;
 import buildcraft.api.recipes.RefineryRecipes;
+import buildcraft.api.tiles.IHasWork;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.container.ContainerDistiller;
 import buildcraft.lib.fluid.BCFluidStack;
@@ -41,7 +42,7 @@ import buildcraft.lib.tile.TileBC;
 
 /** Splits oils and fuels into a lighter gas, which leaves from the top, and a denser liquid, which leaves from the
  * bottom. The input goes in from the sides. */
-public class TileDistiller extends TileBC implements IFluidHandlerProvider, IMjConnectorProvider, MenuProvider {
+public class TileDistiller extends TileBC implements IFluidHandlerProvider, IMjConnectorProvider, MenuProvider, IHasWork {
     public static final long MAX_MJ_PER_TICK = 6 * MjAPI.MJ;
     public static final int CAPACITY = 4 * BCFluidStack.BUCKET;
     private static final int SYNC_INTERVAL = 4;
@@ -179,5 +180,10 @@ public class TileDistiller extends TileBC implements IFluidHandlerProvider, IMjC
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new ContainerDistiller(id, inventory, this);
+    }
+
+    @Override
+    public boolean hasWork() {
+        return isActive;
     }
 }

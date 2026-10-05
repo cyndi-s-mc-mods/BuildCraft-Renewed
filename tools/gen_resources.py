@@ -762,5 +762,99 @@ shaped('plug_power_adaptor', ['sis', 'sgs', 'srs'], {'s': f'{NS}:pipe_structure'
                                                      'g': '#c:gears/stone', 'r': '#c:dusts/redstone'}, count=4)
 LANG['tooltip.buildcraft.pluggable.remove'] = 'Sneak and right click with an empty hand or a wrench to remove'
 
+# ---------------------------------------------------------------- gates, wires and statements
+
+GATE_MATERIAL_TEX = {'clay_brick': 'minecraft:block/bricks', 'iron': 'minecraft:block/iron_block',
+                     'nether_brick': 'minecraft:block/nether_bricks', 'gold': 'minecraft:block/gold_block'}
+GATE_MODIFIER_TEX = {'lapis': 'minecraft:block/lapis_block', 'quartz': 'minecraft:block/quartz_block_top',
+                     'diamond': 'minecraft:block/diamond_block'}
+
+
+def gate_box(frm, to, tex):
+    side = {'uv': [2, 5, 4, 11], 'texture': tex}
+    end = {'uv': [5, 5, 11, 11], 'texture': tex}
+    return {'from': frm, 'to': to, 'faces': {'down': side, 'up': side, 'north': side, 'south': side, 'west': end, 'east': end}}
+
+
+GATE_VARIANTS = [('and', 'clay_brick', 'no_modifier')] + [(l, m, mod) for m in ['iron', 'nether_brick', 'gold'] for l in ['and', 'or']
+                                                          for mod in ['no_modifier', 'lapis', 'quartz', 'diamond']]
+gate_cases = []
+for logic, material, modifier in GATE_VARIANTS:
+    vname = material if material == 'clay_brick' else f'{material}_{logic}_{modifier}'
+    textures = {'particle': GATE_MATERIAL_TEX[material], 'material': GATE_MATERIAL_TEX[material], 'off': f'{NS}:block/gates/gate_off'}
+    # The gate model is made for the west side of a pipe: turn it to face the viewer
+    elements = [gate_box([7, 5, 5], [9.01, 11, 11], '#material'), gate_box([6.9, 6, 6], [9.1, 10, 10], '#off')]
+    if material != 'clay_brick':
+        textures['logic'] = f'{NS}:block/gates/gate_{logic}'
+        elements.append(gate_box([6.8, 7, 7], [9.2, 9, 9], '#logic'))
+    if modifier != 'no_modifier':
+        textures['modifier'] = GATE_MODIFIER_TEX[modifier]
+        for y, z in [(5.5, 5.5), (9.5, 5.5), (5.5, 9.5), (9.5, 9.5)]:
+            elements.append(gate_box([6.8, y, z], [9.2, y + 1, z + 1], '#modifier'))
+    write(f'models/item/gate/{vname}.json', {'parent': 'minecraft:block/block', 'textures': textures, 'elements': elements,
+                                             'display': {'gui': {'rotation': [0, 90, 0], 'scale': [1.4, 1.4, 1.4]},
+                                                         'ground': {'rotation': [0, 90, 0], 'scale': [0.5, 0.5, 0.5]},
+                                                         'fixed': {'rotation': [0, 90, 0]},
+                                                         'thirdperson_righthand': {'rotation': [75, 135, 0], 'translation': [0, 2.5, 0], 'scale': [0.5, 0.5, 0.5]},
+                                                         'firstperson_righthand': {'rotation': [0, 135, 0], 'scale': [0.6, 0.6, 0.6]}}})
+    gate_cases.append({'when': {'logic': logic, 'material': material, 'modifier': modifier},
+                       'model': {'type': 'minecraft:model', 'model': f'{NS}:item/gate/{vname}'}})
+write('items/gate.json', {'model': {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': f'{NS}:gate_variant',
+                                    'cases': gate_cases,
+                                    'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/gate/clay_brick'}}})
+
+
+def gate_result(logic, material, modifier='no_modifier'):
+    return {'id': f'{NS}:gate', 'components': {f'{NS}:gate_variant': {'logic': logic, 'material': material, 'modifier': modifier}}}
+
+
+def gate_recipe(rid, material_key, result):
+    write_data(f'{NS}/recipe/{rid}.json', {'type': 'minecraft:crafting_shaped', 'category': 'redstone',
+                                            'key': {'m': material_key, 'r': '#c:dusts/redstone', 'b': f'{NS}:plug_blocker'},
+                                            'pattern': [' m ', 'mrm', ' b '], 'result': result})
+
+
+gate_recipe('gate_basic', 'minecraft:brick', gate_result('and', 'clay_brick'))
+gate_recipe('gate_iron', '#c:ingots/iron', gate_result('and', 'iron'))
+gate_recipe('gate_nether_brick', 'minecraft:nether_brick', gate_result('and', 'nether_brick'))
+
+LANG.update({
+    'item.buildcraft.gate': 'Gate',
+    'gate.buildcraft.name': '%s %s Gate', 'gate.buildcraft.name.basic': 'Basic Gate', 'gate.buildcraft.name.modified': '%s (%s)',
+    'gate.buildcraft.material.iron': 'Iron', 'gate.buildcraft.material.nether_brick': 'Nether Brick', 'gate.buildcraft.material.gold': 'Gold',
+    'gate.buildcraft.logic.and': 'AND', 'gate.buildcraft.logic.or': 'OR',
+    'gate.buildcraft.modifier.lapis': 'Lapis', 'gate.buildcraft.modifier.quartz': 'Quartz', 'gate.buildcraft.modifier.diamond': 'Diamond',
+    'gate.buildcraft.side': '%s (on the %s side)',
+    'direction.buildcraft.down': 'bottom', 'direction.buildcraft.up': 'top', 'direction.buildcraft.north': 'north',
+    'direction.buildcraft.south': 'south', 'direction.buildcraft.west': 'west', 'direction.buildcraft.east': 'east',
+    'gate.buildcraft.parameter.item.empty': 'Any item (click with an item to choose one)',
+    'gate.buildcraft.parameter.gate_side_only': 'Gate side only', 'gate.buildcraft.parameter.all_sides': 'All sides',
+    'gate.buildcraft.trigger.true': 'Always On',
+    'gate.buildcraft.trigger.redstone.input.active': 'Redstone Signal On', 'gate.buildcraft.trigger.redstone.input.inactive': 'Redstone Signal Off',
+    'gate.buildcraft.trigger.machine.scheduled': 'Has Work', 'gate.buildcraft.trigger.machine.done': 'Work Done',
+    'gate.buildcraft.trigger.engine.blue': 'Engine Blue', 'gate.buildcraft.trigger.engine.green': 'Engine Green',
+    'gate.buildcraft.trigger.engine.yellow': 'Engine Yellow', 'gate.buildcraft.trigger.engine.red': 'Engine Red',
+    'gate.buildcraft.trigger.engine.overheat': 'Engine Overheat',
+    'gate.buildcraft.trigger.inventory.empty': 'Inventory Empty', 'gate.buildcraft.trigger.inventory.contains': 'Items in Inventory',
+    'gate.buildcraft.trigger.inventory.space': 'Space in Inventory', 'gate.buildcraft.trigger.inventory.full': 'Inventory Full',
+    'gate.buildcraft.trigger.inventorylevel.below': 'Contains < %s%%',
+    'gate.buildcraft.trigger.fluid.empty': 'Tank Empty', 'gate.buildcraft.trigger.fluid.contains': 'Fluid in Tank',
+    'gate.buildcraft.trigger.fluid.space': 'Space for Fluid', 'gate.buildcraft.trigger.fluid.full': 'Tank Full',
+    'gate.buildcraft.trigger.fluidlevel.below': 'Tank < %s%% full',
+    'gate.buildcraft.trigger.pipe.empty': 'Pipe Empty', 'gate.buildcraft.trigger.pipe.containsItems': 'Items Traversing',
+    'gate.buildcraft.trigger.pipe.containsFluids': 'Fluid Traversing', 'gate.buildcraft.trigger.pipe.containsEnergy': 'Power Traversing',
+    'gate.buildcraft.trigger.pipe.wire.active': '%s Pipe Signal On', 'gate.buildcraft.trigger.pipe.wire.inactive': '%s Pipe Signal Off',
+    'gate.buildcraft.action.redstone.signal': 'Redstone Signal',
+    'gate.buildcraft.action.machine.on': 'On', 'gate.buildcraft.action.machine.off': 'Off', 'gate.buildcraft.action.machine.loop': 'Loop',
+    'gate.buildcraft.action.pipe.wire': '%s Pipe Signal', 'gate.buildcraft.action.pipe.direction': 'Face the %s side',
+})
+
+for colour in ['white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink', 'gray', 'light_gray', 'cyan', 'purple', 'blue',
+               'brown', 'green', 'red', 'black']:
+    tex = 'silver' if colour == 'light_gray' else colour
+    simple_item(f'pipe_wire_{colour}', f'wire/{tex}')
+    tex_exists(f'{NS}:block/wires/{tex}')
+    name('item', f'pipe_wire_{colour}', colour.replace('_', ' ').title() + ' Pipe Wire')
+
 finish()
 print('Resources generated')

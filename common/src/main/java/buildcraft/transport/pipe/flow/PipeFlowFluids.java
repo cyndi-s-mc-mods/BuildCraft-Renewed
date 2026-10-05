@@ -200,6 +200,15 @@ public class PipeFlowFluids extends PipeFlow implements IFlowFluid {
         }
     }
 
+    /** @return The total amount of fluid in every section of the pipe. */
+    public int getTotalAmount() {
+        int total = 0;
+        for (Section section : sections.values()) {
+            total += section.amount;
+        }
+        return total;
+    }
+
     public BCFluidStack getFluidForRender() {
         return currentFluid;
     }

@@ -3,6 +3,7 @@ package buildcraft.silicon;
 import net.minecraft.world.item.Item;
 
 import buildcraft.lib.registry.RegistryEntry;
+import buildcraft.silicon.item.ItemPluggableGate;
 
 import static buildcraft.lib.registry.RegistrationHelper.item;
 
@@ -12,6 +13,7 @@ public final class BCSiliconItems {
     public static RegistryEntry<Item, Item> CHIPSET_GOLD;
     public static RegistryEntry<Item, Item> CHIPSET_QUARTZ;
     public static RegistryEntry<Item, Item> CHIPSET_DIAMOND;
+    public static RegistryEntry<Item, ItemPluggableGate> GATE;
 
     private BCSiliconItems() {}
 
@@ -21,5 +23,6 @@ public final class BCSiliconItems {
         CHIPSET_GOLD = item("chipset_gold", Item::new);
         CHIPSET_QUARTZ = item("chipset_quartz", Item::new);
         CHIPSET_DIAMOND = item("chipset_diamond", Item::new);
+        GATE = item("gate", ItemPluggableGate::new);
     }
 }

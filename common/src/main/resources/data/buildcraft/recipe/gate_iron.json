@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "m": "#c:ingots/iron",
+    "r": "#c:dusts/redstone",
+    "b": "buildcraft:plug_blocker"
+  },
+  "pattern": [
+    " m ",
+    "mrm",
+    " b "
+  ],
+  "result": {
+    "id": "buildcraft:gate",
+    "components": {
+      "buildcraft:gate_variant": {
+        "logic": "and",
+        "material": "iron",
+        "modifier": "no_modifier"
+      }
+    }
+  }
+}

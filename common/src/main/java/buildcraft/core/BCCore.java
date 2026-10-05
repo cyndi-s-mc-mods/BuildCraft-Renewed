@@ -6,5 +6,6 @@ public final class BCCore {
     public static void init() {
         BCCoreBlocks.init();
         BCCoreItems.init();
+        buildcraft.core.statements.BCCoreStatements.init();
     }
 }

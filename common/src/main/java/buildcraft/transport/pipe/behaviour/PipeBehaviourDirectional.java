@@ -95,6 +95,13 @@ public abstract class PipeBehaviourDirectional extends PipeBehaviour {
         return false;
     }
 
+    /** Points the pipe at the given side, if it can face that way. Used by gates. */
+    public boolean setDirectionIfValid(Direction dir) {
+        if (!canFaceDirection(dir)) return false;
+        setCurrentDir(dir);
+        return true;
+    }
+
     @Nullable
     protected Direction getCurrentDir() {
         return currentDir.face;

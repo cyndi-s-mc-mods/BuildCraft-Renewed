@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import buildcraft.api.tiles.IHasWork;
+import buildcraft.api.tiles.IControllable;
 import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjConnectorProvider;
 import buildcraft.api.mj.IMjReceiver;
@@ -27,7 +29,7 @@ import buildcraft.lib.misc.BlockUtil;
 import buildcraft.lib.tile.TileBC;
 
 /** Base for machines that lower a tube into the ground: the mining well and the pump. */
-public abstract class TileMiner extends TileBC implements IMjConnectorProvider {
+public abstract class TileMiner extends TileBC implements IMjConnectorProvider, IHasWork, IControllable {
     protected int progress = 0;
     @Nullable
     protected BlockPos currentPos = null;
@@ -58,7 +60,9 @@ public abstract class TileMiner extends TileBC implements IMjConnectorProvider {
     public void tick() {
         if (level != null && !level.isClientSide()) {
             battery.tick();
-            mine();
+            if (controlMode != IControllable.Mode.OFF) {
+                mine();
+            }
             boolean complete = currentPos == null;
             if (complete != isComplete) {
                 isComplete = complete;
@@ -141,5 +145,29 @@ public abstract class TileMiner extends TileBC implements IMjConnectorProvider {
         progress = input.getIntOr("progress", 0);
         isComplete = input.getBooleanOr("complete", false);
         battery.load(input, "battery");
+    }
+
+    // Gates
+
+    private IControllable.Mode controlMode = IControllable.Mode.UNKNOWN;
+
+    @Override
+    public IControllable.Mode getControlMode() {
+        return controlMode;
+    }
+
+    @Override
+    public void setControlMode(IControllable.Mode mode) {
+        controlMode = mode;
+    }
+
+    @Override
+    public boolean acceptsControlMode(IControllable.Mode mode) {
+        return mode == IControllable.Mode.ON || mode == IControllable.Mode.OFF;
+    }
+
+    @Override
+    public boolean hasWork() {
+        return !isComplete;
     }
 }

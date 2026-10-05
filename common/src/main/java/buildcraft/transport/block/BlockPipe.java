@@ -113,6 +113,17 @@ public class BlockPipe extends BlockBCTile<TilePipeHolder> {
     }
 
     @Override
+    protected boolean isSignalSource(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        // direction points from the block asking towards this pipe
+        return level.getBlockEntity(pos) instanceof TilePipeHolder tile ? tile.getRedstoneOutput(direction.getOpposite()) : 0;
+    }
+
+    @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier,
         boolean isPrecise) {
         TilePipeHolder tile = getTile(level, pos);

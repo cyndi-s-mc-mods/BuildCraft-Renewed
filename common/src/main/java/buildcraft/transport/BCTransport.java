@@ -9,6 +9,7 @@ public final class BCTransport {
         BCTransportMenus.init();
         BCTransportItems.init();
         BCTransportPlugs.init();
+        buildcraft.transport.statements.BCTransportStatements.init();
     }
 
     public static void setup() {}

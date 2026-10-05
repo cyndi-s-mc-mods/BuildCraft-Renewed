@@ -24,12 +24,15 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import buildcraft.BuildCraft;
 import buildcraft.api.core.EnumPipePart;
+import buildcraft.api.transport.EnumWirePart;
+import buildcraft.transport.wire.WireManager;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.api.transport.pluggable.PlugModelPart;
 import buildcraft.client.render.BoxRenderer;
@@ -54,6 +57,8 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         int fluidCapacity;
         final boolean[] connected = new boolean[6];
         final List<Direction> plugSides = new ArrayList<>();
+        /** Wire boxes: x0, y0, z0, x1, y1, z1 in pixels, then the colour ordinal. */
+        final List<float[]> wireBoxes = new ArrayList<>();
         final List<List<PlugModelPart>> plugModels = new ArrayList<>();
         final float[] power = new float[6];
         float centerPower;
@@ -81,6 +86,13 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         state.itemPositions.clear();
         state.plugSides.clear();
         state.plugModels.clear();
+        state.wireBoxes.clear();
+        Level wireLevel = tile.getLevel();
+        if (wireLevel != null) {
+            for (Map.Entry<EnumWirePart, DyeColor> wire : tile.getWires().entrySet()) {
+                addWireBoxes(state.wireBoxes, wireLevel, tile, wire.getKey(), wire.getValue());
+            }
+        }
         for (Map.Entry<Direction, PipePluggable> entry : tile.getPluggables().entrySet()) {
             List<PlugModelPart> model = entry.getValue().getModel();
             if (!model.isEmpty()) {
@@ -129,6 +141,9 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (!state.wireBoxes.isEmpty()) {
+            submitWires(state.wireBoxes, state.lightCoords, poseStack, collector);
+        }
         for (int i = 0; i < state.plugSides.size(); i++) {
             submitPluggable(state.plugSides.get(i), state.plugModels.get(i), state.lightCoords, poseStack, collector);
         }
@@ -205,6 +220,51 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
                     case WEST -> BoxRenderer.box(pose, buf, 0, lo, lo, 8 - c, hi, hi, faces(face), light, -1);
                     case EAST -> BoxRenderer.box(pose, buf, 8 + c, lo, lo, 16, hi, hi, faces(face), light, -1);
                 }
+            }
+        });
+    }
+
+    /** Adds the boxes for one wire: a small cube at its corner, and bars to the wires it connects to. */
+    private static void addWireBoxes(List<float[]> boxes, Level level, TilePipeHolder tile, EnumWirePart part, DyeColor colour) {
+        float[] lo = new float[3], hi = new float[3];
+        boolean[] signs = { part.x, part.y, part.z };
+        for (int a = 0; a < 3; a++) {
+            lo[a] = signs[a] ? 12 : 3;
+            hi[a] = signs[a] ? 13 : 4;
+        }
+        boxes.add(new float[] { lo[0], lo[1], lo[2], hi[0], hi[1], hi[2], colour.ordinal() });
+        for (Direction.Axis axis : Direction.Axis.values()) {
+            int a = axis.ordinal();
+            // Along the pipe to the wire in the next corner (drawn once, from the negative corner)
+            if (!signs[a] && tile.getWires().get(part.flip(axis)) == colour) {
+                float[] l = lo.clone(), h = hi.clone();
+                l[a] = 4;
+                h[a] = 12;
+                boxes.add(new float[] { l[0], l[1], l[2], h[0], h[1], h[2], colour.ordinal() });
+            }
+            // Out to the wire in the next pipe
+            Direction side = Direction.fromAxisAndDirection(axis, signs[a] ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE);
+            if (WireManager.connectsAcross(level, tile.getBlockPos(), part, colour, side)) {
+                float[] l = lo.clone(), h = hi.clone();
+                if (signs[a]) {
+                    l[a] = 13;
+                    h[a] = 16;
+                } else {
+                    l[a] = 0;
+                    h[a] = 3;
+                }
+                boxes.add(new float[] { l[0], l[1], l[2], h[0], h[1], h[2], colour.ordinal() });
+            }
+        }
+    }
+
+    private void submitWires(List<float[]> boxes, int light, PoseStack poseStack, SubmitNodeCollector collector) {
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS), (pose, buf) -> {
+            for (float[] b : boxes) {
+                DyeColor colour = DyeColor.byId((int) b[6]);
+                String name = colour == DyeColor.LIGHT_GRAY ? "silver" : colour.getSerializedName();
+                TextureAtlasSprite sprite = sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, BuildCraft.id("block/wires/" + name)));
+                BoxRenderer.box(pose, buf, b[0], b[1], b[2], b[3], b[4], b[5], faces(Face.full(sprite)), light, -1);
             }
         });
     }

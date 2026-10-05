@@ -462,6 +462,14 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
     }
 
     /** @return Every item in the pipe, for rendering. */
+    /** @return True if any items are moving through the pipe. */
+    public boolean hasItems() {
+        for (List<TravellingItem> list : items.getAllElements()) {
+            if (!list.isEmpty()) return true;
+        }
+        return !pendingLoad.isEmpty();
+    }
+
     public List<TravellingItem> getAllItemsForRender() {
         resolvePending();
         List<TravellingItem> all = new ArrayList<>();

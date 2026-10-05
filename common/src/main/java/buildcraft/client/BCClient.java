@@ -14,6 +14,7 @@ import buildcraft.silicon.BCSiliconBlocks;
 import buildcraft.silicon.BCSiliconMenus;
 import buildcraft.silicon.client.gui.GuiAdvancedCraftingTable;
 import buildcraft.silicon.client.gui.GuiAssemblyTable;
+import buildcraft.silicon.client.gui.GuiGate;
 import buildcraft.silicon.client.render.RenderLaser;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.BCFactoryMenus;
@@ -67,5 +68,6 @@ public final class BCClient {
         registrar.screen(BCFactoryMenus.AUTO_WORKBENCH.get(), GuiAutoWorkbench::new);
         registrar.screen(BCSiliconMenus.ASSEMBLY_TABLE.get(), GuiAssemblyTable::new);
         registrar.screen(BCSiliconMenus.ADVANCED_CRAFTING_TABLE.get(), GuiAdvancedCraftingTable::new);
+        registrar.screen(BCSiliconMenus.GATE.get(), GuiGate::new);
     }
 }

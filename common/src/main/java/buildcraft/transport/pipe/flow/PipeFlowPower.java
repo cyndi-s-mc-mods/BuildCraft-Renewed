@@ -124,6 +124,14 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower {
     }
 
     /** @return How much power is shown flowing through a side, from 0 to {@link MjAPI#MJ}. */
+    /** @return True if power is flowing through any side of the pipe. */
+    public boolean hasPower() {
+        for (Section s : sections.values()) {
+            if (s.displayPower > 0) return true;
+        }
+        return false;
+    }
+
     public int getDisplayPower(Direction side) {
         return sections.get(side).displayPower;
     }

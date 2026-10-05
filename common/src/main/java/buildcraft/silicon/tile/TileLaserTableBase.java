@@ -22,12 +22,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.network.chat.Component;
 
 import buildcraft.api.power.ILaserTarget;
+import buildcraft.api.tiles.IHasWork;
 import buildcraft.api.recipes.IngredientStack;
 import buildcraft.lib.inventory.ItemHandlerSimple;
 import buildcraft.lib.tile.TileBC;
 
 /** A table that is powered by lasers. */
-public abstract class TileLaserTableBase extends TileBC implements ILaserTarget, MenuProvider {
+public abstract class TileLaserTableBase extends TileBC implements ILaserTarget, MenuProvider, IHasWork {
     public long power;
 
     protected TileLaserTableBase(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -104,5 +105,10 @@ public abstract class TileLaserTableBase extends TileBC implements ILaserTarget,
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean hasWork() {
+        return getTarget() > 0;
     }
 }

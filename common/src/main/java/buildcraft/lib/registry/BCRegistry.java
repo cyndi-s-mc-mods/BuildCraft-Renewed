@@ -20,6 +20,7 @@ public final class BCRegistry {
 
     static {
         // Fixed order for loaders that register everything at once: later registries refer to earlier ones.
+        ENTRIES.put(Registries.DATA_COMPONENT_TYPE, new ArrayList<>());
         ENTRIES.put(Registries.FLUID, new ArrayList<>());
         ENTRIES.put(Registries.BLOCK, new ArrayList<>());
         ENTRIES.put(Registries.ITEM, new ArrayList<>());

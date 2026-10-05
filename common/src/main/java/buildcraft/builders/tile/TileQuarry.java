@@ -32,6 +32,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
+import buildcraft.api.tiles.IHasWork;
+import buildcraft.api.tiles.IControllable;
 import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjConnectorProvider;
 import buildcraft.api.mj.IMjReceiver;
@@ -47,7 +49,7 @@ import buildcraft.lib.misc.InventoryUtil;
 import buildcraft.lib.tile.TileBC;
 
 /** The quarry builds a frame around its area, then moves a drill over it, mining it out layer by layer. */
-public class TileQuarry extends TileBC implements IMjConnectorProvider {
+public class TileQuarry extends TileBC implements IMjConnectorProvider, IHasWork, IControllable {
     private static final long MAX_POWER_PER_TICK = 512 * MjAPI.MJ;
     private static final long FRAME_POWER = 24 * MjAPI.MJ;
     private static final int MAX_SCAN_PER_TICK = 4096;
@@ -344,6 +346,7 @@ public class TileQuarry extends TileBC implements IMjConnectorProvider {
             updatePoses();
         }
         battery.tick();
+        if (controlMode == IControllable.Mode.OFF) return;
 
         int checks = firstChecked ? 10 : 500;
         for (int i = 0; i < checks && !toCheck.isEmpty(); i++) {
@@ -687,5 +690,29 @@ public class TileQuarry extends TileBC implements IMjConnectorProvider {
             output.store("from", Vec3.CODEC, from);
             output.store("to", Vec3.CODEC, to);
         }
+    }
+
+    // Gates
+
+    private IControllable.Mode controlMode = IControllable.Mode.UNKNOWN;
+
+    @Override
+    public IControllable.Mode getControlMode() {
+        return controlMode;
+    }
+
+    @Override
+    public void setControlMode(IControllable.Mode mode) {
+        controlMode = mode;
+    }
+
+    @Override
+    public boolean acceptsControlMode(IControllable.Mode mode) {
+        return mode == IControllable.Mode.ON || mode == IControllable.Mode.OFF;
+    }
+
+    @Override
+    public boolean hasWork() {
+        return frameBox != null && (currentTask != null || !isFinished());
     }
 }

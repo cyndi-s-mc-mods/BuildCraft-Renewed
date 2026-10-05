@@ -13,6 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.Vec3;
 
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.mj.IMjConnector;
+import buildcraft.api.transport.EnumWirePart;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.pluggable.IItemPluggable;
 import buildcraft.api.transport.pluggable.PipePluggable;
@@ -45,6 +47,8 @@ import buildcraft.lib.inventory.IItemHandlerProvider;
 import buildcraft.lib.inventory.IItemTransactor;
 import buildcraft.lib.tile.TileBC;
 import buildcraft.transport.BCTransportBlocks;
+import buildcraft.transport.BCTransportItems;
+import buildcraft.transport.item.ItemWire;
 import buildcraft.transport.block.BlockPipe;
 import buildcraft.transport.pipe.Pipe;
 import buildcraft.transport.pipe.PipeEventBus;
@@ -54,6 +58,8 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     private final PipeEventBus eventBus = new PipeEventBus();
     private boolean blockStateDirty = true;
     private final Map<Direction, PipePluggable> pluggables = new EnumMap<>(Direction.class);
+    private final Map<EnumWirePart, DyeColor> wires = new EnumMap<>(EnumWirePart.class);
+    private final int[] redstoneOutput = new int[6];
 
     public TilePipeHolder(BlockPos pos, BlockState state) {
         super(BCTransportBlocks.PIPE_HOLDER.get(), pos, state);
@@ -71,6 +77,12 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         pipe.save(output.child("pipe"));
+        if (!wires.isEmpty()) {
+            ValueOutput wireOut = output.child("wires");
+            for (Map.Entry<EnumWirePart, DyeColor> entry : wires.entrySet()) {
+                wireOut.putString(entry.getKey().serialName, entry.getValue().getSerializedName());
+            }
+        }
         if (!pluggables.isEmpty()) {
             ValueOutput plugs = output.child("plugs");
             for (Map.Entry<Direction, PipePluggable> entry : pluggables.entrySet()) {
@@ -85,6 +97,15 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         input.child("pipe").ifPresent(pipe::load);
+        wires.clear();
+        input.child("wires").ifPresent(wireIn -> {
+            for (EnumWirePart part : EnumWirePart.VALUES) {
+                String colour = wireIn.getStringOr(part.serialName, "");
+                if (!colour.isEmpty()) {
+                    wires.put(part, DyeColor.byName(colour, DyeColor.WHITE));
+                }
+            }
+        });
         Map<Direction, PipePluggable> old = new EnumMap<>(pluggables);
         pluggables.clear();
         input.child("plugs").ifPresent(plugs -> {
@@ -115,11 +136,43 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
             plug.onTick();
         }
         pipe.onTick();
+        if (level != null && !level.isClientSide()) {
+            updateRedstoneOutput();
+        }
         if (blockStateDirty && level != null && !level.isClientSide()) {
             blockStateDirty = false;
             updateBlockState();
         }
         super.tick();
+    }
+
+    private void updateRedstoneOutput() {
+        boolean changed = false;
+        for (Direction side : Direction.values()) {
+            int value = 0;
+            for (PipePluggable plug : pluggables.values()) {
+                value = Math.max(value, plug.getRedstoneOutput(side));
+            }
+            if (redstoneOutput[side.ordinal()] != value) {
+                redstoneOutput[side.ordinal()] = value;
+                changed = true;
+            }
+        }
+        if (changed && level != null) {
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+        }
+    }
+
+    /** @return The redstone signal the pipe gives out of the given side. */
+    public int getRedstoneOutput(Direction side) {
+        return redstoneOutput[side.ordinal()];
+    }
+
+    public boolean isRedstoneSource() {
+        for (PipePluggable plug : pluggables.values()) {
+            if (plug.canConnectToRedstone()) return true;
+        }
+        return false;
     }
 
     private void updateBlockState() {
@@ -143,6 +196,9 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
             for (PipePluggable plug : pluggables.values()) {
                 plug.onRemove();
                 plug.addDrops(drops);
+            }
+            for (DyeColor colour : wires.values()) {
+                drops.add(new ItemStack(BCTransportItems.WIRES.get(colour).get()));
             }
             for (ItemStack stack : drops) {
                 Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
@@ -187,6 +243,26 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
             if (plug != null) {
                 InteractionResult result = plug.onPluggableActivate(player, hand, hit);
                 if (result != InteractionResult.PASS) return result;
+            }
+        }
+        if (held.getItem() instanceof ItemWire wireItem) {
+            EnumWirePart wirePart = EnumWirePart.closest(hit.getLocation().subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()));
+            DyeColor existing = wires.get(wirePart);
+            if (player.isShiftKeyDown()) {
+                if (existing == wireItem.colour && !isClient()) {
+                    setWire(wirePart, null);
+                    if (!player.getAbilities().instabuild && !player.getInventory().add(new ItemStack(wireItem))) {
+                        Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), new ItemStack(wireItem));
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if (existing == null) {
+                if (!isClient()) {
+                    setWire(wirePart, wireItem.colour);
+                    if (!player.getAbilities().instabuild) held.shrink(1);
+                }
+                return InteractionResult.SUCCESS;
             }
         }
         if (held.getItem() instanceof IItemPluggable itemPlug) {
@@ -280,6 +356,29 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
         return old;
+    }
+
+    @Override
+    public Map<EnumWirePart, DyeColor> getWires() {
+        return wires;
+    }
+
+    @Override
+    public void setWire(EnumWirePart part, @Nullable DyeColor colour) {
+        if (colour == null) {
+            wires.remove(part);
+        } else {
+            wires.put(part, colour);
+        }
+        scheduleNetworkUpdate();
+        // Wires in the pipes around this one connect (or disconnect) to these
+        if (level != null) {
+            for (Direction side : Direction.values()) {
+                if (level.getBlockEntity(worldPosition.relative(side)) instanceof TilePipeHolder other) {
+                    other.sendNetworkUpdate();
+                }
+            }
+        }
     }
 
     public Map<Direction, PipePluggable> getPluggables() {

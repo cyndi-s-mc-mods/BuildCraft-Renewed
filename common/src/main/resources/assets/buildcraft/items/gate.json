@@ -1,0 +1,288 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "buildcraft:gate_variant",
+    "cases": [
+      {
+        "when": {
+          "logic": "and",
+          "material": "clay_brick",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/clay_brick"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "iron",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_and_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "iron",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_and_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "iron",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_and_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "iron",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_and_diamond"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "iron",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_or_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "iron",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_or_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "iron",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_or_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "iron",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/iron_or_diamond"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "nether_brick",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_and_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "nether_brick",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_and_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "nether_brick",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_and_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "nether_brick",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_and_diamond"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "nether_brick",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_or_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "nether_brick",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_or_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "nether_brick",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_or_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "nether_brick",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/nether_brick_or_diamond"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "gold",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_and_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "gold",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_and_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "gold",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_and_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "and",
+          "material": "gold",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_and_diamond"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "gold",
+          "modifier": "no_modifier"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_or_no_modifier"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "gold",
+          "modifier": "lapis"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_or_lapis"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "gold",
+          "modifier": "quartz"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_or_quartz"
+        }
+      },
+      {
+        "when": {
+          "logic": "or",
+          "material": "gold",
+          "modifier": "diamond"
+        },
+        "model": {
+          "type": "minecraft:model",
+          "model": "buildcraft:item/gate/gold_or_diamond"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "buildcraft:item/gate/clay_brick"
+    }
+  }
+}

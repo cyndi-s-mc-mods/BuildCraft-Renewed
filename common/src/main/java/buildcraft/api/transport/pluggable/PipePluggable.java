@@ -82,9 +82,14 @@ public abstract class PipePluggable {
         return false;
     }
 
-    /** @return The redstone signal (0-15) this pluggable gives out of its side. */
-    public int getRedstoneOutput() {
+    /** @return The redstone signal (0-15) this pluggable makes the pipe give out of the given side. */
+    public int getRedstoneOutput(Direction pipeSide) {
         return 0;
+    }
+
+    /** @return True if this pluggable (such as a gate) is sending a signal along wires of the given colour. */
+    public boolean isEmittingWire(net.minecraft.world.item.DyeColor colour) {
+        return false;
     }
 
     /** @return The model to draw, as it would be on the west side. Only called on the client. */

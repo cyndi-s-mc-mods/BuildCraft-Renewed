@@ -31,6 +31,7 @@ import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjConnectorProvider;
 import buildcraft.api.mj.IMjRedstoneReceiver;
 import buildcraft.api.mj.MjAPI;
+import buildcraft.api.tiles.IHasWork;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.container.ContainerAutoWorkbench;
 import buildcraft.lib.crafting.WorkbenchCrafting;
@@ -39,7 +40,7 @@ import buildcraft.lib.tile.TileBC;
 
 /** Crafts the recipe laid out in its blueprint grid, using the materials put into it. It works slowly by itself and
  * much faster with power. */
-public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuProvider, IMjConnectorProvider {
+public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuProvider, IMjConnectorProvider, IHasWork {
     /** A redstone engine makes {@code 1 MJ} per tick, so the workbench is a lot slower without one. */
     private static final long POWER_GEN_PASSIVE = MjAPI.MJ / 5;
     /** It takes 10 seconds to craft an item without power. */
@@ -224,5 +225,10 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
     public void clearContent() {
         invMaterials.clearContent();
         invResult.clearContent();
+    }
+
+    @Override
+    public boolean hasWork() {
+        return powerStored > 0;
     }
 }
