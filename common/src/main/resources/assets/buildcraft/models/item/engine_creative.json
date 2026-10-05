@@ -1,0 +1,8 @@
+{
+  "parent": "buildcraft:block/engine/item",
+  "textures": {
+    "back": "buildcraft:block/engine/creative/back",
+    "side": "buildcraft:block/engine/creative/side",
+    "trunk": "buildcraft:block/engine/trunk_creative"
+  }
+}

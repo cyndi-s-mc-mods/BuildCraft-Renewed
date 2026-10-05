@@ -1,0 +1,17 @@
+{
+  "block.buildcraft.engine_combustion": "Combustion Engine",
+  "block.buildcraft.engine_creative": "Creative Engine",
+  "block.buildcraft.engine_redstone": "Redstone Engine",
+  "block.buildcraft.engine_stirling": "Stirling Engine",
+  "chat.buildcraft.engine.creative.mode": "Creative engine output: %s MJ/t",
+  "gui.buildcraft.engine.heat": "Heat: %s \u00b0C",
+  "gui.buildcraft.engine.output": "Output: %s MJ/t",
+  "gui.buildcraft.engine.stored": "Stored: %s / %s MJ",
+  "item.buildcraft.gear_diamond": "Diamond Gear",
+  "item.buildcraft.gear_gold": "Gold Gear",
+  "item.buildcraft.gear_iron": "Iron Gear",
+  "item.buildcraft.gear_stone": "Stone Gear",
+  "item.buildcraft.gear_wood": "Wood Gear",
+  "item.buildcraft.wrench": "Wrench",
+  "itemGroup.buildcraft.main": "BuildCraft"
+}

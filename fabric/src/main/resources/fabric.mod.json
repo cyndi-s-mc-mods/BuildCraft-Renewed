@@ -4,16 +4,26 @@
   "version": "${version}",
   "name": "BuildCraft",
   "description": "Pipes, engines, quarries and automation.",
-  "authors": ["SpaceToad", "The BuildCraft team", "Cyndi's MC Mods"],
+  "authors": [
+    "SpaceToad",
+    "The BuildCraft team",
+    "Cyndi's MC Mods"
+  ],
   "license": "MPL-2.0",
   "environment": "*",
   "entrypoints": {
-    "main": ["buildcraft.fabric.BuildCraftFabric"]
+    "main": [
+      "buildcraft.fabric.BuildCraftFabric"
+    ],
+    "client": [
+      "buildcraft.fabric.BuildCraftFabricClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=${loader_version}",
     "minecraft": "~${minecraft_version}",
     "java": ">=25",
     "fabric-api": "*"
-  }
+  },
+  "icon": "assets/buildcraft/icon.png"
 }

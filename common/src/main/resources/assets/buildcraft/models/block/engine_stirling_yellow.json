@@ -1,0 +1,8 @@
+{
+  "parent": "buildcraft:block/engine/base",
+  "textures": {
+    "back": "buildcraft:block/engine/stone/back",
+    "side": "buildcraft:block/engine/stone/side",
+    "trunk": "buildcraft:block/engine/trunk_yellow"
+  }
+}
