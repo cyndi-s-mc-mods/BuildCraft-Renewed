@@ -874,7 +874,7 @@ for item, frame, english in [('lens', 'lens_frame', 'Lens'), ('filter', 'filter_
     cases = [{'when': colour, 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}_coloured',
                                         'tints': [{'type': 'minecraft:constant', 'value': rgb}, {'type': 'minecraft:constant', 'value': -1}]}}
              for colour, rgb in DYE_RGB.items()]
-    write(f'items/{item}.json', {'model': {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': f'{NS}:lens_colour',
+    write(f'items/{item}.json', {'model': {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': f'{NS}:colour',
                                            'cases': cases, 'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/{item}'}}})
     name('item', item, english)
 LANG['item.buildcraft.lens.coloured'] = '%s %s'
@@ -883,6 +883,23 @@ LANG.update({
     'gate.buildcraft.trigger.timer': '%s Second Timer',
     'gate.buildcraft.action.pulsar.constant': 'Power Pulsar', 'gate.buildcraft.action.pulsar.single': 'Single Power Pulse',
 })
+
+# Paintbrush
+for colour in DYE_RGB:
+    tex = 'silver' if colour == 'light_gray' else colour
+    tex_exists(f'{NS}:item/paintbrush/{tex}')
+    write(f'models/item/paintbrush_{colour}.json', {'parent': 'minecraft:item/handheld', 'textures': {'layer0': f'{NS}:item/paintbrush/{tex}'}})
+    write_data(f'{NS}/recipe/paintbrush_{colour}.json', {
+        'type': 'minecraft:crafting_shapeless', 'category': 'misc', 'ingredients': [f'{NS}:paintbrush', f'#c:dyes/{colour}'],
+        'result': {'id': f'{NS}:paintbrush', 'components': {f'{NS}:colour': colour}}})
+write('models/item/paintbrush.json', {'parent': 'minecraft:item/handheld', 'textures': {'layer0': f'{NS}:item/paintbrush/clean'}})
+write('items/paintbrush.json', {'model': {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': f'{NS}:colour',
+                                          'cases': [{'when': c, 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/paintbrush_{c}'}} for c in DYE_RGB],
+                                          'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/paintbrush'}}})
+shaped('paintbrush', [' iw', ' gi', 's  '], {'i': '#c:strings', 'w': '#minecraft:wool', 'g': '#c:gears/wood', 's': '#c:rods/wooden'}, category='equipment')
+LANG['item.buildcraft.paintbrush.clean'] = 'Paintbrush'
+LANG['item.buildcraft.paintbrush.coloured'] = '%s Paintbrush'
+name('item', 'paintbrush', 'Paintbrush')
 
 finish()
 print('Resources generated')

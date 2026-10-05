@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "buildcraft:paintbrush",
+    "#c:dyes/brown"
+  ],
+  "result": {
+    "id": "buildcraft:paintbrush",
+    "components": {
+      "buildcraft:colour": "brown"
+    }
+  }
+}

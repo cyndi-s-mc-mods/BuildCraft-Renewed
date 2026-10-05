@@ -8,6 +8,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import buildcraft.lib.item.ICreativeVariants;
 import buildcraft.lib.platform.Platform;
 import buildcraft.lib.registry.BCRegistry;
 import buildcraft.lib.registry.RegistrationHelper;
@@ -19,12 +20,17 @@ public final class BCLib {
     private BCLib() {}
 
     public static void init() {
+        BCLibComponents.init();
         CREATIVE_TAB = BCRegistry.register(Registries.CREATIVE_MODE_TAB, "main", key -> Platform.INSTANCE.creativeTabBuilder()
             .title(Component.translatable("itemGroup.buildcraft.main"))
             .icon(() -> new ItemStack(buildcraft.core.BCCoreItems.WRENCH.get()))
             .displayItems((params, output) -> {
                 for (Supplier<? extends Item> item : RegistrationHelper.items()) {
-                    output.accept(item.get());
+                    if (item.get() instanceof ICreativeVariants variants) {
+                        variants.addCreativeVariants(output::accept);
+                    } else {
+                        output.accept(item.get());
+                    }
                 }
             })
             .build());

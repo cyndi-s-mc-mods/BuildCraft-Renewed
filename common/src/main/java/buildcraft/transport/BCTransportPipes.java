@@ -98,7 +98,7 @@ public final class BCTransportPipes {
     }
 
     private static void define(String id, PipeFlowType flow, Function<IPipe, PipeBehaviour> logic, Visual visual) {
-        PipeDefinition def = new PipeDefinition(id, flow, logic, false);
+        PipeDefinition def = new PipeDefinition(id, flow, logic, flow != FLOW_POWER);
         DEFINITIONS.put(id, def);
         RegistryEntry<Block, BlockPipe> block = RegistrationHelper.blockWithItem("pipe_" + id,
             props -> BlockPipe.create(props, () -> BCTransportBlocks.PIPE_HOLDER.get(), def, visual),

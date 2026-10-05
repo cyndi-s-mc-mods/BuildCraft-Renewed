@@ -2,6 +2,7 @@ package buildcraft.core;
 
 import net.minecraft.world.item.Item;
 
+import buildcraft.core.item.ItemPaintbrush;
 import buildcraft.core.item.ItemWrench;
 import buildcraft.lib.registry.RegistryEntry;
 
@@ -14,6 +15,7 @@ public final class BCCoreItems {
     public static RegistryEntry<Item, Item> GEAR_IRON;
     public static RegistryEntry<Item, Item> GEAR_GOLD;
     public static RegistryEntry<Item, Item> GEAR_DIAMOND;
+    public static RegistryEntry<Item, ItemPaintbrush> PAINTBRUSH;
 
     private BCCoreItems() {}
 
@@ -24,5 +26,6 @@ public final class BCCoreItems {
         GEAR_IRON = item("gear_iron", Item::new);
         GEAR_GOLD = item("gear_gold", Item::new);
         GEAR_DIAMOND = item("gear_diamond", Item::new);
+        PAINTBRUSH = item("paintbrush", ItemPaintbrush::new);
     }
 }

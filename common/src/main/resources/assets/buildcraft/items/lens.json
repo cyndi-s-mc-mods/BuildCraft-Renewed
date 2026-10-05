@@ -2,7 +2,7 @@
   "model": {
     "type": "minecraft:select",
     "property": "minecraft:component",
-    "component": "buildcraft:lens_colour",
+    "component": "buildcraft:colour",
     "cases": [
       {
         "when": "white",

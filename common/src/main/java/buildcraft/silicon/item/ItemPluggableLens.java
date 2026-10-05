@@ -19,13 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import buildcraft.api.transport.pipe.IPipeHolder;
 import buildcraft.api.transport.pluggable.IItemPluggable;
 import buildcraft.api.transport.pluggable.PipePluggable;
-import buildcraft.silicon.BCSiliconComponents;
+import buildcraft.lib.BCLibComponents;
+import buildcraft.lib.item.ICreativeVariants;
 import buildcraft.silicon.BCSiliconItems;
 import buildcraft.silicon.BCSiliconPlugs;
 import buildcraft.silicon.plug.PluggableLens;
 
 /** A lens or filter. Its colour (if it has one) is stored in a data component. */
-public class ItemPluggableLens extends Item implements IItemPluggable {
+public class ItemPluggableLens extends Item implements IItemPluggable, ICreativeVariants {
     private final boolean isFilter;
 
     public ItemPluggableLens(Properties properties, boolean isFilter) {
@@ -35,13 +36,13 @@ public class ItemPluggableLens extends Item implements IItemPluggable {
 
     @Nullable
     public static DyeColor getColour(ItemStack stack) {
-        return stack.get(BCSiliconComponents.LENS_COLOUR.get());
+        return stack.get(BCLibComponents.COLOUR.get());
     }
 
     public static ItemStack getStack(@Nullable DyeColor colour, boolean filter) {
         ItemStack stack = new ItemStack(filter ? BCSiliconItems.FILTER.get() : BCSiliconItems.LENS.get());
         if (colour != null) {
-            stack.set(BCSiliconComponents.LENS_COLOUR.get(), colour);
+            stack.set(BCLibComponents.COLOUR.get(), colour);
         }
         return stack;
     }
@@ -52,6 +53,14 @@ public class ItemPluggableLens extends Item implements IItemPluggable {
         Component base = super.getName(stack);
         if (colour == null) return base;
         return Component.translatable("item.buildcraft.lens.coloured", Component.translatable("color.minecraft." + colour.getSerializedName()), base);
+    }
+
+    @Override
+    public void addCreativeVariants(java.util.function.Consumer<ItemStack> output) {
+        output.accept(getStack(null, isFilter));
+        for (DyeColor colour : DyeColor.values()) {
+            output.accept(getStack(colour, isFilter));
+        }
     }
 
     @Override

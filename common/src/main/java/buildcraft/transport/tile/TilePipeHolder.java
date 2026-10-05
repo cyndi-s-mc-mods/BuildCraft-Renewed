@@ -46,6 +46,7 @@ import buildcraft.lib.fluid.IFluidHandlerProvider;
 import buildcraft.lib.inventory.IItemHandlerProvider;
 import buildcraft.lib.inventory.IItemTransactor;
 import buildcraft.lib.tile.TileBC;
+import buildcraft.core.item.ItemPaintbrush;
 import buildcraft.transport.BCTransportBlocks;
 import buildcraft.transport.BCTransportItems;
 import buildcraft.transport.item.ItemWire;
@@ -246,6 +247,21 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
                 InteractionResult result = plug.onPluggableActivate(player, hand, hit);
                 if (result != InteractionResult.PASS) return result;
             }
+        }
+        if (held.getItem() instanceof ItemPaintbrush) {
+            if (!pipe.definition.canBeColoured) return InteractionResult.PASS;
+            DyeColor paint = ItemPaintbrush.getColour(held);
+            if (pipe.getColour() != paint) {
+                if (!isClient()) {
+                    pipe.setColour(paint);
+                    if (paint != null && !player.getAbilities().instabuild) {
+                        held.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? net.minecraft.world.entity.EquipmentSlot.MAINHAND
+                            : net.minecraft.world.entity.EquipmentSlot.OFFHAND);
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+            return InteractionResult.PASS;
         }
         if (held.getItem() instanceof ItemWire wireItem) {
             EnumWirePart wirePart = EnumWirePart.closest(hit.getLocation().subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()));

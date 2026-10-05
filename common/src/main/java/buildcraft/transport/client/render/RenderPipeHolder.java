@@ -59,6 +59,8 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         final List<Direction> plugSides = new ArrayList<>();
         /** Wire boxes: x0, y0, z0, x1, y1, z1 in pixels, then the colour ordinal. */
         final List<float[]> wireBoxes = new ArrayList<>();
+        /** The pipe's paint colour (ARGB), or 0 if it isn't painted. */
+        int paint;
         final List<List<PlugModelPart>> plugModels = new ArrayList<>();
         final float[] power = new float[6];
         float centerPower;
@@ -87,6 +89,8 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         state.plugSides.clear();
         state.plugModels.clear();
         state.wireBoxes.clear();
+        DyeColor paint = tile.getPipe().getColour();
+        state.paint = paint == null ? 0 : 0xFF000000 | paint.getTextureDiffuseColor();
         Level wireLevel = tile.getLevel();
         if (wireLevel != null) {
             for (Map.Entry<EnumWirePart, DyeColor> wire : tile.getWires().entrySet()) {
@@ -141,6 +145,9 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (state.paint != 0) {
+            submitPaint(state, poseStack, collector);
+        }
         if (!state.wireBoxes.isEmpty()) {
             submitWires(state.wireBoxes, state.lightCoords, poseStack, collector);
         }
@@ -256,6 +263,38 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
                 boxes.add(new float[] { l[0], l[1], l[2], h[0], h[1], h[2], colour.ordinal() });
             }
         }
+    }
+
+    /** Draws a coloured border around a painted pipe's centre and arms. */
+    private void submitPaint(State state, PoseStack poseStack, SubmitNodeCollector collector) {
+        TextureAtlasSprite sprite = sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, BuildCraft.id("block/pipes/colour_border_outer")));
+        int light = state.lightCoords;
+        int colour = state.paint;
+        float lo = 3.98f, hi = 12.02f;
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS), (pose, buf) -> {
+            Face[] centre = new Face[6];
+            for (Direction dir : Direction.values()) {
+                if (!state.connected[dir.get3DDataValue()]) centre[dir.get3DDataValue()] = new Face(sprite, 4, 4, 12, 12);
+            }
+            BoxRenderer.box(pose, buf, lo, lo, lo, hi, hi, hi, centre, light, colour);
+            for (Direction dir : Direction.values()) {
+                if (!state.connected[dir.get3DDataValue()]) continue;
+                Face[] faces = new Face[6];
+                for (Direction f : Direction.values()) {
+                    if (f.getAxis() != dir.getAxis()) faces[f.get3DDataValue()] = new Face(sprite, 0, 4, 4, 12);
+                }
+                float[] min = { lo, lo, lo }, max = { hi, hi, hi };
+                int a = dir.getAxis().ordinal();
+                if (dir.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+                    min[a] = 12;
+                    max[a] = 16;
+                } else {
+                    min[a] = 0;
+                    max[a] = 4;
+                }
+                BoxRenderer.box(pose, buf, min[0], min[1], min[2], max[0], max[1], max[2], faces, light, colour);
+            }
+        });
     }
 
     private void submitWires(List<float[]> boxes, int light, PoseStack poseStack, SubmitNodeCollector collector) {
