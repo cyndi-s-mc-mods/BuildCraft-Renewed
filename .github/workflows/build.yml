@@ -38,7 +38,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        loader: [fabric, forge, neoforge]
+        include:
+          - loader: fabric
+            run_dir: fabric/run
+          - loader: forge
+            run_dir: forge/runs/main/server
+          - loader: neoforge
+            run_dir: neoforge/run
     steps:
       - uses: actions/checkout@v4
 
@@ -49,29 +55,11 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Find the run directory
-        run: |
-          # The first start makes the run directory (stopping at the EULA): wait for its eula.txt, then stop Gradle
-          ./gradlew :${{ matrix.loader }}:runServer < /dev/null > first-start.log 2>&1 &
-          gradle=$!
-          eula=""
-          for i in $(seq 1 240); do
-            eula=$(find ${{ matrix.loader }} -name eula.txt -not -path '*/build/*' | head -1)
-            if [ -n "$eula" ] || ! kill -0 $gradle 2>/dev/null; then break; fi
-            sleep 5
-          done
-          kill $gradle 2>/dev/null || true
-          ./gradlew --stop > /dev/null 2>&1 || true
-          pkill -f 'net.minecraft|minecraftforge|neoforged|fabricmc' || true
-          if [ -z "$eula" ]; then
-            tail -n 100 first-start.log
-            echo "The server didn't start"
-            exit 1
-          fi
-          echo "RUN_DIR=$(dirname "$eula")" >> "$GITHUB_ENV"
-
       - name: Run the smoke test
+        env:
+          RUN_DIR: ${{ matrix.run_dir }}
         run: |
+          mkdir -p "$RUN_DIR"
           echo "eula=true" > "$RUN_DIR/eula.txt"
           printf 'online-mode=false\nlevel-type=minecraft\\:flat\nspawn-protection=0\nfunction-permission-level=4\n' > "$RUN_DIR/server.properties"
           rm -rf "$RUN_DIR/world"
