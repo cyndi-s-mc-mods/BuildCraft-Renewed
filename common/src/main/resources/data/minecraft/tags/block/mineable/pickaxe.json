@@ -1,5 +1,7 @@
 {
   "values": [
+    "buildcraft:advanced_crafting_table",
+    "buildcraft:assembly_table",
     "buildcraft:chute",
     "buildcraft:distiller",
     "buildcraft:engine_combustion",
@@ -8,6 +10,7 @@
     "buildcraft:flood_gate",
     "buildcraft:frame",
     "buildcraft:heat_exchange",
+    "buildcraft:laser",
     "buildcraft:mining_well",
     "buildcraft:pump",
     "buildcraft:quarry"

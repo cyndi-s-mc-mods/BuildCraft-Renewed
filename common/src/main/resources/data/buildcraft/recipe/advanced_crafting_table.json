@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": "minecraft:obsidian",
+    "t": "minecraft:crafting_table",
+    "c": "#c:chests/wooden",
+    "r": "buildcraft:chipset_redstone"
+  },
+  "pattern": [
+    "OtO",
+    "OcO",
+    "OrO"
+  ],
+  "result": {
+    "id": "buildcraft:advanced_crafting_table"
+  }
+}

@@ -6,9 +6,6 @@
 
 package buildcraft.factory.tile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
@@ -25,10 +22,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -40,8 +33,8 @@ import buildcraft.api.mj.IMjRedstoneReceiver;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.container.ContainerAutoWorkbench;
+import buildcraft.lib.crafting.WorkbenchCrafting;
 import buildcraft.lib.inventory.ItemHandlerSimple;
-import buildcraft.lib.misc.InventoryUtil;
 import buildcraft.lib.tile.TileBC;
 
 /** Crafts the recipe laid out in its blueprint grid, using the materials put into it. It works slowly by itself and
@@ -58,13 +51,11 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
     public final ItemHandlerSimple invBlueprint = new ItemHandlerSimple(9, this::onBlueprintChanged);
     public final ItemHandlerSimple invMaterials = new ItemHandlerSimple(9, (slot, stack) -> isMaterial(stack), this::setChanged);
     public final ItemHandlerSimple invResult = new ItemHandlerSimple(1, (slot, stack) -> false, this::setChanged);
+    private final WorkbenchCrafting crafting = new WorkbenchCrafting(invBlueprint, invMaterials, invResult);
     /** What the blueprint makes, shown in the GUI. */
-    public final SimpleContainer preview = new SimpleContainer(1);
+    public final SimpleContainer preview = crafting.preview;
 
     private long powerStored = 0;
-    private boolean recipeDirty = true;
-    @Nullable
-    private RecipeHolder<CraftingRecipe> recipe;
     private final IMjRedstoneReceiver receiver = new Receiver();
 
     public TileAutoWorkbench(BlockPos pos, BlockState state) {
@@ -72,21 +63,12 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
     }
 
     private void onBlueprintChanged() {
-        for (int i = 0; i < invBlueprint.getContainerSize(); i++) {
-            ItemStack stack = invBlueprint.getItem(i);
-            if (stack.getCount() > 1) {
-                invBlueprint.getItems().set(i, stack.copyWithCount(1));
-            }
-        }
-        recipeDirty = true;
+        crafting.onBlueprintChanged();
         setChanged();
     }
 
     private boolean isMaterial(ItemStack stack) {
-        for (ItemStack bpt : invBlueprint.getItems()) {
-            if (!bpt.isEmpty() && ItemStack.isSameItemSameComponents(bpt, stack)) return true;
-        }
-        return false;
+        return crafting.isMaterial(stack);
     }
 
     public long getPowerStored() {
@@ -97,14 +79,11 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
     public void tick() {
         super.tick();
         if (!(level instanceof ServerLevel server)) return;
-        if (recipeDirty) {
-            recipeDirty = false;
-            updateRecipe(server);
-        }
-        if (canCraft()) {
+        crafting.tick(server);
+        if (crafting.canCraft()) {
             if (powerStored >= POWER_REQUIRED) {
-                craft(server);
-                powerStored = canCraft() ? 1 : 0;
+                crafting.craft(server, worldPosition);
+                powerStored = crafting.canCraft() ? 1 : 0;
             } else {
                 powerStored += POWER_GEN_PASSIVE;
             }
@@ -112,87 +91,6 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
             powerStored -= POWER_LOST;
         } else {
             powerStored = 0;
-        }
-    }
-
-    private CraftingInput blueprintInput() {
-        return CraftingInput.of(3, 3, new ArrayList<>(invBlueprint.getItems()));
-    }
-
-    private void updateRecipe(ServerLevel server) {
-        CraftingInput input = blueprintInput();
-        Optional<RecipeHolder<CraftingRecipe>> found = input.isEmpty() ? Optional.empty()
-            : server.recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, server);
-        recipe = found.orElse(null);
-        preview.setItem(0, recipe == null ? ItemStack.EMPTY : recipe.value().assemble(input));
-    }
-
-    /** @return The material slot to take each blueprint slot's item from, or null if the materials are missing. */
-    @Nullable
-    private int[] findMaterials() {
-        int[] used = new int[9];
-        int[] source = new int[9];
-        for (int i = 0; i < 9; i++) {
-            ItemStack bpt = invBlueprint.getItem(i);
-            source[i] = -1;
-            if (bpt.isEmpty()) continue;
-            for (int m = 0; m < 9; m++) {
-                ItemStack material = invMaterials.getItem(m);
-                if (material.getCount() > used[m] && ItemStack.isSameItemSameComponents(bpt, material)) {
-                    used[m]++;
-                    source[i] = m;
-                    break;
-                }
-            }
-            if (source[i] < 0) return null;
-        }
-        return source;
-    }
-
-    private boolean canCraft() {
-        if (recipe == null) return false;
-        ItemStack result = preview.getItem(0);
-        ItemStack current = invResult.getItem(0);
-        if (!current.isEmpty() && (!ItemStack.isSameItemSameComponents(current, result)
-            || current.getCount() + result.getCount() > current.getMaxStackSize())) {
-            return false;
-        }
-        return findMaterials() != null;
-    }
-
-    private void craft(ServerLevel server) {
-        int[] source = findMaterials();
-        if (recipe == null || source == null) return;
-        List<ItemStack> items = new ArrayList<>(9);
-        for (int i = 0; i < 9; i++) {
-            items.add(source[i] < 0 ? ItemStack.EMPTY : invMaterials.getItem(source[i]).copyWithCount(1));
-        }
-        CraftingInput input = CraftingInput.of(3, 3, items);
-        if (!recipe.value().matches(input, server)) return;
-        ItemStack result = recipe.value().assemble(input);
-        List<ItemStack> remaining = recipe.value().getRemainingItems(input);
-        for (int i = 0; i < 9; i++) {
-            if (source[i] >= 0) {
-                invMaterials.removeItem(source[i], 1);
-            }
-        }
-        ItemStack current = invResult.getItem(0);
-        if (current.isEmpty()) {
-            invResult.setItem(0, result);
-        } else {
-            invResult.forceInsert(0, result);
-        }
-        for (ItemStack left : remaining) {
-            if (left.isEmpty()) continue;
-            ItemStack rest = left;
-            for (int m = 0; m < 9 && !rest.isEmpty(); m++) {
-                if (invMaterials.canPlaceItem(m, rest)) {
-                    rest = invMaterials.forceInsert(m, rest);
-                }
-            }
-            if (!rest.isEmpty()) {
-                InventoryUtil.addToBestAcceptor(server, worldPosition, rest);
-            }
         }
     }
 
@@ -225,7 +123,7 @@ public class TileAutoWorkbench extends TileBC implements WorldlyContainer, MenuP
         invMaterials.load(input, "materials");
         invResult.load(input, "result");
         powerStored = input.getLongOr("power", 0);
-        recipeDirty = true;
+        crafting.markDirty();
     }
 
     private final class Receiver implements IMjRedstoneReceiver {

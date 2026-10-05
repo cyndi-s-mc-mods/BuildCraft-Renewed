@@ -697,5 +697,50 @@ write('blockstates/frame.json', {'multipart': parts})
 name('block', 'frame', 'Frame')
 tag('block', 'minecraft:mineable/pickaxe', f'{NS}:frame')
 
+# ---------------------------------------------------------------- silicon
+
+for v in ['top', 'side', 'bottom']:
+    tex_exists(f'{NS}:block/laser/{v}')
+write('models/block/laser.json', {'textures': {'particle': f'{NS}:block/laser/bottom', 'top': f'{NS}:block/laser/top',
+                                               'side': f'{NS}:block/laser/side', 'bottom': f'{NS}:block/laser/bottom'},
+                                  'elements': [
+                                      {'from': [0, 0, 0], 'to': [16, 4, 16], 'faces': {
+                                          'down': {'texture': '#bottom', 'cullface': 'down'}, 'up': {'texture': '#top'},
+                                          'north': {'texture': '#side', 'cullface': 'north'}, 'south': {'texture': '#side', 'cullface': 'south'},
+                                          'west': {'texture': '#side', 'cullface': 'west'}, 'east': {'texture': '#side', 'cullface': 'east'}}},
+                                      {'from': [5, 4, 5], 'to': [11, 13, 11], 'faces': {
+                                          'up': {'texture': '#top'}, 'north': {'texture': '#side'}, 'south': {'texture': '#side'},
+                                          'west': {'texture': '#side'}, 'east': {'texture': '#side'}}}]})
+write('blockstates/laser.json', {'variants': {f'facing={d}': {'model': f'{NS}:block/laser', **rot} for d, rot in FACING_ROTATIONS.items()}})
+block_item('laser')
+name('block', 'laser', 'Laser')
+drops_self('laser')
+shaped('laser', ['rro', 'rdd', 'rro'], {'r': '#c:dusts/redstone', 'd': '#c:gems/diamond', 'o': 'minecraft:obsidian'})
+
+LEGACY_SILICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets',
+                              'buildcraftsilicon', 'models', 'block', 'table')
+for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table', 'advanced_crafting')]:
+    with open(os.path.join(LEGACY_SILICON, f'{legacy}.json')) as f:
+        model = json.load(f)
+    textures = {k: v.replace('buildcraftsilicon:blocks/', f'{NS}:block/') for k, v in model['textures'].items()}
+    for v in textures.values():
+        tex_exists(v)
+    write(f'models/block/{table}.json', {'textures': textures, 'elements': model['elements']})
+    write(f'blockstates/{table}.json', {'variants': {'': {'model': f'{NS}:block/{table}'}}})
+    block_item(table)
+    drops_self(table)
+    tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{table}')
+name('block', 'assembly_table', 'Assembly Table')
+name('block', 'advanced_crafting_table', 'Advanced Crafting Table')
+shaped('assembly_table', ['OdO', 'OrO', 'OgO'], {'O': 'minecraft:obsidian', 'd': '#c:gems/diamond', 'r': '#c:dusts/redstone',
+                                                 'g': '#c:gears/diamond'})
+shaped('advanced_crafting_table', ['OtO', 'OcO', 'OrO'], {'O': 'minecraft:obsidian', 't': 'minecraft:crafting_table',
+                                                          'c': '#c:chests/wooden', 'r': f'{NS}:chipset_redstone'})
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:laser')
+
+for chip, english in [('redstone', 'Redstone'), ('iron', 'Iron'), ('gold', 'Golden'), ('quartz', 'Quartz'), ('diamond', 'Diamond')]:
+    simple_item(f'chipset_{chip}', f'redstone_chipset/{"red" if chip == "redstone" else chip}')
+    name('item', f'chipset_{chip}', f'{english} Chipset')
+
 finish()
 print('Resources generated')

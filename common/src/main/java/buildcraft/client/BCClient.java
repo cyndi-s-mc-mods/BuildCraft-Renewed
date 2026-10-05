@@ -10,6 +10,11 @@ import buildcraft.builders.BCBuildersBlocks;
 import buildcraft.builders.client.render.RenderQuarry;
 import buildcraft.core.client.render.RenderMarkerVolume;
 import buildcraft.energy.BCEnergyBlocks;
+import buildcraft.silicon.BCSiliconBlocks;
+import buildcraft.silicon.BCSiliconMenus;
+import buildcraft.silicon.client.gui.GuiAdvancedCraftingTable;
+import buildcraft.silicon.client.gui.GuiAssemblyTable;
+import buildcraft.silicon.client.render.RenderLaser;
 import buildcraft.factory.BCFactoryBlocks;
 import buildcraft.factory.BCFactoryMenus;
 import buildcraft.factory.client.gui.GuiAutoWorkbench;
@@ -40,6 +45,7 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
         registrar.blockEntityRenderer(BCCoreBlocks.MARKER_VOLUME_TILE.get(), RenderMarkerVolume::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.QUARRY_TILE.get(), RenderQuarry::new);
+        registrar.blockEntityRenderer(BCSiliconBlocks.LASER_TILE.get(), RenderLaser::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.TANK_TILE.get(), RenderTank::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.DISTILLER_TILE.get(), RenderDistiller::new);
     }
@@ -59,5 +65,7 @@ public final class BCClient {
         registrar.screen(BCFactoryMenus.CHUTE.get(), GuiChute::new);
         registrar.screen(BCFactoryMenus.DISTILLER.get(), GuiDistiller::new);
         registrar.screen(BCFactoryMenus.AUTO_WORKBENCH.get(), GuiAutoWorkbench::new);
+        registrar.screen(BCSiliconMenus.ASSEMBLY_TABLE.get(), GuiAssemblyTable::new);
+        registrar.screen(BCSiliconMenus.ADVANCED_CRAFTING_TABLE.get(), GuiAdvancedCraftingTable::new);
     }
 }

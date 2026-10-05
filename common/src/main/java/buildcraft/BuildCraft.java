@@ -18,6 +18,7 @@ import buildcraft.factory.BCFactoryConfig;
 import buildcraft.lib.BCLib;
 import buildcraft.lib.config.BCConfig;
 import buildcraft.lib.platform.Platform;
+import buildcraft.silicon.BCSilicon;
 import buildcraft.transport.BCTransport;
 import buildcraft.transport.BCTransportConfig;
 
@@ -50,6 +51,7 @@ public final class BuildCraft {
         BCTransport.init();
         BCFactory.init();
         BCBuilders.init();
+        BCSilicon.init();
     }
 
     private static boolean setUp = false;
@@ -62,5 +64,6 @@ public final class BuildCraft {
         BCTransport.setup();
         BCFactory.setup();
         BCBuilders.setup();
+        BCSilicon.setup();
     }
 }
