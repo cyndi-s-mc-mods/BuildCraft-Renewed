@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "l": "#minecraft:sandstone",
+    "l": "#c:sandstone/blocks",
     "g": "#c:glass_blocks/colorless",
-    "r": "#minecraft:sandstone"
+    "r": "#c:sandstone/blocks"
   },
   "pattern": [
     "lgr"

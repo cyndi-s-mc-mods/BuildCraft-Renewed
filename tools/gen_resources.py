@@ -405,7 +405,7 @@ PIPE_MATERIALS = {
     'iron_item': ('#c:ingots/iron', None),
     'gold_item': ('#c:ingots/gold', None),
     'clay_item': ('minecraft:clay', None),
-    'sandstone_item': ('#minecraft:sandstone', None),
+    'sandstone_item': ('#c:sandstone/blocks', None),
     'void_item': ('minecraft:black_dye', '#c:dusts/redstone'),
     'obsidian_item': ('minecraft:obsidian', None),
     'diamond_item': ('#c:gems/diamond', None),
