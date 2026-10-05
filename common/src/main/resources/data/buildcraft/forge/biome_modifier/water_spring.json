@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "buildcraft:water_spring",
+  "step": "underground_structures"
+}

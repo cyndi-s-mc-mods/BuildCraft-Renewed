@@ -3,6 +3,12 @@
     "buildcraft:advanced_crafting_table",
     "buildcraft:assembly_table",
     "buildcraft:chute",
+    "buildcraft:decorated_blueprint",
+    "buildcraft:decorated_destroy",
+    "buildcraft:decorated_laser_back",
+    "buildcraft:decorated_leather",
+    "buildcraft:decorated_paper",
+    "buildcraft:decorated_template",
     "buildcraft:distiller",
     "buildcraft:engine_combustion",
     "buildcraft:engine_creative",
@@ -12,6 +18,7 @@
     "buildcraft:heat_exchange",
     "buildcraft:laser",
     "buildcraft:mining_well",
+    "buildcraft:power_tester",
     "buildcraft:pump",
     "buildcraft:quarry"
   ]

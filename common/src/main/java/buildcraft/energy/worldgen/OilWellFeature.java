@@ -31,6 +31,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.resources.Identifier;
 
+import buildcraft.api.enums.EnumSpring;
+import buildcraft.core.worldgen.WaterSpringFeature;
 import buildcraft.energy.BCEnergyConfig;
 import buildcraft.energy.BCEnergyFluids;
 
@@ -138,6 +140,8 @@ public record OilWellFeature() implements Feature {
             if (type == GenType.LARGE) {
                 // A thin column of oil down to the bottom of the world
                 structures.add(tubeY(new BlockPos(x, level.getMinY() + 1, z), wellY - level.getMinY() - 1, 1));
+                // With an oil spring at the bottom, which slowly refills it
+                structures.add(new OilSpring(new BlockPos(x, level.getMinY(), z)));
             }
         }
         return structures;
@@ -280,6 +284,21 @@ public record OilWellFeature() implements Feature {
                 }
             }
             return placed;
+        }
+    }
+
+    static class OilSpring extends Structure {
+        private final BlockPos pos;
+
+        OilSpring(BlockPos pos) {
+            super(new BoundingBox(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ()));
+            this.pos = pos;
+        }
+
+        @Override
+        boolean generateWithin(WorldGenLevel level, BoundingBox intersect) {
+            WaterSpringFeature.placeSpring(level, pos, EnumSpring.OIL);
+            return true;
         }
     }
 

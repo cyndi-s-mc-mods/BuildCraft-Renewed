@@ -908,5 +908,29 @@ name('item', 'facade', 'Facade')
 LANG['item.buildcraft.facade.solid'] = '%s Facade'
 LANG['item.buildcraft.facade.hollow'] = 'Hollow %s Facade'
 
+# Springs (they look like bedrock), the power tester and decorated blocks
+write('blockstates/spring.json', {'variants': {'type=water': {'model': 'minecraft:block/bedrock'},
+                                               'type=oil': {'model': 'minecraft:block/bedrock'}}})
+block_item('spring', 'minecraft:block/bedrock')
+name('block', 'spring', 'Water Spring')
+
+
+def cube_all_block(block, texture, english):
+    tex_exists(f'{NS}:block/{texture}')
+    write(f'models/block/{block}.json', {'parent': 'minecraft:block/cube_all', 'textures': {'all': f'{NS}:block/{texture}'}})
+    write(f'blockstates/{block}.json', {'variants': {'': {'model': f'{NS}:block/{block}'}}})
+    block_item(block)
+    drops_self(block)
+    tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
+    name('block', block, english)
+
+
+cube_all_block('power_tester', 'power_tester', 'Power Tester')
+LANG['chat.buildcraft.power_tester'] = 'Last received: %s MJ, last tick: %s MJ, total: %s MJ'
+for kind, texture, english in [('destroy', 'misc/texture_red_dark', 'Destroy'), ('blueprint', 'blueprint/blue', 'Blueprint'),
+                               ('template', 'blueprint/black', 'Template'), ('paper', 'misc/paper', 'Paper'),
+                               ('leather', 'misc/leather', 'Leather'), ('laser_back', 'laser/bottom', 'Laser Back')]:
+    cube_all_block(f'decorated_{kind}', texture, f'Decorated Block ({english})')
+
 finish()
 print('Resources generated')

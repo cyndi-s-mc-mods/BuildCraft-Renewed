@@ -40,6 +40,7 @@ public final class BuildCraft {
         initialized = true;
         LOGGER.info("BuildCraft loading on {}", Platform.INSTANCE.loaderName());
         Map<String, Class<?>> config = new LinkedHashMap<>();
+        config.put("core", buildcraft.core.BCCoreConfig.class);
         config.put("energy", BCEnergyConfig.class);
         config.put("factory", BCFactoryConfig.class);
         config.put("builders", BCBuildersConfig.class);

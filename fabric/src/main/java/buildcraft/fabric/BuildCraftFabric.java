@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import buildcraft.BuildCraft;
+import buildcraft.core.BCCoreWorldGen;
 import buildcraft.energy.BCEnergyWorldGen;
 import buildcraft.lib.registry.BCRegistry;
 
@@ -26,6 +27,8 @@ public class BuildCraftFabric implements ModInitializer {
         FabricTransfer.register();
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.LAKES,
             BCEnergyWorldGen.OIL_WELL_PLACED);
+        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
+            BCCoreWorldGen.WATER_SPRING_PLACED);
         BuildCraft.setup();
     }
 }
