@@ -441,5 +441,126 @@ LANG['gui.buildcraft.pipe.emerald.blacklist'] = 'Blacklist: extract everything e
 LANG['gui.buildcraft.pipe.emerald.roundrobin'] = 'Round robin: extract each filtered item in turn'
 LANG['gui.buildcraft.pipe.emzuli.nopaint'] = 'No paint'
 
+# ---------------------------------------------------------------- factory
+
+LEGACY_MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets',
+                             'buildcraftfactory', 'models', 'block')
+
+
+def legacy_elements(model):
+    """The elements of a 1.12 factory model, without comments."""
+    with open(os.path.join(LEGACY_MODELS, f'{model}.json')) as f:
+        elements = json.load(f)['elements']
+    for e in elements:
+        e.pop('comment', None)
+    return elements
+
+
+def block_item(block, model=None):
+    write(f'models/item/{block}.json', {'parent': model or f'{NS}:block/{block}'})
+    item_def(block)
+
+
+def cube(model, **faces):
+    tex = {k: f'{NS}:block/{v}' for k, v in faces.items()}
+    for v in faces.values():
+        tex_exists(f'{NS}:block/{v}')
+    write(f'models/block/{model}.json', {'parent': 'minecraft:block/cube', 'textures': tex})
+
+
+# Tank
+TANK_ELEMENT = [{'from': [2, 0, 2], 'to': [14, 16, 14], 'faces': {
+    'down': {'texture': '#end', 'cullface': 'down'}, 'up': {'texture': '#end', 'cullface': 'up'},
+    'north': {'texture': '#side'}, 'south': {'texture': '#side'}, 'west': {'texture': '#side'}, 'east': {'texture': '#side'}}}]
+for model, side in [('tank', 'side'), ('tank_joined_below', 'side_joined_below')]:
+    tex_exists(f'{NS}:block/tank/{side}')
+    write(f'models/block/{model}.json', {'textures': {'particle': f'{NS}:block/tank/{side}', 'end': f'{NS}:block/tank/end',
+                                                      'side': f'{NS}:block/tank/{side}'}, 'elements': TANK_ELEMENT})
+write('blockstates/tank.json', {'variants': {'joined_below=false': {'model': f'{NS}:block/tank'},
+                                             'joined_below=true': {'model': f'{NS}:block/tank_joined_below'}}})
+block_item('tank')
+name('block', 'tank', 'Tank')
+drops_self('tank')
+shaped('tank', ['ggg', 'g g', 'ggg'], {'g': '#c:glass_blocks/colorless'})
+
+# Mining well and pump
+cube('mining_well', particle='mining_well/side', down='mining_well/bottom', up='mining_well/top', north='mining_well/front',
+     east='mining_well/side', south='mining_well/back', west='mining_well/side')
+write('blockstates/mining_well.json', {'variants': {
+    f'facing={d}': ({'model': f'{NS}:block/mining_well', 'y': y} if y else {'model': f'{NS}:block/mining_well'})
+    for d, y in [('north', 0), ('east', 90), ('south', 180), ('west', 270)]}})
+block_item('mining_well')
+name('block', 'mining_well', 'Mining Well')
+drops_self('mining_well')
+shaped('mining_well', ['iri', 'igi', 'ipi'], {'i': '#c:ingots/iron', 'r': '#c:dusts/redstone', 'g': '#c:gears/iron',
+                                              'p': 'minecraft:iron_pickaxe'})
+
+cube('pump', particle='pump/side', down='pump/bottom', up='pump/top', north='pump/side', east='pump/side',
+     south='pump/side', west='pump/side')
+write('blockstates/pump.json', {'variants': {'': {'model': f'{NS}:block/pump'}}})
+block_item('pump')
+name('block', 'pump', 'Pump')
+drops_self('pump')
+shaped('pump', ['iri', 'igi', 'tbt'], {'i': '#c:ingots/iron', 'r': '#c:dusts/redstone', 'g': '#c:gears/iron',
+                                       't': f'{NS}:tank', 'b': 'minecraft:bucket'})
+
+tex_exists(f'{NS}:block/mining_well/tube')
+write('models/block/tube.json', {'textures': {'particle': f'{NS}:block/mining_well/tube', 't': f'{NS}:block/mining_well/tube'},
+                                 'elements': [{'from': [4, 0, 4], 'to': [12, 16, 12], 'faces': {
+                                     d: {'uv': [4, 0, 12, 16] if d not in ('up', 'down') else [4, 4, 12, 12], 'texture': '#t',
+                                         **({'cullface': d} if d in ('up', 'down') else {})}
+                                     for d in ['down', 'up', 'north', 'south', 'west', 'east']}}]})
+write('blockstates/tube.json', {'variants': {'': {'model': f'{NS}:block/tube'}}})
+name('block', 'tube', 'Tube')
+tag('block', 'minecraft:dragon_immune', f'{NS}:tube')
+tag('block', 'minecraft:wither_immune', f'{NS}:tube')
+
+# Chute
+CHUTE_TEXTURES = {k: f'{NS}:block/chute/{k}' for k in ['top', 'top_bottom', 'top_side', 'bottom', 'side', 'side2']}
+CHUTE_TEXTURES['particle'] = f'{NS}:block/chute/top'
+for v in CHUTE_TEXTURES.values():
+    tex_exists(v)
+write('models/block/chute.json', {'textures': CHUTE_TEXTURES, 'elements': legacy_elements('chute')})
+write('models/block/chute_connected.json', {'textures': CHUTE_TEXTURES, 'elements': legacy_elements('chute_connected')})
+OPPOSITE = {'up': 'down', 'down': 'up', 'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east'}
+parts = [{'when': {'facing': d}, 'apply': {'model': f'{NS}:block/chute', **FACING_ROTATIONS[d]}} for d in FACING_ROTATIONS]
+# The connection model points down, so rotate it as a model pointing up would be rotated to face the other way
+parts += [{'when': {f'connected_{d}': 'true'}, 'apply': {'model': f'{NS}:block/chute_connected', **FACING_ROTATIONS[OPPOSITE[d]]}}
+          for d in FACING_ROTATIONS]
+write('blockstates/chute.json', {'multipart': parts})
+block_item('chute')
+name('block', 'chute', 'Chute')
+drops_self('chute')
+shaped('chute', ['ici', 'igi', ' i '], {'i': '#c:ingots/iron', 'c': 'minecraft:chest', 'g': '#c:gears/stone'})
+
+# Flood gate: every side but the top shows whether it is open
+FLOOD_SIDES = ['down', 'north', 'south', 'west', 'east']
+for state in ['open', 'closed']:
+    tex_exists(f'{NS}:block/flood_gate/{state}')
+tex_exists(f'{NS}:block/flood_gate/top')
+write('models/block/flood_gate_top.json', {'textures': {'particle': f'{NS}:block/flood_gate/top', 't': f'{NS}:block/flood_gate/top'},
+                                           'elements': [{'from': [0, 0, 0], 'to': [16, 16, 16], 'faces': {
+                                               'up': {'texture': '#t', 'cullface': 'up'}}}]})
+for d in FLOOD_SIDES:
+    for state in ['open', 'closed']:
+        write(f'models/block/flood_gate_{d}_{state}.json', {
+            'textures': {'particle': f'{NS}:block/flood_gate/{state}', 't': f'{NS}:block/flood_gate/{state}'},
+            'elements': [{'from': [0, 0, 0], 'to': [16, 16, 16], 'faces': {d: {'texture': '#t', 'cullface': d}}}]})
+parts = [{'apply': {'model': f'{NS}:block/flood_gate_top'}}]
+for d in FLOOD_SIDES:
+    for state, value in [('open', 'true'), ('closed', 'false')]:
+        parts.append({'when': {f'open_{d}': value}, 'apply': {'model': f'{NS}:block/flood_gate_{d}_{state}'}})
+write('blockstates/flood_gate.json', {'multipart': parts})
+cube('flood_gate_item', particle='flood_gate/open', down='flood_gate/open', up='flood_gate/top', north='flood_gate/open',
+     east='flood_gate/open', south='flood_gate/open', west='flood_gate/open')
+block_item('flood_gate', f'{NS}:block/flood_gate_item')
+name('block', 'flood_gate', 'Flood Gate')
+drops_self('flood_gate')
+shaped('flood_gate', ['igi', 'btb', 'ibi'], {'i': '#c:ingots/iron', 'g': '#c:gears/iron', 'b': 'minecraft:iron_bars',
+                                             't': f'{NS}:tank'})
+
+for block in ['mining_well', 'pump', 'chute', 'flood_gate']:
+    tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
+
 finish()
 print('Resources generated')

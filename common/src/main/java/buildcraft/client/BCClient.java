@@ -7,6 +7,10 @@ import buildcraft.BuildCraft;
 import buildcraft.client.render.RenderEngine;
 import buildcraft.core.BCCoreBlocks;
 import buildcraft.energy.BCEnergyBlocks;
+import buildcraft.factory.BCFactoryBlocks;
+import buildcraft.factory.BCFactoryMenus;
+import buildcraft.factory.client.gui.GuiChute;
+import buildcraft.factory.client.render.RenderTank;
 import buildcraft.energy.BCEnergyMenus;
 import buildcraft.energy.client.gui.GuiEngineIron;
 import buildcraft.energy.client.gui.GuiEngineStone;
@@ -28,6 +32,7 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_STIRLING_TILE.get(), ctx -> new RenderEngine<>(ctx, "stone"));
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_COMBUSTION_TILE.get(), ctx -> new RenderEngine<>(ctx, "iron"));
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
+        registrar.blockEntityRenderer(BCFactoryBlocks.TANK_TILE.get(), RenderTank::new);
     }
 
     /** @return The world model for a BuildCraft fluid. */
@@ -42,5 +47,6 @@ public final class BCClient {
         registrar.screen(BCTransportMenus.PIPE_DIAMOND.get(), GuiDiamondPipe::new);
         registrar.screen(BCTransportMenus.PIPE_DIAMOND_WOOD.get(), GuiDiamondWoodPipe::new);
         registrar.screen(BCTransportMenus.PIPE_EMZULI.get(), GuiEmzuliPipe::new);
+        registrar.screen(BCFactoryMenus.CHUTE.get(), GuiChute::new);
     }
 }

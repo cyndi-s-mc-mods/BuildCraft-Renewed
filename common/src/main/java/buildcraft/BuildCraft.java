@@ -7,6 +7,7 @@ import net.minecraft.resources.Identifier;
 
 import buildcraft.core.BCCore;
 import buildcraft.energy.BCEnergy;
+import buildcraft.factory.BCFactory;
 import buildcraft.lib.BCLib;
 import buildcraft.lib.platform.Platform;
 import buildcraft.transport.BCTransport;
@@ -32,6 +33,7 @@ public final class BuildCraft {
         BCCore.init();
         BCEnergy.init();
         BCTransport.init();
+        BCFactory.init();
     }
 
     private static boolean setUp = false;
@@ -42,5 +44,6 @@ public final class BuildCraft {
         setUp = true;
         BCEnergy.setup();
         BCTransport.setup();
+        BCFactory.setup();
     }
 }

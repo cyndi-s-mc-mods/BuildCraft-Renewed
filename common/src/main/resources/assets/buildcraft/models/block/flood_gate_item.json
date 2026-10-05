@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "buildcraft:block/flood_gate/open",
+    "down": "buildcraft:block/flood_gate/open",
+    "up": "buildcraft:block/flood_gate/top",
+    "north": "buildcraft:block/flood_gate/open",
+    "east": "buildcraft:block/flood_gate/open",
+    "south": "buildcraft:block/flood_gate/open",
+    "west": "buildcraft:block/flood_gate/open"
+  }
+}

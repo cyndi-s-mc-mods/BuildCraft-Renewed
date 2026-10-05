@@ -1,0 +1,89 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "buildcraft:block/flood_gate_top"
+      }
+    },
+    {
+      "when": {
+        "open_down": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_down_open"
+      }
+    },
+    {
+      "when": {
+        "open_down": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_down_closed"
+      }
+    },
+    {
+      "when": {
+        "open_north": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_north_open"
+      }
+    },
+    {
+      "when": {
+        "open_north": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_north_closed"
+      }
+    },
+    {
+      "when": {
+        "open_south": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_south_open"
+      }
+    },
+    {
+      "when": {
+        "open_south": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_south_closed"
+      }
+    },
+    {
+      "when": {
+        "open_west": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_west_open"
+      }
+    },
+    {
+      "when": {
+        "open_west": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_west_closed"
+      }
+    },
+    {
+      "when": {
+        "open_east": "true"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_east_open"
+      }
+    },
+    {
+      "when": {
+        "open_east": "false"
+      },
+      "apply": {
+        "model": "buildcraft:block/flood_gate_east_closed"
+      }
+    }
+  ]
+}

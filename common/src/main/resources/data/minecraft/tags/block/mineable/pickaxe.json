@@ -1,7 +1,11 @@
 {
   "values": [
+    "buildcraft:chute",
     "buildcraft:engine_combustion",
     "buildcraft:engine_creative",
-    "buildcraft:engine_stirling"
+    "buildcraft:engine_stirling",
+    "buildcraft:flood_gate",
+    "buildcraft:mining_well",
+    "buildcraft:pump"
   ]
 }
