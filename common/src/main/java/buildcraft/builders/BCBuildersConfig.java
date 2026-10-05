@@ -12,5 +12,8 @@ public final class BCBuildersConfig {
     /** The most blocks per second a quarry can mine. 0 means no limit. */
     public static double quarryMaxBlockMineRate = 0;
 
+    /** Whether quarries, fillers and builders keep the chunks they work in loaded. */
+    public static boolean chunkLoadMachines = true;
+
     private BCBuildersConfig() {}
 }

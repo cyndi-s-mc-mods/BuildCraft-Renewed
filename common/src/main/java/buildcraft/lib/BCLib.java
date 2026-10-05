@@ -21,6 +21,7 @@ public final class BCLib {
 
     public static void init() {
         BCLibComponents.init();
+        buildcraft.lib.misc.ChunkLoader.init();
         CREATIVE_TAB = BCRegistry.register(Registries.CREATIVE_MODE_TAB, "main", key -> Platform.INSTANCE.creativeTabBuilder()
             .title(Component.translatable("itemGroup.buildcraft.main"))
             .icon(() -> new ItemStack(buildcraft.core.BCCoreItems.WRENCH.get()))

@@ -52,11 +52,14 @@ import buildcraft.builders.snapshot.SnapshotHeader;
 import buildcraft.builders.snapshot.SnapshotStore;
 import buildcraft.lib.inventory.IContainerDelegate;
 import buildcraft.lib.inventory.ItemHandlerSimple;
+import buildcraft.builders.BCBuildersConfig;
+import buildcraft.lib.misc.ChunkLoader;
 import buildcraft.lib.tile.TileBC;
 
 /** Builds the template or blueprint in its slot, in front of it (where the architect table's area was, relative to the
  * table), using the blocks in its inventory. */
 public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate {
+    private final ChunkLoader chunkLoader = new ChunkLoader();
     public static final int INV_SIZE = 27;
 
     public final ItemHandlerSimple invSnapshot = new ItemHandlerSimple(1,
@@ -178,6 +181,9 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         super.tick();
         if (level == null || level.isClientSide()) return;
         if (needsRebuild) rebuild();
+        if (level instanceof ServerLevel serverLevel) {
+            chunkLoader.tick(serverLevel, ChunkLoader.chunksFor(worldPosition, box), BCBuildersConfig.chunkLoadMachines);
+        }
         if (engine != null) {
             engine.tick(battery, inv, true, mode != Mode.OFF);
         }
@@ -270,6 +276,7 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         if (level != null) {
             Containers.dropContents(level, pos, invSnapshot);
         }
+        if (level instanceof ServerLevel serverLevel) chunkLoader.releaseAll(serverLevel);
     }
 
     @Override

@@ -53,10 +53,13 @@ import buildcraft.builders.filler.Pattern;
 import buildcraft.builders.filler.Patterns;
 import buildcraft.lib.inventory.IContainerDelegate;
 import buildcraft.lib.inventory.ItemHandlerSimple;
+import buildcraft.builders.BCBuildersConfig;
+import buildcraft.lib.misc.ChunkLoader;
 import buildcraft.lib.tile.TileBC;
 
 /** Builds (or clears out) a pattern in the area marked out next to it, using the blocks in its inventory. */
 public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate {
+    private final ChunkLoader chunkLoader = new ChunkLoader();
     public static final int PARAM_COUNT = 4;
     public static final int INV_SIZE = 27;
     public final ItemHandlerSimple inv = new ItemHandlerSimple(INV_SIZE, (slot, stack) -> stack.getItem() instanceof BlockItem,
@@ -233,6 +236,10 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         super.tick();
         if (level == null || level.isClientSide()) return;
         if (lockedTicks > 0) lockedTicks--;
+        if (level instanceof ServerLevel serverLevel) {
+            chunkLoader.tick(serverLevel, ChunkLoader.chunksFor(worldPosition, engine == null ? null : box),
+                BCBuildersConfig.chunkLoadMachines);
+        }
         if (engine != null) {
             engine.tick(battery, inv, canExcavate, mode != Mode.OFF);
         }
@@ -334,6 +341,12 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new ContainerFiller(id, inventory, this);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level instanceof ServerLevel serverLevel) chunkLoader.releaseAll(serverLevel);
     }
 
     @Override

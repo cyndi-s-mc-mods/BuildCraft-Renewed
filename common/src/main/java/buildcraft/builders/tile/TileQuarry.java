@@ -46,10 +46,13 @@ import buildcraft.builders.BCBuildersConfig;
 import buildcraft.builders.block.BlockQuarry;
 import buildcraft.lib.misc.BlockUtil;
 import buildcraft.lib.misc.InventoryUtil;
+import buildcraft.builders.BCBuildersConfig;
+import buildcraft.lib.misc.ChunkLoader;
 import buildcraft.lib.tile.TileBC;
 
 /** The quarry builds a frame around its area, then moves a drill over it, mining it out layer by layer. */
 public class TileQuarry extends TileBC implements IMjConnectorProvider, IHasWork, IControllable {
+    private final ChunkLoader chunkLoader = new ChunkLoader();
     private static final long MAX_POWER_PER_TICK = 512 * MjAPI.MJ;
     private static final long FRAME_POWER = 24 * MjAPI.MJ;
     private static final int MAX_SCAN_PER_TICK = 4096;
@@ -337,6 +340,9 @@ public class TileQuarry extends TileBC implements IMjConnectorProvider, IHasWork
             clientDrillPos = drillPos;
             return;
         }
+        if (level instanceof ServerLevel serverLevel) {
+            chunkLoader.tick(serverLevel, ChunkLoader.chunksFor(worldPosition, frameBox), BCBuildersConfig.chunkLoadMachines);
+        }
         if (frameBox == null || miningBox == null) {
             // Placed without a player (such as by a command), so it never looked for its area
             setupArea();
@@ -452,6 +458,7 @@ public class TileQuarry extends TileBC implements IMjConnectorProvider, IHasWork
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
         if (level == null || level.isClientSide()) return;
+        if (level instanceof ServerLevel serverLevel) chunkLoader.releaseAll(serverLevel);
         if (currentTask instanceof TaskBreakBlock task) {
             level.destroyBlockProgress(task.breakPos.hashCode(), task.breakPos, -1);
         }
