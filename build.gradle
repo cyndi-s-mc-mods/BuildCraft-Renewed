@@ -49,25 +49,4 @@ subprojects {
             rename { "${it}_${rootProject.archives_base_name}" }
         }
     }
-
-    // Copies this loader's compile classpath into build/deps/<loader>/ so it can be cached
-    // for compiling outside of Gradle. Used by the deps-cache CI job.
-    tasks.register('dumpCompileClasspath') {
-        def files = configurations.compileClasspath
-        def out = rootProject.layout.buildDirectory.dir("deps/${project.name}").get().asFile
-        // Runs the tasks that generate classpath entries (NeoForge's Minecraft jar is one).
-        dependsOn files
-        doLast {
-            out.mkdirs()
-            def names = []
-            files.files.each { f ->
-                if (f.isFile()) {
-                    java.nio.file.Files.copy(f.toPath(), new File(out, f.name).toPath(),
-                            java.nio.file.StandardCopyOption.REPLACE_EXISTING)
-                    names << f.name
-                }
-            }
-            new File(out, 'classpath.txt').text = names.join('\n') + '\n'
-        }
-    }
 }
