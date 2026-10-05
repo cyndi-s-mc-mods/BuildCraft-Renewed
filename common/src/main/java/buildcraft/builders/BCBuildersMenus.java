@@ -12,6 +12,7 @@ import buildcraft.builders.container.ContainerArchitectTable;
 import buildcraft.builders.container.ContainerBuilder;
 import buildcraft.builders.container.ContainerElectronicLibrary;
 import buildcraft.builders.container.ContainerFiller;
+import buildcraft.builders.container.ContainerReplacer;
 import buildcraft.lib.registry.RegistryEntry;
 
 import static buildcraft.lib.registry.RegistrationHelper.menu;
@@ -21,6 +22,7 @@ public final class BCBuildersMenus {
     public static RegistryEntry<MenuType<?>, MenuType<ContainerArchitectTable>> ARCHITECT;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerBuilder>> BUILDER;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerElectronicLibrary>> LIBRARY;
+    public static RegistryEntry<MenuType<?>, MenuType<ContainerReplacer>> REPLACER;
 
     private BCBuildersMenus() {}
 
@@ -29,5 +31,6 @@ public final class BCBuildersMenus {
         ARCHITECT = menu("architect", ContainerArchitectTable::new);
         BUILDER = menu("builder", ContainerBuilder::new);
         LIBRARY = menu("library", ContainerElectronicLibrary::new);
+        REPLACER = menu("replacer", ContainerReplacer::new);
     }
 }

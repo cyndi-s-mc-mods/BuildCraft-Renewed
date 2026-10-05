@@ -21,9 +21,10 @@ Java 25 is needed to build and run it.
 * **Factory:** mining well, pump, flood gate, tank, chute, distiller, heat exchanger, auto workbench and water gel.
 * **Silicon:** laser, assembly table, advanced crafting table, chipsets, and gates with their triggers and actions.
 * **Builders:** quarry, filler (all 19 patterns, which gates can set), architect table, builder, electronic library,
-  templates and blueprints. Quarries, fillers and builders keep the chunks they work in loaded.
+  replacer, templates, blueprints and single schematics. Quarries, fillers and builders keep the chunks they work in
+  loaded.
 
-Not ported (yet): the replacer, path markers, map locations, goggles, the zone planner and the guide book.
+Not ported (yet): path markers, map locations, goggles, the zone planner and the guide book.
 
 Settings are in `config/buildcraft.properties`. The game writes it each time it starts, keeping the values set in it and
 adding any missing settings with their defaults.

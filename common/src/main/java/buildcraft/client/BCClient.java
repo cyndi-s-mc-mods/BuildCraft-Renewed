@@ -97,5 +97,6 @@ public final class BCClient {
         registrar.screen(BCBuildersMenus.ARCHITECT.get(), GuiArchitectTable::new);
         registrar.screen(BCBuildersMenus.BUILDER.get(), GuiBuilder::new);
         registrar.screen(BCBuildersMenus.LIBRARY.get(), GuiElectronicLibrary::new);
+        registrar.screen(BCBuildersMenus.REPLACER.get(), buildcraft.builders.client.gui.GuiReplacer::new);
     }
 }

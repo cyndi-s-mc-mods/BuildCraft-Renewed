@@ -17,6 +17,7 @@ import buildcraft.builders.tile.TileBuilder;
 import buildcraft.builders.tile.TileElectronicLibrary;
 import buildcraft.builders.tile.TileFiller;
 import buildcraft.builders.tile.TileQuarry;
+import buildcraft.builders.tile.TileReplacer;
 import buildcraft.lib.registry.RegistryEntry;
 
 import static buildcraft.lib.registry.RegistrationHelper.block;
@@ -30,12 +31,14 @@ public final class BCBuildersBlocks {
     public static RegistryEntry<Block, BlockArchitectTable> ARCHITECT;
     public static RegistryEntry<Block, BlockFacing<TileBuilder>> BUILDER;
     public static RegistryEntry<Block, BlockFacing<TileElectronicLibrary>> LIBRARY;
+    public static RegistryEntry<Block, BlockFacing<TileReplacer>> REPLACER;
 
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileQuarry>> QUARRY_TILE;
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileFiller>> FILLER_TILE;
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileArchitectTable>> ARCHITECT_TILE;
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileBuilder>> BUILDER_TILE;
     public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileElectronicLibrary>> LIBRARY_TILE;
+    public static RegistryEntry<BlockEntityType<?>, BlockEntityType<TileReplacer>> REPLACER_TILE;
 
     private BCBuildersBlocks() {}
 
@@ -59,11 +62,15 @@ public final class BCBuildersBlocks {
         LIBRARY = blockWithItem("library", props -> new BlockFacing<>(props, () -> LIBRARY_TILE.get()),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5f).sound(SoundType.METAL)
                 .requiresCorrectToolForDrops());
+        REPLACER = blockWithItem("replacer", props -> new BlockFacing<>(props, () -> REPLACER_TILE.get()),
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5f).sound(SoundType.METAL)
+                .requiresCorrectToolForDrops());
 
         QUARRY_TILE = tile("quarry", TileQuarry::new, () -> QUARRY.get());
         FILLER_TILE = tile("filler", TileFiller::new, () -> FILLER.get());
         ARCHITECT_TILE = tile("architect", TileArchitectTable::new, () -> ARCHITECT.get());
         BUILDER_TILE = tile("builder", TileBuilder::new, () -> BUILDER.get());
         LIBRARY_TILE = tile("library", TileElectronicLibrary::new, () -> LIBRARY.get());
+        REPLACER_TILE = tile("replacer", TileReplacer::new, () -> REPLACER.get());
     }
 }

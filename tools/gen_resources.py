@@ -1036,5 +1036,30 @@ LANG.update({
     'gui.buildcraft.list.material.off': 'Not matching by material',
 })
 
+# Replacer and single schematics
+cube('replacer', particle='replacer/side', down='replacer/bottom', up='replacer/top', north='replacer/front', east='replacer/side',
+     south='replacer/side', west='replacer/side')
+write('blockstates/replacer.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/replacer', **({'y': y} if y else {})} for d, y in FACINGS}})
+block_item('replacer')
+name('block', 'replacer', 'Replacer')
+drops_self('replacer')
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:replacer')
+shaped('replacer', ['bmb', 'ycy', 'gkg'], {'b': '#c:dyes/black', 'm': f'{NS}:marker_volume', 'y': '#c:dyes/yellow',
+                                           'c': f'{NS}:blueprint', 'g': '#c:gears/gold', 'k': '#c:chests/wooden'})
+for state in ['clean', 'used']:
+    tex_exists(f'{NS}:item/schematic_single/{state}')
+    write(f'models/item/schematic_single_{state}.json', {'parent': 'minecraft:item/generated',
+                                                          'textures': {'layer0': f'{NS}:item/schematic_single/{state}'}})
+write('items/schematic_single.json', {'model': {'type': 'minecraft:condition', 'property': 'minecraft:has_component',
+                                                'component': f'{NS}:schematic',
+                                                'on_true': {'type': 'minecraft:model', 'model': f'{NS}:item/schematic_single_used'},
+                                                'on_false': {'type': 'minecraft:model', 'model': f'{NS}:item/schematic_single_clean'}}})
+name('item', 'schematic_single', 'Single Schematic')
+shapeless('schematic_single', ['minecraft:paper', 'minecraft:paper', '#c:gems/lapis'], count=4)
+LANG['item.buildcraft.schematic_single.used'] = '%s (%s)'
+LANG['gui.buildcraft.replacer.help'] = ('Put a blueprint in the top slot, a single schematic of the block to replace bottom left, and '
+                                        'one of the block to replace it with bottom right.')
+
 finish()
 print('Resources generated')

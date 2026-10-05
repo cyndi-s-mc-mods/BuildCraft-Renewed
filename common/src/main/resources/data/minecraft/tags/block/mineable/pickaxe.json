@@ -22,6 +22,7 @@
     "buildcraft:mining_well",
     "buildcraft:power_tester",
     "buildcraft:pump",
-    "buildcraft:quarry"
+    "buildcraft:quarry",
+    "buildcraft:replacer"
   ]
 }
