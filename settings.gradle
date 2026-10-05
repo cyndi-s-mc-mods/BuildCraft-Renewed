@@ -17,6 +17,11 @@ pluginManagement {
     }
 }
 
+plugins {
+    // Downloads the Java 25 the build needs if it isn't installed
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
 rootProject.name = 'buildcraft'
 
 include 'fabric', 'forge', 'neoforge'
