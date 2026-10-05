@@ -304,6 +304,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         pattern = statement instanceof Pattern p ? p : Patterns.NONE;
         for (int i = 0; i < PARAM_COUNT; i++) {
             params[i] = input.child("param" + i).map(StatementManager::loadParameter).orElse(null);
+            if (params[i] == null) params[i] = pattern.createParameter(i);
         }
         canExcavate = input.getBooleanOr("excavate", true);
         inverted = input.getBooleanOr("inverted", false);

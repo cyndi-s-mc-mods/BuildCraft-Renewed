@@ -928,8 +928,7 @@ def cube_all_block(block, texture, english):
 cube_all_block('power_tester', 'power_tester', 'Power Tester')
 LANG['chat.buildcraft.power_tester'] = 'Last received: %s MJ, last tick: %s MJ, total: %s MJ'
 for kind, texture, english in [('destroy', 'misc/texture_red_dark', 'Destroy'), ('blueprint', 'blueprint/blue', 'Blueprint'),
-                               ('template', 'blueprint/black', 'Template'), ('paper', 'misc/paper', 'Paper'),
-                               ('leather', 'misc/leather', 'Leather'), ('laser_back', 'laser/bottom', 'Laser Back')]:
+                               ('template', 'blueprint/black', 'Template'), ('laser_back', 'laser/bottom', 'Laser Back')]:
     cube_all_block(f'decorated_{kind}', texture, f'Decorated Block ({english})')
 
 # Filler
@@ -972,7 +971,7 @@ LANG.update({
     'tip.filler.invert.on': 'Invert', 'tip.filler.invert.off': 'Do Not Invert',
     'gui.buildcraft.filler.resources': 'Filling Resources', 'gui.buildcraft.filler.progress': 'Break: %s  Place: %s',
     'gui.buildcraft.filler.finished': 'Finished', 'gui.buildcraft.filler.off': 'Switched off',
-    'gui.buildcraft.filler.locked': 'Set by a gate',
+    'gui.buildcraft.filler.locked': 'Set by a gate', 'gui.buildcraft.filler.no_area': 'No area: use volume markers',
 })
 
 # Architect table, builder and electronic library

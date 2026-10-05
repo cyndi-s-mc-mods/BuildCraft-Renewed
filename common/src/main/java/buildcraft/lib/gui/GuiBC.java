@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 
 import buildcraft.lib.client.FluidRenderUtil;
 import buildcraft.lib.fluid.BCFluidStack;
@@ -26,6 +27,14 @@ public abstract class GuiBC<M extends ContainerBC<?>> extends AbstractContainerS
     protected void init() {
         super.init();
         titleLabelX = (imageWidth - font.width(title)) / 2;
+        // Put the "Inventory" label just above the player's inventory, wherever it is
+        for (Slot slot : menu.slots) {
+            if (slot.container instanceof Inventory) {
+                inventoryLabelX = slot.x - 1;
+                inventoryLabelY = slot.y - 11;
+                break;
+            }
+        }
     }
 
     @Override

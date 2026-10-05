@@ -17,6 +17,13 @@ public class GuiDistiller extends GuiBC<ContainerDistiller> {
         super(menu, inventory, title, BuildCraft.id("textures/gui/distiller.png"), 176, 161);
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        // Clear of the tanks
+        titleLabelX = 8;
+    }
+
     private ContainerBC.TankView tank(int i) {
         return switch (i) {
             case 0 -> menu.tankIn;

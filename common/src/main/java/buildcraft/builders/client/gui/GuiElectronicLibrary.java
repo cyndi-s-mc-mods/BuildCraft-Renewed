@@ -36,7 +36,8 @@ public class GuiElectronicLibrary extends GuiBC<ContainerElectronicLibrary> {
         super.init();
         titleLabelX = 8;
         titleLabelY = 8;
-        inventoryLabelY = 127;
+        // There's no room for the label between the list and the inventory
+        inventoryLabelY = -1000;
     }
 
     private List<SnapshotHeader> entries() {

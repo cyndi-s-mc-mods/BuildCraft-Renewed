@@ -80,7 +80,8 @@ public class GuiFiller extends GuiBC<ContainerFiller> {
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractLabels(graphics, mouseX, mouseY);
         graphics.text(font, Component.translatable("gui.buildcraft.filler.resources"), 8, 74, 0xFF404040, false);
-        String status = menu.finished.getBoolean() ? "gui.buildcraft.filler.finished"
+        String status = !menu.hasBox.getBoolean() ? "gui.buildcraft.filler.no_area"
+            : menu.finished.getBoolean() ? "gui.buildcraft.filler.finished"
             : menu.mode.getInt() == IControllable.Mode.OFF.ordinal() ? "gui.buildcraft.filler.off" : null;
         Component progress = status != null ? Component.translatable(status)
             : Component.translatable("gui.buildcraft.filler.progress", menu.toBreak.getInt(), menu.toPlace.getInt());

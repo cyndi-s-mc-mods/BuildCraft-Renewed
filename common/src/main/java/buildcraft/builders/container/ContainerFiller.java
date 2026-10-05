@@ -43,6 +43,7 @@ public class ContainerFiller extends ContainerBC<TileFiller> {
     public final MenuData.Field toBreak;
     public final MenuData.Field toPlace;
     public final MenuData.Field power;
+    public final MenuData.Field hasBox;
 
     /** Client constructor. */
     public ContainerFiller(int id, Inventory inventory) {
@@ -64,6 +65,7 @@ public class ContainerFiller extends ContainerBC<TileFiller> {
         toBreak = data.addInt(tile == null ? null : tile::getLeftToBreak);
         toPlace = data.addInt(tile == null ? null : tile::getLeftToPlace);
         power = data.addLong(tile == null ? null : tile::getStoredPower);
+        hasBox = data.addBoolean(tile == null ? null : () -> tile.getBox() != null);
         Container inv = tile != null ? tile.inv : new SimpleContainer(TileFiller.INV_SIZE);
         for (int i = 0; i < TileFiller.INV_SIZE; i++) {
             addSlot(new Slot(inv, i, 8 + (i % 9) * 18, 85 + (i / 9) * 18) {
