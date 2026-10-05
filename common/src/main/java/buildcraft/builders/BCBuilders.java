@@ -5,6 +5,8 @@ public final class BCBuilders {
 
     public static void init() {
         BCBuildersBlocks.init();
+        BCBuildersMenus.init();
+        BCBuildersStatements.init();
     }
 
     public static void setup() {}

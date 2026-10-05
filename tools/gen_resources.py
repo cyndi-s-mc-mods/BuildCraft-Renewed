@@ -932,5 +932,48 @@ for kind, texture, english in [('destroy', 'misc/texture_red_dark', 'Destroy'), 
                                ('leather', 'misc/leather', 'Leather'), ('laser_back', 'laser/bottom', 'Laser Back')]:
     cube_all_block(f'decorated_{kind}', texture, f'Decorated Block ({english})')
 
+# Filler
+cube('filler', particle='filler/side', down='filler/bottom', up='filler/top', north='filler/front', east='filler/side',
+     south='filler/side', west='filler/side')
+write('blockstates/filler.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/filler', **({'y': y} if y else {})}
+    for d, y in [('north', 0), ('east', 90), ('south', 180), ('west', 270)]}})
+block_item('filler')
+name('block', 'filler', 'Filler')
+drops_self('filler')
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:filler')
+shaped('filler', ['bmb', 'yty', 'gcg'], {'b': '#c:dyes/black', 'm': f'{NS}:marker_volume', 'y': '#c:dyes/yellow',
+                                         't': 'minecraft:crafting_table', 'g': '#c:gears/gold', 'c': '#c:chests/wooden'})
+for pattern in ['none', 'clear', 'fill', 'box', 'frame', 'pyramid', 'stairs', 'sphere', 'sphere_half', 'sphere_quarter',
+                'sphere_eighth', '2d_square', '2d_circle', '2d_semi_circle', '2d_arc', '2d_triangle', '2d_pentagon', '2d_hexagon',
+                '2d_octagon']:
+    if not os.path.exists(os.path.join(TEXTURE_ROOT, 'gui', 'filler', 'patterns', pattern + '.png')):
+        print('WARNING: missing pattern icon', pattern)
+LANG.update({
+    'fillerpattern.none': 'None', 'fillerpattern.clear': 'Clear', 'fillerpattern.fill': 'Fill', 'fillerpattern.box': 'Box',
+    'fillerpattern.frame': 'Frame', 'fillerpattern.pyramid': 'Pyramid', 'fillerpattern.stairs': 'Stairs',
+    'fillerpattern.sphere': 'Sphere', 'fillerpattern.sphere_half': 'Hemisphere', 'fillerpattern.sphere_quarter': 'Quarter-Sphere',
+    'fillerpattern.sphere_eighth': 'Eighth-Sphere', 'fillerpattern.2d_square': 'Square', 'fillerpattern.2d_circle': 'Circle',
+    'fillerpattern.2d_semi_circle': 'Semi-Circle', 'fillerpattern.2d_arc': 'Arc', 'fillerpattern.2d_triangle': 'Triangle',
+    'fillerpattern.2d_pentagon': 'Pentagon', 'fillerpattern.2d_hexagon': 'Hexagon', 'fillerpattern.2d_octagon': 'Octagon',
+    'fillerpattern.parameter.hollow': 'Hollow', 'fillerpattern.parameter.filled': 'Filled',
+    'fillerpattern.parameter.filled_outer': 'Surrounded',
+    'buildcraft.param.rotation.0': 'No rotation', 'buildcraft.param.rotation.1': '90 degree rotation',
+    'buildcraft.param.rotation.2': '180 degree rotation', 'buildcraft.param.rotation.3': '270 degree rotation',
+    'buildcraft.param.axis.x': 'X Axis', 'buildcraft.param.axis.y': 'Y Axis', 'buildcraft.param.axis.z': 'Z Axis',
+    'buildcraft.param.facing.down': 'Flat side: bottom', 'buildcraft.param.facing.up': 'Flat side: top',
+    'buildcraft.param.facing.north': 'Flat side: north', 'buildcraft.param.facing.south': 'Flat side: south',
+    'buildcraft.param.facing.west': 'Flat side: west', 'buildcraft.param.facing.east': 'Flat side: east',
+    'direction.buildcraft.center.0': 'North-West', 'direction.buildcraft.center.1': 'North',
+    'direction.buildcraft.center.2': 'North-East', 'direction.buildcraft.center.3': 'West', 'direction.buildcraft.center.4': 'Centre',
+    'direction.buildcraft.center.5': 'East', 'direction.buildcraft.center.6': 'South-West', 'direction.buildcraft.center.7': 'South',
+    'direction.buildcraft.center.8': 'South-East',
+    'tip.filler.excavate.on': 'Excavate', 'tip.filler.excavate.off': 'Do Not Excavate',
+    'tip.filler.invert.on': 'Invert', 'tip.filler.invert.off': 'Do Not Invert',
+    'gui.buildcraft.filler.resources': 'Filling Resources', 'gui.buildcraft.filler.progress': 'Break: %s  Place: %s',
+    'gui.buildcraft.filler.finished': 'Finished', 'gui.buildcraft.filler.off': 'Switched off',
+    'gui.buildcraft.filler.locked': 'Set by a gate',
+})
+
 finish()
 print('Resources generated')

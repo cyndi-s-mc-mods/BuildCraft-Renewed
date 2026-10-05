@@ -41,6 +41,9 @@ import buildcraft.transport.client.gui.GuiDiamondWoodPipe;
 import buildcraft.transport.client.gui.GuiEmzuliPipe;
 import buildcraft.transport.client.render.RenderPipeHolder;
 import buildcraft.silicon.client.render.FacadeClient;
+import buildcraft.builders.BCBuildersMenus;
+import buildcraft.builders.client.gui.GuiFiller;
+import buildcraft.builders.client.render.RenderFiller;
 
 /** Client-side setup. Each loader calls the methods here when its client registration events fire. */
 public final class BCClient {
@@ -55,6 +58,7 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
         registrar.blockEntityRenderer(BCCoreBlocks.MARKER_VOLUME_TILE.get(), RenderMarkerVolume::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.QUARRY_TILE.get(), RenderQuarry::new);
+        registrar.blockEntityRenderer(BCBuildersBlocks.FILLER_TILE.get(), RenderFiller::new);
         registrar.blockEntityRenderer(BCSiliconBlocks.LASER_TILE.get(), RenderLaser::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.TANK_TILE.get(), RenderTank::new);
         registrar.blockEntityRenderer(BCFactoryBlocks.DISTILLER_TILE.get(), RenderDistiller::new);
@@ -83,5 +87,6 @@ public final class BCClient {
         registrar.screen(BCSiliconMenus.ASSEMBLY_TABLE.get(), GuiAssemblyTable::new);
         registrar.screen(BCSiliconMenus.ADVANCED_CRAFTING_TABLE.get(), GuiAdvancedCraftingTable::new);
         registrar.screen(BCSiliconMenus.GATE.get(), GuiGate::new);
+        registrar.screen(BCBuildersMenus.FILLER.get(), GuiFiller::new);
     }
 }
