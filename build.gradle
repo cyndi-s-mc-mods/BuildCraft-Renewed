@@ -55,6 +55,8 @@ subprojects {
     tasks.register('dumpCompileClasspath') {
         def files = configurations.compileClasspath
         def out = rootProject.layout.buildDirectory.dir("deps/${project.name}").get().asFile
+        // Runs the tasks that generate classpath entries (NeoForge's Minecraft jar is one).
+        dependsOn files
         doLast {
             out.mkdirs()
             def names = []
