@@ -12,9 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry;
 
 import buildcraft.client.BCClient;
 import buildcraft.client.ClientRegistrar;
+import buildcraft.lib.fluid.BCFluidDefinition;
 
 public class BuildCraftFabricClient implements ClientModInitializer {
     @Override
@@ -34,5 +36,8 @@ public class BuildCraftFabricClient implements ClientModInitializer {
         };
         BCClient.registerRenderers(registrar);
         BCClient.registerScreens(registrar);
+        for (BCFluidDefinition def : BCFluidDefinition.ALL) {
+            FluidRenderingRegistry.register(def.source.get(), def.flowing.get(), BCClient.fluidModel(def));
+        }
     }
 }

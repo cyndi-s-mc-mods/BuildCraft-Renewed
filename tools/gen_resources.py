@@ -191,5 +191,36 @@ shaped('gear_iron', GEAR_RING, {'o': '#c:ingots/iron', 'i': '#c:gears/stone'})
 shaped('gear_gold', GEAR_RING, {'o': '#c:ingots/gold', 'i': '#c:gears/iron'})
 shaped('gear_diamond', GEAR_RING, {'o': '#c:gems/diamond', 'i': '#c:gears/gold'})
 
+# ---------------------------------------------------------------- fluids
+
+# name: (English name, light colour) for each oil and fuel, matching BCEnergyFluids
+FLUIDS = {
+    'oil': ('Crude Oil', 0x505050),
+    'oil_residue': ('Residue', 0x100F10),
+    'oil_heavy': ('Heavy Oil', 0xA08F1F),
+    'oil_dense': ('Dense Oil', 0x876E77),
+    'oil_distilled': ('Distilled Oil', 0xE4AF78),
+    'fuel_dense': ('Dense Fuel', 0xFFAF3F),
+    'fuel_mixed_heavy': ('Mixed Heavy Fuels', 0xF2A700),
+    'fuel_light': ('Light Fuel', 0xFFFF30),
+    'fuel_mixed_light': ('Mixed Light Fuels', 0xF6D700),
+    'fuel_gaseous': ('Gaseous Fuel', 0xFAF630),
+}
+HEAT_PREFIX = ['', 'Hot ', 'Searing ']
+
+write('models/item/fluid_bucket.json', {'parent': 'minecraft:item/generated', 'textures': {
+    'layer0': 'minecraft:item/bucket', 'layer1': f'{NS}:item/bucket_fluid_overlay'}})
+for fluid, (english, colour) in FLUIDS.items():
+    for heat in range(3):
+        id = fluid if heat == 0 else f'{fluid}_heat_{heat}'
+        write(f'blockstates/{id}.json', {'variants': {'': {'model': f'{NS}:block/fluid/{id}'}}})
+        write(f'models/block/fluid/{id}.json', {'textures': {'particle': f'{NS}:block/fluids/{fluid}_heat_{heat}_still'}})
+        write(f'items/{id}_bucket.json', {'model': {'type': 'minecraft:model', 'model': f'{NS}:item/fluid_bucket', 'tints': [
+            {'type': 'minecraft:constant', 'value': -1},
+            {'type': 'minecraft:constant', 'value': colour - 0x1000000}]}})
+        name('block', id, HEAT_PREFIX[heat] + english)
+        name('item', f'{id}_bucket', HEAT_PREFIX[heat] + english + ' Bucket')
+        tag('fluid', f'{NS}:{fluid}', f'{NS}:{id}', f'{NS}:flowing_{id}')
+
 finish()
 print('Resources generated')

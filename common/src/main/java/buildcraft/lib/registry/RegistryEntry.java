@@ -32,7 +32,7 @@ public final class RegistryEntry<R, T extends R> implements Supplier<T> {
         return registry;
     }
 
-    T create() {
+    synchronized T create() {
         if (value == null) {
             value = factory.apply(key());
         }
@@ -43,11 +43,11 @@ public final class RegistryEntry<R, T extends R> implements Supplier<T> {
         return value != null;
     }
 
+    /** Returns the registered object. If its registry hasn't been registered yet the object is created early (some
+     * objects, such as liquid blocks, need objects from another registry while they are constructed) and the same
+     * instance is registered later. */
     @Override
     public T get() {
-        if (value == null) {
-            throw new IllegalStateException("Registry entry " + id + " has not been registered yet");
-        }
-        return value;
+        return create();
     }
 }

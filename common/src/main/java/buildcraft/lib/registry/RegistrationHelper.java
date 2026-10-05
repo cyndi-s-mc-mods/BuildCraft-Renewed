@@ -23,11 +23,17 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 public final class RegistrationHelper {
     /** Every item, in the order it was registered. Used for the creative tab. */
     private static final List<Supplier<? extends Item>> ITEMS = new ArrayList<>();
+    /** Every block entity type. Used by the loaders to expose BuildCraft's inventories and tanks. */
+    private static final List<Supplier<? extends BlockEntityType<?>>> TILES = new ArrayList<>();
 
     private RegistrationHelper() {}
 
     public static List<Supplier<? extends Item>> items() {
         return Collections.unmodifiableList(ITEMS);
+    }
+
+    public static List<BlockEntityType<?>> tileTypes() {
+        return TILES.stream().<BlockEntityType<?>>map(Supplier::get).toList();
     }
 
     public static <B extends Block> RegistryEntry<Block, B> block(String name,
@@ -63,13 +69,15 @@ public final class RegistrationHelper {
     @SafeVarargs
     public static <T extends BlockEntity> RegistryEntry<BlockEntityType<?>, BlockEntityType<T>> tile(String name,
         BlockEntityType.BlockEntitySupplier<T> factory, Supplier<? extends Block>... blocks) {
-        return BCRegistry.register(Registries.BLOCK_ENTITY_TYPE, name, key -> {
+        RegistryEntry<BlockEntityType<?>, BlockEntityType<T>> entry = BCRegistry.register(Registries.BLOCK_ENTITY_TYPE, name, key -> {
             Block[] array = new Block[blocks.length];
             for (int i = 0; i < blocks.length; i++) {
                 array[i] = blocks[i].get();
             }
             return new BlockEntityType<>(factory, Set.of(array));
         });
+        TILES.add(entry);
+        return entry;
     }
 
     public static <M extends AbstractContainerMenu> RegistryEntry<MenuType<?>, MenuType<M>> menu(String name,

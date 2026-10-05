@@ -18,5 +18,6 @@ public class BuildCraftFabric implements ModInitializer {
             Registry<Object> registry = (Registry<Object>) BuiltInRegistries.REGISTRY.getValue(key.identifier());
             BCRegistry.registerAll(key, (entry, value) -> Registry.register(registry, entry.id(), value));
         }
+        FabricTransfer.register();
     }
 }

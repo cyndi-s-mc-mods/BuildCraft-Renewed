@@ -14,15 +14,22 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 import buildcraft.BuildCraft;
 import buildcraft.client.BCClient;
 import buildcraft.client.ClientRegistrar;
+import buildcraft.lib.fluid.BCFluidDefinition;
 
 @Mod(value = BuildCraft.MOD_ID, dist = Dist.CLIENT)
 public class BuildCraftNeoForgeClient {
     public BuildCraftNeoForgeClient(IEventBus modBus) {
+        modBus.addListener(RegisterFluidModelsEvent.class, event -> {
+            for (BCFluidDefinition def : BCFluidDefinition.ALL) {
+                event.register(BCClient.fluidModel(def), def.source.get(), def.flowing.get());
+            }
+        });
         modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, event -> BCClient.registerRenderers(new ClientRegistrar() {
             @Override
             public <T extends BlockEntity, S extends BlockEntityRenderState> void blockEntityRenderer(
