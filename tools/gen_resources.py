@@ -562,5 +562,97 @@ shaped('flood_gate', ['igi', 'btb', 'ibi'], {'i': '#c:ingots/iron', 'g': '#c:gea
 for block in ['mining_well', 'pump', 'chute', 'flood_gate']:
     tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
 
+# Distiller: the model faces west
+tex_exists(f'{NS}:block/distiller/tank_sprite_a')
+tex_exists(f'{NS}:block/distiller/tank_sprite_b')
+write('models/block/distiller.json', {'textures': {'particle': f'{NS}:block/distiller/tank_sprite_a',
+                                                   'sprite_a': f'{NS}:block/distiller/tank_sprite_a',
+                                                   'sprite_b': f'{NS}:block/distiller/tank_sprite_b'},
+                                      'elements': legacy_elements('distiller')})
+HORIZONTAL_FROM_WEST = {'west': 0, 'north': 90, 'east': 180, 'south': 270}
+write('blockstates/distiller.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/distiller', **({'y': y} if y else {})} for d, y in HORIZONTAL_FROM_WEST.items()}})
+block_item('distiller')
+name('block', 'distiller', 'Distiller')
+drops_self('distiller')
+shaped('distiller', ['rtr', 'tgt'], {'r': 'minecraft:redstone_torch', 't': f'{NS}:tank', 'g': '#c:gears/diamond'})
+
+# Heat exchanger: converted from 1.12's conditional model, which faces west
+with open(os.path.join(LEGACY_MODELS, '..', 'tiles', 'heat_exchange_static.json')) as f:
+    HEAT_MODEL = json.load(f)
+
+
+def heat_visible(expr, part, left, right):
+    if not expr:
+        return True
+    env = {'MIDDLE': 'middle', 'START': 'start', 'END': 'end', 'part': part, 'connected_left': left, 'connected_right': right}
+    py = expr.replace('&&', ' and ').replace('!', ' not ').replace(' not =', '!=')
+    return eval(py, {}, env)
+
+
+HEAT_TEXTURES = {f'sprite_{c}': f'{NS}:block/heat_exchange/sprite_{c}' for c in 'abcde'}
+for v in HEAT_TEXTURES.values():
+    tex_exists(v)
+HEAT_TEXTURES['particle'] = HEAT_TEXTURES['sprite_b']
+heat_variants = {}
+for part in ['start', 'middle', 'end']:
+    for left in [False, True]:
+        for right in [False, True]:
+            elements = []
+            for e in HEAT_MODEL['elements']:
+                if not heat_visible(e.get('visible'), part, left, right):
+                    continue
+                faces = {}
+                for d, face in e['faces'].items():
+                    out = {'uv': face['uv'], 'texture': face['texture']}
+                    if face.get('rotation'):
+                        out['rotation'] = face['rotation'] * 90
+                    faces[d] = out
+                elements.append({'from': e['from'], 'to': e['to'], 'faces': faces})
+            model = f'heat_exchange_{part}' + ('' if part != 'middle' else f'_{"l" if left else ""}{"r" if right else ""}')
+            write(f'models/block/{model}.json', {'textures': HEAT_TEXTURES, 'elements': elements})
+            for d, y in HORIZONTAL_FROM_WEST.items():
+                key = f'connected_left={str(left).lower()},connected_right={str(right).lower()},facing={d},part={part}'
+                heat_variants[key] = {'model': f'{NS}:block/{model}', **({'y': y} if y else {})}
+write('blockstates/heat_exchange.json', {'variants': heat_variants})
+block_item('heat_exchange', f'{NS}:block/heat_exchange_middle_')
+name('block', 'heat_exchange', 'Heat Exchanger')
+drops_self('heat_exchange')
+shaped('heat_exchange', ['igi', '###', 'igi'], {'i': '#c:ingots/iron', 'g': '#c:gears/iron', '#': '#c:glass_blocks/colorless'})
+
+# Auto workbench
+cube('autoworkbench_item', particle='auto_workbench_item/side', down='auto_workbench_item/bottom', up='auto_workbench_item/top',
+     north='auto_workbench_item/side', east='auto_workbench_item/side', south='auto_workbench_item/side', west='auto_workbench_item/side')
+write('blockstates/autoworkbench_item.json', {'variants': {'': {'model': f'{NS}:block/autoworkbench_item'}}})
+block_item('autoworkbench_item')
+name('block', 'autoworkbench_item', 'Auto Workbench')
+drops_self('autoworkbench_item')
+shaped('autoworkbench_item', ['gwg'], {'g': '#c:gears/stone', 'w': 'minecraft:crafting_table'})
+tag('block', 'minecraft:mineable/axe', f'{NS}:autoworkbench_item')
+
+# Water gel
+gel_variants = {}
+for stage in ['spread_0', 'spread_1', 'spread_2', 'spread_3', 'gelling_0', 'gelling_1', 'gel']:
+    tex_exists(f'{NS}:block/gel/{stage}')
+    write(f'models/block/water_gel_{stage}.json', {'parent': 'minecraft:block/cube_all', 'textures': {'all': f'{NS}:block/gel/{stage}'}})
+    gel_variants[f'stage={stage}'] = {'model': f'{NS}:block/water_gel_{stage}'}
+write('blockstates/water_gel.json', {'variants': gel_variants})
+name('block', 'water_gel', 'Gelled Water')
+write_data(f'{NS}/loot_table/blocks/water_gel.json', {
+    'type': 'minecraft:block',
+    'pools': [{'rolls': 1, 'entries': [{'type': 'minecraft:item', 'name': f'{NS}:gel'}]}],
+    'random_sequence': f'{NS}:blocks/water_gel'})
+tag('block', 'minecraft:mineable/shovel', f'{NS}:water_gel')
+simple_item('water_gel_spawn', 'water_gel')
+name('item', 'water_gel_spawn', 'Water Gel')
+simple_item('gel')
+name('item', 'gel', 'Gel')
+shaped('water_gel_spawn', [' s ', 'srs', ' s '], {'s': 'minecraft:sand', 'r': f'{NS}:oil_residue_bucket'})
+shaped('water_gel_to_bucket', ['g', 'b'], {'g': f'{NS}:gel', 'b': 'minecraft:bucket'}, result='minecraft:water_bucket')
+
+for block in ['distiller', 'heat_exchange']:
+    tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{block}')
+
+
 finish()
 print('Resources generated')

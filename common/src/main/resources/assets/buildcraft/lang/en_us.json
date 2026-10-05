@@ -1,5 +1,7 @@
 {
+  "block.buildcraft.autoworkbench_item": "Auto Workbench",
   "block.buildcraft.chute": "Chute",
+  "block.buildcraft.distiller": "Distiller",
   "block.buildcraft.engine_combustion": "Combustion Engine",
   "block.buildcraft.engine_creative": "Creative Engine",
   "block.buildcraft.engine_redstone": "Redstone Engine",
@@ -20,6 +22,7 @@
   "block.buildcraft.fuel_mixed_light": "Mixed Light Fuels",
   "block.buildcraft.fuel_mixed_light_heat_1": "Hot Mixed Light Fuels",
   "block.buildcraft.fuel_mixed_light_heat_2": "Searing Mixed Light Fuels",
+  "block.buildcraft.heat_exchange": "Heat Exchanger",
   "block.buildcraft.mining_well": "Mining Well",
   "block.buildcraft.oil": "Crude Oil",
   "block.buildcraft.oil_dense": "Dense Oil",
@@ -76,6 +79,7 @@
   "block.buildcraft.pump": "Pump",
   "block.buildcraft.tank": "Tank",
   "block.buildcraft.tube": "Tube",
+  "block.buildcraft.water_gel": "Gelled Water",
   "chat.buildcraft.engine.creative.mode": "Creative engine output: %s MJ/t",
   "chat.buildcraft.pipe.power.limit": "Power limit: %s MJ/t",
   "gui.buildcraft.engine.heat": "Heat: %s \u00b0C",
@@ -107,6 +111,7 @@
   "item.buildcraft.gear_iron": "Iron Gear",
   "item.buildcraft.gear_stone": "Stone Gear",
   "item.buildcraft.gear_wood": "Wood Gear",
+  "item.buildcraft.gel": "Gel",
   "item.buildcraft.oil_bucket": "Crude Oil Bucket",
   "item.buildcraft.oil_dense_bucket": "Dense Oil Bucket",
   "item.buildcraft.oil_dense_heat_1_bucket": "Hot Dense Oil Bucket",
@@ -123,6 +128,7 @@
   "item.buildcraft.oil_residue_heat_1_bucket": "Hot Residue Bucket",
   "item.buildcraft.oil_residue_heat_2_bucket": "Searing Residue Bucket",
   "item.buildcraft.pipe_sealant": "Pipe Sealant",
+  "item.buildcraft.water_gel_spawn": "Water Gel",
   "item.buildcraft.wrench": "Wrench",
   "itemGroup.buildcraft.main": "BuildCraft"
 }

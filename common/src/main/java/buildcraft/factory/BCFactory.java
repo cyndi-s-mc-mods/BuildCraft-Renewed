@@ -5,6 +5,7 @@ public final class BCFactory {
 
     public static void init() {
         BCFactoryBlocks.init();
+        BCFactoryItems.init();
         BCFactoryMenus.init();
     }
 
