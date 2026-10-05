@@ -8,6 +8,7 @@ public final class BCTransport {
         BCTransportBlocks.init();
         BCTransportMenus.init();
         BCTransportItems.init();
+        BCTransportPlugs.init();
     }
 
     public static void setup() {}

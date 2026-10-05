@@ -139,7 +139,10 @@
   "item.buildcraft.oil_residue_heat_1_bucket": "Hot Residue Bucket",
   "item.buildcraft.oil_residue_heat_2_bucket": "Searing Residue Bucket",
   "item.buildcraft.pipe_sealant": "Pipe Sealant",
+  "item.buildcraft.plug_blocker": "Pipe Plug",
+  "item.buildcraft.plug_power_adaptor": "Power Adapter",
   "item.buildcraft.water_gel_spawn": "Water Gel",
   "item.buildcraft.wrench": "Wrench",
-  "itemGroup.buildcraft.main": "BuildCraft"
+  "itemGroup.buildcraft.main": "BuildCraft",
+  "tooltip.buildcraft.pluggable.remove": "Sneak and right click with an empty hand or a wrench to remove"
 }

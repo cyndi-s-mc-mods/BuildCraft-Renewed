@@ -13,6 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import buildcraft.api.transport.pluggable.PipePluggable;
+
 /** The block entity that holds a pipe. */
 public interface IPipeHolder {
     Level getPipeWorld();
@@ -35,4 +37,12 @@ public interface IPipeHolder {
 
     /** Asks for the block state to be recalculated (for connections and behaviour visuals). */
     void scheduleBlockStateUpdate();
+
+    @Nullable
+    PipePluggable getPluggable(Direction side);
+
+    /** Replaces the pluggable on a side (null removes it).
+     * @return The pluggable that was there before. */
+    @Nullable
+    PipePluggable replacePluggable(Direction side, @Nullable PipePluggable with);
 }

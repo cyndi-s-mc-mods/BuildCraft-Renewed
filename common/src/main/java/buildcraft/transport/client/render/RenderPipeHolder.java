@@ -2,8 +2,10 @@ package buildcraft.transport.client.render;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 
 import org.jspecify.annotations.Nullable;
 
@@ -28,6 +30,8 @@ import net.minecraft.world.phys.Vec3;
 
 import buildcraft.BuildCraft;
 import buildcraft.api.core.EnumPipePart;
+import buildcraft.api.transport.pluggable.PipePluggable;
+import buildcraft.api.transport.pluggable.PlugModelPart;
 import buildcraft.client.render.BoxRenderer;
 import buildcraft.client.render.BoxRenderer.Face;
 import buildcraft.lib.client.FluidRenderUtil;
@@ -49,6 +53,8 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         final double[] fluidAmounts = new double[7];
         int fluidCapacity;
         final boolean[] connected = new boolean[6];
+        final List<Direction> plugSides = new ArrayList<>();
+        final List<List<PlugModelPart>> plugModels = new ArrayList<>();
         final float[] power = new float[6];
         float centerPower;
     }
@@ -73,6 +79,15 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
         BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
         state.items.clear();
         state.itemPositions.clear();
+        state.plugSides.clear();
+        state.plugModels.clear();
+        for (Map.Entry<Direction, PipePluggable> entry : tile.getPluggables().entrySet()) {
+            List<PlugModelPart> model = entry.getValue().getModel();
+            if (!model.isEmpty()) {
+                state.plugSides.add(entry.getKey());
+                state.plugModels.add(model);
+            }
+        }
         state.fluidSprite = null;
         state.centerPower = 0;
         Level level = tile.getLevel();
@@ -114,6 +129,9 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        for (int i = 0; i < state.plugSides.size(); i++) {
+            submitPluggable(state.plugSides.get(i), state.plugModels.get(i), state.lightCoords, poseStack, collector);
+        }
         for (int i = 0; i < state.items.size(); i++) {
             Vec3 pos = state.itemPositions.get(i);
             poseStack.pushPose();
@@ -189,6 +207,35 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder, Ren
                 }
             }
         });
+    }
+
+    private void submitPluggable(Direction side, List<PlugModelPart> model, int light, PoseStack poseStack, SubmitNodeCollector collector) {
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        switch (side) {
+            case EAST -> poseStack.rotate(Axis.YP.rotationDegrees(180));
+            case NORTH -> poseStack.rotate(Axis.YP.rotationDegrees(-90));
+            case SOUTH -> poseStack.rotate(Axis.YP.rotationDegrees(90));
+            case UP -> poseStack.rotate(Axis.ZP.rotationDegrees(-90));
+            case DOWN -> poseStack.rotate(Axis.ZP.rotationDegrees(90));
+            default -> {}
+        }
+        poseStack.translate(-0.5, -0.5, -0.5);
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS), (pose, buf) -> {
+            for (PlugModelPart part : model) {
+                PlugModelPart.Face[] src = part.faces();
+                Face[] faces = new Face[6];
+                for (int f = 0; f < 6; f++) {
+                    PlugModelPart.Face face = src == null ? null : src[f];
+                    if (face != null) {
+                        TextureAtlasSprite sprite = sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, face.sprite()));
+                        faces[f] = new Face(sprite, face.u0(), face.v0(), face.u1(), face.v1());
+                    }
+                }
+                BoxRenderer.box(pose, buf, part.x0(), part.y0(), part.z0(), part.x1(), part.y1(), part.z1(), faces, light, part.colour());
+            }
+        });
+        poseStack.popPose();
     }
 
     private static Face[] faces(Face face) {

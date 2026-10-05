@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.api.transport.pipe.IPipeHolder;
 import buildcraft.api.transport.pipe.PipeBehaviour;
 import buildcraft.api.transport.pipe.PipeDefinition;
@@ -139,6 +140,10 @@ public final class Pipe implements IPipe {
         types.clear();
 
         for (Direction facing : Direction.values()) {
+            PipePluggable plug = holder.getPluggable(facing);
+            if (plug != null && plug.isBlocking()) {
+                continue;
+            }
             BlockEntity oTile = holder.getNeighbourTile(facing);
             if (oTile == null) {
                 continue;
@@ -177,6 +182,10 @@ public final class Pipe implements IPipe {
     }
 
     public static boolean canPipesConnect(Direction to, IPipe one, IPipe two) {
+        PipePluggable plug = two.getHolder().getPluggable(to.getOpposite());
+        if (plug != null && plug.isBlocking()) {
+            return false;
+        }
         return canColoursConnect(one.getColour(), two.getColour())
             && one.getBehaviour().canConnect(to, two.getBehaviour())
             && two.getBehaviour().canConnect(to.getOpposite(), one.getBehaviour())

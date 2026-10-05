@@ -106,6 +106,9 @@ public class BlockPipe extends BlockBCTile<TilePipeHolder> {
                 mask |= 1 << dir.get3DDataValue();
             }
         }
+        if (level.getBlockEntity(pos) instanceof TilePipeHolder tile && !tile.getPluggables().isEmpty()) {
+            return Shapes.or(SHAPES[mask], tile.getPluggableShape());
+        }
         return SHAPES[mask];
     }
 

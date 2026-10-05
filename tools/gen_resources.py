@@ -742,5 +742,25 @@ for chip, english in [('redstone', 'Redstone'), ('iron', 'Iron'), ('gold', 'Gold
     simple_item(f'chipset_{chip}', f'redstone_chipset/{"red" if chip == "redstone" else chip}')
     name('item', f'chipset_{chip}', f'{english} Chipset')
 
+# ---------------------------------------------------------------- pluggables
+
+def plug_item(item, texture, elements):
+    tex_exists(f'{NS}:{texture}')
+    write(f'models/item/{item}.json', {'parent': 'minecraft:block/block', 'textures': {'particle': f'{NS}:{texture}', 'all': f'{NS}:{texture}'},
+                                       'elements': [{'from': f, 'to': t, 'faces': {d: {'texture': '#all'} for d in
+                                                                                   ['down', 'up', 'north', 'south', 'west', 'east']}}
+                                                    for f, t in elements]})
+    item_def(item)
+
+
+plug_item('plug_blocker', 'block/pipes/plug', [([6, 4, 4], [10, 12, 12])])
+name('item', 'plug_blocker', 'Pipe Plug')
+shapeless('plug_blocker', [f'{NS}:pipe_structure'], count=4)
+plug_item('plug_power_adaptor', 'block/pipes/power_adapter', [([7, 4, 4], [9, 12, 12]), ([9, 3, 3], [11, 13, 13])])
+name('item', 'plug_power_adaptor', 'Power Adapter')
+shaped('plug_power_adaptor', ['sis', 'sgs', 'srs'], {'s': f'{NS}:pipe_structure', 'i': '#c:ingots/gold',
+                                                     'g': '#c:gears/stone', 'r': '#c:dusts/redstone'}, count=4)
+LANG['tooltip.buildcraft.pluggable.remove'] = 'Sneak and right click with an empty hand or a wrench to remove'
+
 finish()
 print('Resources generated')

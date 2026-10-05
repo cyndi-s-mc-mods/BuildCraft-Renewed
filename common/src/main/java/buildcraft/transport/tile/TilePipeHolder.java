@@ -2,10 +2,16 @@ package buildcraft.transport.tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
+
 
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +31,10 @@ import net.minecraft.world.phys.Vec3;
 
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.mj.IMjConnector;
+import buildcraft.api.tools.IToolWrench;
+import buildcraft.api.transport.pluggable.IItemPluggable;
+import buildcraft.api.transport.pluggable.PipePluggable;
+import buildcraft.api.transport.pluggable.PluggableDefinition;
 import buildcraft.api.mj.IMjConnectorProvider;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.IPipeHolder;
@@ -43,6 +53,7 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     private final Pipe pipe;
     private final PipeEventBus eventBus = new PipeEventBus();
     private boolean blockStateDirty = true;
+    private final Map<Direction, PipePluggable> pluggables = new EnumMap<>(Direction.class);
 
     public TilePipeHolder(BlockPos pos, BlockState state) {
         super(BCTransportBlocks.PIPE_HOLDER.get(), pos, state);
@@ -60,12 +71,36 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         pipe.save(output.child("pipe"));
+        if (!pluggables.isEmpty()) {
+            ValueOutput plugs = output.child("plugs");
+            for (Map.Entry<Direction, PipePluggable> entry : pluggables.entrySet()) {
+                ValueOutput plug = plugs.child(entry.getKey().getSerializedName());
+                plug.putString("id", entry.getValue().definition.id.toString());
+                entry.getValue().save(plug);
+            }
+        }
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         input.child("pipe").ifPresent(pipe::load);
+        Map<Direction, PipePluggable> old = new EnumMap<>(pluggables);
+        pluggables.clear();
+        input.child("plugs").ifPresent(plugs -> {
+            for (Direction side : Direction.values()) {
+                plugs.child(side.getSerializedName()).ifPresent(plug -> {
+                    Identifier id = Identifier.tryParse(plug.getStringOr("id", ""));
+                    PluggableDefinition def = id == null ? null : PluggableDefinition.get(id);
+                    if (def != null) {
+                        pluggables.put(side, def.loader.load(def, this, side, plug));
+                    }
+                });
+            }
+        });
+        if (!old.keySet().equals(pluggables.keySet())) {
+            pipe.markForUpdate();
+        }
     }
 
     @Override
@@ -76,6 +111,9 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
 
     @Override
     public void tick() {
+        for (PipePluggable plug : List.copyOf(pluggables.values())) {
+            plug.onTick();
+        }
         pipe.onTick();
         if (blockStateDirty && level != null && !level.isClientSide()) {
             blockStateDirty = false;
@@ -102,6 +140,10 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
         if (level != null && !level.isClientSide()) {
             List<ItemStack> drops = new ArrayList<>();
             pipe.addDrops(drops);
+            for (PipePluggable plug : pluggables.values()) {
+                plug.onRemove();
+                plug.addDrops(drops);
+            }
             for (ItemStack stack : drops) {
                 Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
             }
@@ -123,6 +165,49 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
     @Override
     public InteractionResult onActivated(Player player, InteractionHand hand, ItemStack held, BlockHitResult hit) {
         EnumPipePart part = getPartHit(worldPosition, hit.getLocation());
+        Direction plugSide = getPluggableHit(hit.getLocation());
+        if (plugSide != null) {
+            PipePluggable plug = pluggables.get(plugSide);
+            if (player.isShiftKeyDown() && (held.isEmpty() || held.getItem() instanceof IToolWrench)) {
+                // Take the pluggable off
+                if (!isClient() && plug != null) {
+                    replacePluggable(plugSide, null);
+                    if (!player.getAbilities().instabuild) {
+                        List<ItemStack> drops = new ArrayList<>();
+                        plug.addDrops(drops);
+                        for (ItemStack stack : drops) {
+                            if (!player.getInventory().add(stack) && level != null) {
+                                Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), stack);
+                            }
+                        }
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if (plug != null) {
+                InteractionResult result = plug.onPluggableActivate(player, hand, hit);
+                if (result != InteractionResult.PASS) return result;
+            }
+        }
+        if (held.getItem() instanceof IItemPluggable itemPlug) {
+            Direction side = part.face != null ? part.face : hit.getDirection();
+            if (pluggables.get(side) == null) {
+                if (!isClient()) {
+                    PipePluggable plug = itemPlug.onPlace(held, this, side, player, hand);
+                    if (plug == null) return InteractionResult.FAIL;
+                    replacePluggable(side, plug);
+                    plug.onPlacedBy(player);
+                    if (!player.getAbilities().instabuild) {
+                        held.shrink(1);
+                    }
+                    if (level != null) {
+                        level.playSound(null, worldPosition, net.minecraft.sounds.SoundEvents.METAL_PLACE,
+                            net.minecraft.sounds.SoundSource.BLOCKS, 1, 1);
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
         InteractionResult result = pipe.behaviour.onPipeActivate(player, hand, held, hit, part);
         if (result != InteractionResult.PASS) {
             return result;
@@ -178,10 +263,58 @@ public class TilePipeHolder extends TileBC implements IPipeHolder, IMjConnectorP
         blockStateDirty = true;
     }
 
+    @Override
+    public @Nullable PipePluggable getPluggable(Direction side) {
+        return pluggables.get(side);
+    }
+
+    @Override
+    public @Nullable PipePluggable replacePluggable(Direction side, @Nullable PipePluggable with) {
+        PipePluggable old = with == null ? pluggables.remove(side) : pluggables.put(side, with);
+        if (old != null && old != with) {
+            old.onRemove();
+        }
+        pipe.markForUpdate();
+        scheduleNetworkUpdate();
+        if (level != null) {
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+        }
+        return old;
+    }
+
+    public Map<Direction, PipePluggable> getPluggables() {
+        return pluggables;
+    }
+
+    /** @return The side of the pluggable at the given point (in world coordinates), or null. */
+    @Nullable
+    public Direction getPluggableHit(Vec3 hit) {
+        Vec3 local = hit.subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+        for (Map.Entry<Direction, PipePluggable> entry : pluggables.entrySet()) {
+            if (entry.getValue().getBoundingBox().inflate(1e-3).contains(local)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /** @return The shape of every pluggable, for collisions. */
+    public VoxelShape getPluggableShape() {
+        VoxelShape shape = Shapes.empty();
+        for (PipePluggable plug : pluggables.values()) {
+            shape = Shapes.or(shape, Shapes.create(plug.getBoundingBox()));
+        }
+        return shape;
+    }
+
     // Exposed to other mods
 
     @Override
     public @Nullable IMjConnector getMjConnector(Direction side) {
+        PipePluggable plug = pluggables.get(side);
+        if (plug != null) {
+            return plug.getMjConnector();
+        }
         if (!pipe.isConnected(side)) return null;
         IMjConnector connector = pipe.behaviour.getMjConnector(side);
         return connector != null ? connector : pipe.flow.getMjConnector(side);

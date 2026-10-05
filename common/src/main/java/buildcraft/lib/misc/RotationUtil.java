@@ -2,6 +2,8 @@ package buildcraft.lib.misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,5 +48,25 @@ public final class RotationUtil {
     /** Cycles to the next of the six directions after current. */
     public static Direction next(Direction current) {
         return Direction.from3DDataValue(current.get3DDataValue() + 1);
+    }
+
+    /** Turns a point (relative to the centre of the block) from the west side to the given side. Pluggable models and
+     * boxes are made for the west side and turned with this. */
+    public static Vec3 rotateFromWest(Vec3 p, Direction side) {
+        return switch (side) {
+            case WEST -> p;
+            case EAST -> new Vec3(-p.x, p.y, -p.z);
+            case NORTH -> new Vec3(-p.z, p.y, p.x);
+            case SOUTH -> new Vec3(p.z, p.y, -p.x);
+            case UP -> new Vec3(p.y, -p.x, p.z);
+            case DOWN -> new Vec3(-p.y, p.x, p.z);
+        };
+    }
+
+    /** @return A box (in pixels, as it would be on the west side) turned to the given side, in block coordinates. */
+    public static AABB boxFromWest(double x0, double y0, double z0, double x1, double y1, double z1, Direction side) {
+        Vec3 a = rotateFromWest(new Vec3(x0 / 16 - 0.5, y0 / 16 - 0.5, z0 / 16 - 0.5), side);
+        Vec3 b = rotateFromWest(new Vec3(x1 / 16 - 0.5, y1 / 16 - 0.5, z1 / 16 - 0.5), side);
+        return new AABB(a.x + 0.5, a.y + 0.5, a.z + 0.5, b.x + 0.5, b.y + 0.5, b.z + 0.5);
     }
 }
