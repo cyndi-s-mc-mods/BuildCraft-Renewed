@@ -29,6 +29,7 @@ public final class BCCoreItems {
     public static RegistryEntry<Item, ItemFragileFluidShard> FRAGILE_FLUID_SHARD;
     public static RegistryEntry<Item, ItemGoggles> GOGGLES;
     public static RegistryEntry<Item, ItemMapLocation> MAP_LOCATION;
+    public static RegistryEntry<Item, buildcraft.lib.item.ItemGuide> GUIDE;
 
     private BCCoreItems() {}
 
@@ -47,5 +48,6 @@ public final class BCCoreItems {
         FRAGILE_FLUID_SHARD = hiddenItem("fragile_fluid_shard", ItemFragileFluidShard::new);
         GOGGLES = item("goggles", ItemGoggles::new);
         MAP_LOCATION = item("map_location", ItemMapLocation::new);
+        GUIDE = item("guide", buildcraft.lib.item.ItemGuide::new);
     }
 }

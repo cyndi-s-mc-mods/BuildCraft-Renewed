@@ -130,7 +130,7 @@ public class GuiFillerPlanner extends GuiBC<ContainerFillerPlanner> {
         }
         for (int i = 0; i < Math.min(menu.getPattern().maxParameters(), AddonFillerPlanner.PARAM_COUNT); i++) {
             if (isHovering(PARAM_X + 18 * i, PARAM_Y, 18, 18, mx, my)) {
-                sendButtonClick(ContainerFiller.BUTTON_PARAM + i * 2 + (event.button() == 1 ? 1 : 0));
+                sendButtonClick(ContainerFiller.BUTTON_PARAM + i * 2 + containerButton(event));
                 return true;
             }
         }

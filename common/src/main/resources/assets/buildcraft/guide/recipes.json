@@ -1,0 +1,1698 @@
+{
+ "buildcraft:advanced_crafting_table": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:obsidian",
+     "minecraft:crafting_table",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "#c:chests/wooden",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "buildcraft:chipset_redstone",
+     "minecraft:obsidian"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:architect": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/black",
+     "buildcraft:marker_volume",
+     "#c:dyes/black"
+    ],
+    [
+     "#c:dyes/yellow",
+     "minecraft:crafting_table",
+     "#c:dyes/yellow"
+    ],
+    [
+     "#c:gears/diamond",
+     "buildcraft:blueprint",
+     "#c:gears/diamond"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:assembly_table": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:obsidian",
+     "#c:gems/diamond",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "#c:dusts/redstone",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "#c:gears/diamond",
+     "minecraft:obsidian"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:autoworkbench_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:gears/stone",
+     "minecraft:crafting_table",
+     "#c:gears/stone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:blueprint": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "#c:gems/lapis",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:builder": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/black",
+     "buildcraft:marker_volume",
+     "#c:dyes/black"
+    ],
+    [
+     "#c:dyes/yellow",
+     "minecraft:crafting_table",
+     "#c:dyes/yellow"
+    ],
+    [
+     "#c:gears/diamond",
+     "#c:chests/wooden",
+     "#c:gears/diamond"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:chute": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "minecraft:chest",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/stone",
+     "#c:ingots/iron"
+    ],
+    [
+     null,
+     "#c:ingots/iron",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:distiller": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:redstone_torch",
+     "buildcraft:tank",
+     "minecraft:redstone_torch"
+    ],
+    [
+     "buildcraft:tank",
+     "#c:gears/diamond",
+     "buildcraft:tank"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:engine_combustion": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:ingots/iron",
+     "#c:ingots/iron"
+    ],
+    [
+     null,
+     "#c:glass_blocks/colorless",
+     null
+    ],
+    [
+     "#c:gears/iron",
+     "minecraft:piston",
+     "#c:gears/iron"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:engine_redstone": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#minecraft:planks",
+     "#minecraft:planks",
+     "#minecraft:planks"
+    ],
+    [
+     null,
+     "#c:glass_blocks/colorless",
+     null
+    ],
+    [
+     "#c:gears/wood",
+     "minecraft:piston",
+     "#c:gears/wood"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:engine_stirling": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:cobblestones",
+     "#c:cobblestones",
+     "#c:cobblestones"
+    ],
+    [
+     null,
+     "#c:glass_blocks/colorless",
+     null
+    ],
+    [
+     "#c:gears/stone",
+     "minecraft:piston",
+     "#c:gears/stone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:filler": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/black",
+     "buildcraft:marker_volume",
+     "#c:dyes/black"
+    ],
+    [
+     "#c:dyes/yellow",
+     "minecraft:crafting_table",
+     "#c:dyes/yellow"
+    ],
+    [
+     "#c:gears/gold",
+     "#c:chests/wooden",
+     "#c:gears/gold"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:filler_planner": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:paper",
+     "#c:dyes/yellow",
+     "#c:dyes/black"
+    ],
+    [
+     "buildcraft:marker_volume"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:flood_gate": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:gears/iron",
+     "#c:ingots/iron"
+    ],
+    [
+     "minecraft:iron_bars",
+     "buildcraft:tank",
+     "minecraft:iron_bars"
+    ],
+    [
+     "#c:ingots/iron",
+     "minecraft:iron_bars",
+     "#c:ingots/iron"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gate": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "minecraft:brick",
+     null
+    ],
+    [
+     "minecraft:brick",
+     "#c:dusts/redstone",
+     "minecraft:brick"
+    ],
+    [
+     null,
+     "buildcraft:plug_blocker",
+     null
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:ingots/iron",
+     null
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:dusts/redstone",
+     "#c:ingots/iron"
+    ],
+    [
+     null,
+     "buildcraft:plug_blocker",
+     null
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "minecraft:nether_brick",
+     null
+    ],
+    [
+     "minecraft:nether_brick",
+     "#c:dusts/redstone",
+     "minecraft:nether_brick"
+    ],
+    [
+     null,
+     "buildcraft:plug_blocker",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gear_diamond": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:gems/diamond",
+     null
+    ],
+    [
+     "#c:gems/diamond",
+     "#c:gears/gold",
+     "#c:gems/diamond"
+    ],
+    [
+     null,
+     "#c:gems/diamond",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gear_gold": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:ingots/gold",
+     null
+    ],
+    [
+     "#c:ingots/gold",
+     "#c:gears/iron",
+     "#c:ingots/gold"
+    ],
+    [
+     null,
+     "#c:ingots/gold",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gear_iron": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:ingots/iron",
+     null
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/stone",
+     "#c:ingots/iron"
+    ],
+    [
+     null,
+     "#c:ingots/iron",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gear_stone": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:cobblestones",
+     null
+    ],
+    [
+     "#c:cobblestones",
+     "#c:gears/wood",
+     "#c:cobblestones"
+    ],
+    [
+     null,
+     "#c:cobblestones",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:gear_wood": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:rods/wooden",
+     null
+    ],
+    [
+     "#c:rods/wooden",
+     null,
+     "#c:rods/wooden"
+    ],
+    [
+     null,
+     "#c:rods/wooden",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:goggles": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:leather",
+     "minecraft:leather",
+     "minecraft:leather"
+    ],
+    [
+     "#c:glass_panes",
+     null,
+     "#c:glass_panes"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:guide": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:gears/wood",
+     "minecraft:paper",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:heat_exchange": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:gears/iron",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/iron",
+     "#c:ingots/iron"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:integration_table": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:obsidian",
+     "#c:ingots/gold",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "buildcraft:chipset_iron",
+     "minecraft:obsidian"
+    ],
+    [
+     "minecraft:obsidian",
+     "#c:gears/diamond",
+     "minecraft:obsidian"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:laser": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dusts/redstone",
+     "#c:dusts/redstone",
+     "minecraft:obsidian"
+    ],
+    [
+     "#c:dusts/redstone",
+     "#c:gems/diamond",
+     "#c:gems/diamond"
+    ],
+    [
+     "#c:dusts/redstone",
+     "#c:dusts/redstone",
+     "minecraft:obsidian"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:library": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:gears/gold",
+     "#c:ingots/iron"
+    ],
+    [
+     "buildcraft:blueprint",
+     "#c:chests/wooden",
+     "buildcraft:blueprint"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/gold",
+     "#c:ingots/iron"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:list": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "#c:dyes/green",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:map_location": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "#c:dyes/yellow",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:marker_connector": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:redstone_torch"
+    ],
+    [
+     "#c:gears/wood"
+    ],
+    [
+     "buildcraft:wrench"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:marker_path": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/green"
+    ],
+    [
+     "minecraft:redstone_torch"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:marker_volume": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/blue"
+    ],
+    [
+     "minecraft:redstone_torch"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:mining_well": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:dusts/redstone",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/iron",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:ingots/iron",
+     "minecraft:iron_pickaxe",
+     "#c:ingots/iron"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:paintbrush": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "#c:strings",
+     "#minecraft:wool"
+    ],
+    [
+     null,
+     "#c:gears/wood",
+     "#c:strings"
+    ],
+    [
+     "#c:rods/wooden",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/black"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/blue"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/brown"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/cyan"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/gray"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/green"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/light_blue"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/light_gray"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/lime"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/magenta"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/orange"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/pink"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/purple"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/red"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/white"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:paintbrush",
+     "#c:dyes/yellow"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_clay_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_clay_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_clay_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_clay_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:clay",
+     "#c:glass_blocks/colorless",
+     "minecraft:clay"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_cobblestone_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_cobblestone_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_cobblestone_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_cobblestone_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:cobblestones",
+     "#c:glass_blocks/colorless",
+     "#c:cobblestones"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_cobblestone_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_cobblestone_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_cobblestone_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_daizuli_item": [
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:lapis_block",
+     "#c:glass_blocks/colorless",
+     "#c:gems/diamond"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:gems/diamond",
+     "#c:glass_blocks/colorless",
+     "#c:gems/diamond"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_wood_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_wood_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_wood_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_wood_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#minecraft:planks",
+     "#c:glass_blocks/colorless",
+     "#c:gems/diamond"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_wood_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_diamond_wood_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_wood_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_emzuli_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_diamond_wood_item",
+     "minecraft:lapis_block"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_gold_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_gold_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_gold_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_gold_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:ingots/gold",
+     "#c:glass_blocks/colorless",
+     "#c:ingots/gold"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_gold_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_gold_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_gold_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_iron_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_iron_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_iron_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_iron_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:glass_blocks/colorless",
+     "#c:ingots/iron"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_iron_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_iron_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_iron_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_lapis_item": [
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:lapis_block",
+     "#c:glass_blocks/colorless",
+     "minecraft:lapis_block"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_obsidian_item": [
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:obsidian",
+     "#c:glass_blocks/colorless",
+     "minecraft:obsidian"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_quartz_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_quartz_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_quartz_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_quartz_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:quartz_block",
+     "#c:glass_blocks/colorless",
+     "minecraft:quartz_block"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_quartz_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_quartz_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_quartz_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_sandstone_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_sandstone_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_sandstone_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_sandstone_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:sandstone/blocks",
+     "#c:glass_blocks/colorless",
+     "#c:sandstone/blocks"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_sandstone_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_sandstone_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_sandstone_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_sealant": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:green_dye"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "buildcraft:oil_residue_bucket"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_stone_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_stone_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_stone_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_stone_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:stone",
+     "#c:glass_blocks/colorless",
+     "minecraft:stone"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_stone_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_stone_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_stone_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_stripes_item": [
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#c:gears/gold",
+     "#c:glass_blocks/colorless",
+     "#c:gears/gold"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_structure": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_cobblestone_item",
+     "minecraft:gravel"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_void_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_void_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_void_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_void_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "minecraft:black_dye",
+     "#c:glass_blocks/colorless",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_wood_fluid": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_wood_item",
+     "buildcraft:pipe_sealant"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_wood_item": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_wood_fluid"
+    ]
+   ]
+  },
+  {
+   "count": 8,
+   "grid": [
+    [
+     "#minecraft:planks",
+     "#c:glass_blocks/colorless",
+     "#minecraft:planks"
+    ]
+   ]
+  },
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_wood_power"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pipe_wood_power": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:pipe_wood_item",
+     "#c:dusts/redstone"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:plug_blocker": [
+  {
+   "count": 4,
+   "grid": [
+    [
+     "buildcraft:pipe_structure"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:plug_power_adaptor": [
+  {
+   "count": 4,
+   "grid": [
+    [
+     "buildcraft:pipe_structure",
+     "#c:ingots/gold",
+     "buildcraft:pipe_structure"
+    ],
+    [
+     "buildcraft:pipe_structure",
+     "#c:gears/stone",
+     "buildcraft:pipe_structure"
+    ],
+    [
+     "buildcraft:pipe_structure",
+     "#c:dusts/redstone",
+     "buildcraft:pipe_structure"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:pump": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:dusts/redstone",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/iron",
+     "#c:ingots/iron"
+    ],
+    [
+     "buildcraft:tank",
+     "minecraft:bucket",
+     "buildcraft:tank"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:quarry": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:gears/iron",
+     "#c:dusts/redstone",
+     "#c:gears/iron"
+    ],
+    [
+     "#c:gears/gold",
+     "#c:gears/iron",
+     "#c:gears/gold"
+    ],
+    [
+     "#c:gears/diamond",
+     "minecraft:diamond_pickaxe",
+     "#c:gears/diamond"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:replacer": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:dyes/black",
+     "buildcraft:marker_volume",
+     "#c:dyes/black"
+    ],
+    [
+     "#c:dyes/yellow",
+     "buildcraft:blueprint",
+     "#c:dyes/yellow"
+    ],
+    [
+     "#c:gears/gold",
+     "#c:chests/wooden",
+     "#c:gears/gold"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:schematic_single": [
+  {
+   "count": 4,
+   "grid": [
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "#c:gems/lapis"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:tank": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless"
+    ],
+    [
+     "#c:glass_blocks/colorless",
+     null,
+     "#c:glass_blocks/colorless"
+    ],
+    [
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless",
+     "#c:glass_blocks/colorless"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:template": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "#c:dyes/black",
+     "minecraft:paper"
+    ],
+    [
+     "minecraft:paper",
+     "minecraft:paper",
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:volume_box": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:marker_volume",
+     "minecraft:paper"
+    ]
+   ]
+  }
+ ],
+ "buildcraft:water_gel_spawn": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     null,
+     "minecraft:sand",
+     null
+    ],
+    [
+     "minecraft:sand",
+     "buildcraft:oil_residue_bucket",
+     "minecraft:sand"
+    ],
+    [
+     null,
+     "minecraft:sand",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:wrench": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     null,
+     "#c:ingots/iron"
+    ],
+    [
+     null,
+     "#c:gears/stone",
+     null
+    ],
+    [
+     null,
+     "#c:ingots/iron",
+     null
+    ]
+   ]
+  }
+ ],
+ "buildcraft:zone_planner": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "#c:ingots/iron",
+     "#c:dusts/redstone",
+     "#c:ingots/iron"
+    ],
+    [
+     "#c:gears/gold",
+     "minecraft:map",
+     "#c:gears/gold"
+    ],
+    [
+     "#c:ingots/iron",
+     "#c:gears/diamond",
+     "#c:ingots/iron"
+    ]
+   ]
+  }
+ ],
+ "minecraft:water_bucket": [
+  {
+   "count": 1,
+   "grid": [
+    [
+     "buildcraft:gel"
+    ],
+    [
+     "minecraft:bucket"
+    ]
+   ]
+  }
+ ]
+}

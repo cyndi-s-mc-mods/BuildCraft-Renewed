@@ -1178,5 +1178,18 @@ LANG.update({
     'gui.buildcraft.zone_planner.paint': 'Drag to add to the zone of this colour; drag with the right button to remove',
 })
 
+# The guide book (its pages are made by tools/gen_guide.py)
+simple_item('guide', 'guide_book')
+name('item', 'guide', 'Guide Book')
+shapeless('guide', ['#c:gears/wood', 'minecraft:paper', 'minecraft:paper', 'minecraft:paper'])
+LANG.update({
+    'gui.buildcraft.guide.search': 'Search',
+    'gui.buildcraft.guide.lore': 'Lore',
+    'gui.buildcraft.guide.no_results': 'Nothing matches the search.',
+    'gui.buildcraft.guide.recipes': 'Made with:',
+    'gui.buildcraft.guide.usages': 'Used to make:',
+    'gui.buildcraft.guide.assembly': 'Assembly table, %s MJ:',
+})
+
 finish()
 print('Resources generated')

@@ -83,6 +83,8 @@ public final class BCClient {
     }
 
     public static void registerScreens(ClientRegistrar registrar) {
+        buildcraft.lib.BCClientHooks.openGuide = () -> net.minecraft.client.Minecraft.getInstance().gui
+            .setScreen(new buildcraft.lib.client.guide.GuiGuide());
         buildcraft.lib.net.BCNetwork.setClientHandler(buildcraft.robotics.zone.ZonePackets.MapData.TYPE,
             buildcraft.robotics.client.gui.GuiZonePlanner::receive);
         registrar.screen(buildcraft.robotics.BCRoboticsMenus.ZONE_PLANNER.get(), buildcraft.robotics.client.gui.GuiZonePlanner::new);

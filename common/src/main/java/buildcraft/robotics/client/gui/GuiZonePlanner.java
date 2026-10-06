@@ -216,8 +216,8 @@ public class GuiZonePlanner extends GuiBC<ContainerZonePlanner> {
         if (isOverMap(event.x(), event.y())) {
             if (brushColour() >= 0) {
                 paintStart = new BlockPos(blockX(event.x()), 0, blockZ(event.y()));
-                paintButton = event.button();
-            } else if (event.button() == 0) {
+                paintButton = containerButton(event);
+            } else if (containerButton(event) == 0) {
                 panning = true;
             }
             return true;
