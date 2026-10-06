@@ -56,6 +56,22 @@ public final class BCCoreStatements {
         new ExternalTrigger("machine.done", "trigger_machine_inactive", (t, s, c, p) -> t instanceof IHasWork w && !w.hasWork()));
 
     public static final ITriggerExternal[] ENGINE_STAGES = new ITriggerExternal[5];
+    public static final ITriggerExternal ENERGY_HIGH = StatementManager.registerStatement(
+        new ExternalTrigger("energy.high", "trigger_energy_storage_high", (t, s, c, p) -> energyLevel(t, s) > 0.95));
+    public static final ITriggerExternal ENERGY_LOW = StatementManager.registerStatement(
+        new ExternalTrigger("energy.low", "trigger_energy_storage_low", (t, s, c, p) -> {
+            double level = energyLevel(t, s);
+            return level >= 0 && level < 0.05;
+        }));
+
+    /** @return How full (0 to 1) the machine's power store is, or -1 if it doesn't say. */
+    static double energyLevel(BlockEntity tile, Direction side) {
+        if (tile instanceof buildcraft.api.mj.IMjConnectorProvider provider
+            && provider.getMjConnector(side) instanceof buildcraft.api.mj.IMjReadable readable && readable.getCapacity() > 0) {
+            return readable.getStored() / (double) readable.getCapacity();
+        }
+        return -1;
+    }
 
     static {
         String[] icons = { "trigger_engineheat_blue", "trigger_engineheat_green", "trigger_engineheat_yellow", "trigger_engineheat_red",
@@ -108,6 +124,10 @@ public final class BCCoreStatements {
 
             @Override
             public void addExternalTriggers(Collection<ITriggerExternal> triggers, Direction side, BlockEntity tile) {
+                if (energyLevel(tile, side) >= 0) {
+                    triggers.add(ENERGY_HIGH);
+                    triggers.add(ENERGY_LOW);
+                }
                 if (tile instanceof IHasWork) {
                     triggers.add(MACHINE_ACTIVE);
                     triggers.add(MACHINE_INACTIVE);

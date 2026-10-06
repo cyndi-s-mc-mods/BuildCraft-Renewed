@@ -27,7 +27,7 @@ import buildcraft.api.transport.pipe.PipeEventItem;
 import buildcraft.transport.block.BlockPipe;
 
 /** Daizuli pipes send items of their colour out of the side they point at, and everything else elsewhere. */
-public class PipeBehaviourDaizuli extends PipeBehaviourDirectional {
+public class PipeBehaviourDaizuli extends PipeBehaviourDirectional implements IColouredPipe {
     private DyeColor colour = DyeColor.WHITE;
 
     public PipeBehaviourDaizuli(IPipe pipe) {
@@ -55,6 +55,14 @@ public class PipeBehaviourDaizuli extends PipeBehaviourDirectional {
     @Override
     protected boolean canFaceDirection(@Nullable Direction dir) {
         return dir != null;
+    }
+
+    @Override
+    public void setColour(DyeColor colour) {
+        if (this.colour == colour) return;
+        this.colour = colour;
+        pipe.getHolder().scheduleBlockStateUpdate();
+        pipe.getHolder().scheduleNetworkUpdate();
     }
 
     @Override

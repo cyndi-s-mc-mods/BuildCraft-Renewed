@@ -290,7 +290,7 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower {
         s.nextPowerQuery = Math.min(s.nextPowerQuery + amount, getMaxPower());
     }
 
-    long getPowerRequested(@Nullable Direction side) {
+    public long getPowerRequested(@Nullable Direction side) {
         long req = 0;
         for (Direction face : Direction.values()) {
             if (side == null || face != side) {

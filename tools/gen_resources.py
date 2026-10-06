@@ -1191,5 +1191,15 @@ LANG.update({
     'gui.buildcraft.guide.assembly': 'Assembly table, %s MJ:',
 })
 
+# Gate statements added with the guide book
+LANG.update({
+    'gate.buildcraft.action.pipe.colour': 'Paint items %s',
+    'gate.buildcraft.action.extraction': 'Extract %s filter items',
+    'gate.buildcraft.action.pipe.power_limit': 'Limit power to %s MJ/t',
+    'gate.buildcraft.trigger.pipe.requestsEnergy': 'Power requested',
+    'gate.buildcraft.trigger.energy.high': 'Energy stored high',
+    'gate.buildcraft.trigger.energy.low': 'Energy stored low',
+})
+
 finish()
 print('Resources generated')

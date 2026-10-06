@@ -536,6 +536,18 @@
    {
     "page": "trigger/pipe_signal_inactive",
     "statement": "buildcraft:pipe.wire.red.inactive"
+   },
+   {
+    "page": "trigger/energy_high",
+    "statement": "buildcraft:energy.high"
+   },
+   {
+    "page": "trigger/energy_low",
+    "statement": "buildcraft:energy.low"
+   },
+   {
+    "page": "trigger/power_requested",
+    "statement": "buildcraft:pipe.requestsEnergy"
    }
   ]
  },
@@ -601,6 +613,10 @@
    {
     "page": "action/pipe_direction_west",
     "statement": "buildcraft:pipe.dir.west"
+   },
+   {
+    "page": "action/power_limit",
+    "statement": "buildcraft:pipe.power_limit.iron_power.s1"
    }
   ]
  }

@@ -54,6 +54,23 @@ public class PipeBehaviourLimiter extends PipeBehaviour {
         return state.hasProperty(BlockPipe.LIMIT) ? state.setValue(BlockPipe.LIMIT, limitShift) : state;
     }
 
+    public int getLimitShift() {
+        return limitShift;
+    }
+
+    /** Sets the limit (as a gate does): the power through is divided by 2 to the power of the shift, or none at all for
+     * {@link #MAX_SHIFT}. */
+    public void setLimitShift(int shift) {
+        shift = Mth.clamp(shift, 0, MAX_SHIFT);
+        if (shift == limitShift) return;
+        limitShift = shift;
+        if (pipe.getFlow() instanceof IFlowPower flow) {
+            flow.reconfigure();
+        }
+        pipe.getHolder().scheduleBlockStateUpdate();
+        pipe.getHolder().scheduleNetworkUpdate();
+    }
+
     @PipeEventHandler
     public void configurePower(PipeEventPower.Configure event) {
         if (limitShift == MAX_SHIFT) {

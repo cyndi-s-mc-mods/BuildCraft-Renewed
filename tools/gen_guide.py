@@ -578,6 +578,38 @@ that colour.
 <recipes_usages stack="buildcraft:zone_planner"/>
 ''')
 
+page('trigger/energy_high', 'statement:buildcraft:energy.high', '''
+Energy stored high is a gate trigger for machines that store power (such as quarries, fillers, pumps and lasers) next to
+the gate.
+
+<chapter name="Requirements"/>
+It is active while the machine's power store is more than 95% full.
+''')
+
+page('trigger/energy_low', 'statement:buildcraft:energy.low', '''
+Energy stored low is a gate trigger for machines that store power (such as quarries, fillers, pumps and lasers) next to
+the gate.
+
+<chapter name="Requirements"/>
+It is active while the machine's power store is less than 5% full: a sign that it needs more power than it is getting.
+''')
+
+page('trigger/power_requested', 'statement:buildcraft:pipe.requestsEnergy', '''
+Power requested is a gate trigger for gates on power pipes.
+
+<chapter name="Requirements"/>
+It is active while the machines at the end of the pipe want power. Use it to turn engines on only when they are
+needed.
+''')
+
+page('action/power_limit', 'statement:buildcraft:pipe.power_limit.iron_power.s1', '''
+The power limit actions are found on gates on iron and diamond power pipes.
+
+<chapter name="Effect"/>
+While active, the pipe lets through no more than the power shown: its full rate, a half, a quarter and so on, down to
+none at all. This is the same limit that hitting the pipe with a wrench sets.
+''')
+
 # Categories in the contents: (title, [pages])
 CATEGORIES = [
     ('Introduction', ['core/guide', 'energy/power']),
@@ -599,8 +631,9 @@ CATEGORIES = [
      + ['transport/pipe_power', 'transport/pipe_sealant', 'transport/wire', 'transport/plug_blocker',
         'transport/plug_power_adaptor']),
     ('Robotics', ['robotics/zone_planner']),
-    ('Triggers', [f'trigger/{name}' for _, group, name, _ in STATEMENTS if group == 'trigger']),
-    ('Actions', [f'action/{name}' for _, group, name, _ in STATEMENTS if group == 'action']),
+    ('Triggers', [f'trigger/{name}' for _, group, name, _ in STATEMENTS if group == 'trigger']
+     + ['trigger/energy_high', 'trigger/energy_low', 'trigger/power_requested']),
+    ('Actions', [f'action/{name}' for _, group, name, _ in STATEMENTS if group == 'action'] + ['action/power_limit']),
 ]
 
 
