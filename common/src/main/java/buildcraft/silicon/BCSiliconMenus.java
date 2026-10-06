@@ -13,6 +13,7 @@ public final class BCSiliconMenus {
     public static RegistryEntry<MenuType<?>, MenuType<ContainerAssemblyTable>> ASSEMBLY_TABLE;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerAdvancedCraftingTable>> ADVANCED_CRAFTING_TABLE;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerGate>> GATE;
+    public static RegistryEntry<MenuType<?>, MenuType<buildcraft.silicon.container.ContainerIntegrationTable>> INTEGRATION_TABLE;
 
     private BCSiliconMenus() {}
 
@@ -20,5 +21,6 @@ public final class BCSiliconMenus {
         ASSEMBLY_TABLE = menu("assembly_table", ContainerAssemblyTable::new);
         ADVANCED_CRAFTING_TABLE = menu("advanced_crafting_table", ContainerAdvancedCraftingTable::new);
         GATE = menu("gate", ContainerGate::new);
+        INTEGRATION_TABLE = menu("integration_table", buildcraft.silicon.container.ContainerIntegrationTable::new);
     }
 }

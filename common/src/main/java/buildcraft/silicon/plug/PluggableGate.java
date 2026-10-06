@@ -34,6 +34,7 @@ import buildcraft.api.transport.pluggable.PluggableDefinition;
 import buildcraft.lib.misc.RotationUtil;
 import buildcraft.silicon.container.ContainerGate;
 import buildcraft.silicon.gate.GateLogic;
+import buildcraft.silicon.item.ItemGateCopier;
 import buildcraft.silicon.gate.GateVariant;
 import buildcraft.silicon.item.ItemPluggableGate;
 
@@ -79,6 +80,13 @@ public class PluggableGate extends PipePluggable implements MenuProvider {
 
     @Override
     public InteractionResult onPluggableActivate(Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack held = player.getItemInHand(hand);
+        if (held.getItem() instanceof ItemGateCopier) {
+            if (!player.level().isClientSide()) {
+                ItemGateCopier.useOnGate(held, player, this);
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (!player.level().isClientSide()) {
             player.openMenu(this);
         }

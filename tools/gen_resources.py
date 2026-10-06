@@ -719,7 +719,7 @@ shaped('laser', ['rro', 'rdd', 'rro'], {'r': '#c:dusts/redstone', 'd': '#c:gems/
 
 LEGACY_SILICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets',
                               'buildcraftsilicon', 'models', 'block', 'table')
-for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table', 'advanced_crafting')]:
+for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table', 'advanced_crafting'), ('integration_table', 'integration')]:
     with open(os.path.join(LEGACY_SILICON, f'{legacy}.json')) as f:
         model = json.load(f)
     textures = {k: v.replace('buildcraftsilicon:blocks/', f'{NS}:block/') for k, v in model['textures'].items()}
@@ -732,6 +732,9 @@ for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table'
     tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{table}')
 name('block', 'assembly_table', 'Assembly Table')
 name('block', 'advanced_crafting_table', 'Advanced Crafting Table')
+name('block', 'integration_table', 'Integration Table')
+shaped('integration_table', ['OiO', 'OrO', 'OgO'], {'O': 'minecraft:obsidian', 'i': '#c:ingots/gold', 'r': f'{NS}:chipset_iron',
+                                                    'g': '#c:gears/diamond'})
 shaped('assembly_table', ['OdO', 'OrO', 'OgO'], {'O': 'minecraft:obsidian', 'd': '#c:gems/diamond', 'r': '#c:dusts/redstone',
                                                  'g': '#c:gears/diamond'})
 shaped('advanced_crafting_table', ['OtO', 'OcO', 'OrO'], {'O': 'minecraft:obsidian', 't': 'minecraft:crafting_table',
@@ -1138,6 +1141,24 @@ LANG.update({
     'item.buildcraft.map_location.clear': 'Sneak right click to clear it',
     'direction.buildcraft.down': 'bottom', 'direction.buildcraft.up': 'top', 'direction.buildcraft.north': 'north',
     'direction.buildcraft.south': 'south', 'direction.buildcraft.west': 'west', 'direction.buildcraft.east': 'east',
+})
+
+# Gate copier
+for state in ['empty', 'full']:
+    tex_exists(f'{NS}:item/gatecopier/{state}')
+    write(f'models/item/gate_copier_{state}.json', {'parent': 'minecraft:item/handheld',
+                                                    'textures': {'layer0': f'{NS}:item/gatecopier/{state}'}})
+write('items/gate_copier.json', {'model': {'type': 'minecraft:condition', 'property': 'minecraft:has_component',
+                                           'component': f'{NS}:gate_copy',
+                                           'on_true': {'type': 'minecraft:model', 'model': f'{NS}:item/gate_copier_full'},
+                                           'on_false': {'type': 'minecraft:model', 'model': f'{NS}:item/gate_copier_empty'}}})
+name('item', 'gate_copier', 'Gate Copier')
+LANG.update({
+    'item.buildcraft.gate_copier.empty': 'Right click a gate to copy its settings',
+    'item.buildcraft.gate_copier.full': 'Right click gates to paste the settings; sneak right click to clear',
+    'chat.buildcraft.gate_copier.copied': 'Gate settings copied',
+    'chat.buildcraft.gate_copier.pasted': 'Gate settings pasted',
+    'chat.buildcraft.gate_copier.cleared': 'Gate copier cleared',
 })
 
 finish()

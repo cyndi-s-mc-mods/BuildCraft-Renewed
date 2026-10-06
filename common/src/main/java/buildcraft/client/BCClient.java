@@ -94,6 +94,7 @@ public final class BCClient {
         registrar.screen(BCSiliconMenus.ASSEMBLY_TABLE.get(), GuiAssemblyTable::new);
         registrar.screen(BCSiliconMenus.ADVANCED_CRAFTING_TABLE.get(), GuiAdvancedCraftingTable::new);
         registrar.screen(BCSiliconMenus.GATE.get(), GuiGate::new);
+        registrar.screen(BCSiliconMenus.INTEGRATION_TABLE.get(), buildcraft.silicon.client.gui.GuiIntegrationTable::new);
         registrar.screen(BCBuildersMenus.FILLER.get(), GuiFiller::new);
         registrar.screen(buildcraft.core.BCCoreMenus.LIST.get(), buildcraft.core.client.gui.GuiList::new);
         registrar.screen(BCBuildersMenus.ARCHITECT.get(), GuiArchitectTable::new);
