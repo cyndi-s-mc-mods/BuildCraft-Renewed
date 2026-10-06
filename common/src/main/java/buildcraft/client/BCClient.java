@@ -60,6 +60,8 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_COMBUSTION_TILE.get(), ctx -> new RenderEngine<>(ctx, "iron"));
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
         registrar.blockEntityRenderer(BCCoreBlocks.MARKER_VOLUME_TILE.get(), RenderMarkerVolume::new);
+        registrar.blockEntityRenderer(BCCoreBlocks.MARKER_PATH_TILE.get(), buildcraft.core.client.render.RenderMarkerPath::new);
+        registrar.entityRenderer(buildcraft.core.BCCoreEntities.VOLUME_BOX.get(), buildcraft.core.client.render.RenderVolumeBox::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.QUARRY_TILE.get(), RenderQuarry::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.FILLER_TILE.get(), RenderBuildBox::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.BUILDER_TILE.get(), RenderBuildBox::new);
@@ -98,5 +100,6 @@ public final class BCClient {
         registrar.screen(BCBuildersMenus.BUILDER.get(), GuiBuilder::new);
         registrar.screen(BCBuildersMenus.LIBRARY.get(), GuiElectronicLibrary::new);
         registrar.screen(BCBuildersMenus.REPLACER.get(), buildcraft.builders.client.gui.GuiReplacer::new);
+        registrar.screen(BCBuildersMenus.FILLER_PLANNER.get(), buildcraft.builders.client.gui.GuiFillerPlanner::new);
     }
 }

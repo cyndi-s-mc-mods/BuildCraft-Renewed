@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "#c:dyes/yellow",
+    "#c:dyes/black",
+    "buildcraft:marker_volume"
+  ],
+  "result": {
+    "id": "buildcraft:filler_planner"
+  }
+}

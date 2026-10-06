@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
@@ -44,10 +45,12 @@ import buildcraft.builders.snapshot.Snapshot;
 import buildcraft.builders.snapshot.SnapshotHeader;
 import buildcraft.builders.snapshot.SnapshotStore;
 import buildcraft.lib.inventory.ItemHandlerSimple;
+import buildcraft.core.marker.IVolumeBoxUser;
+import buildcraft.core.marker.VolumeBoxEntity;
 import buildcraft.lib.tile.TileBC;
 
 /** Scans the area marked out behind it into a blank template or blueprint. */
-public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuildBox {
+public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuildBox, IVolumeBoxUser {
     private static final int TEMPLATE_PER_TICK = 1024;
     private static final int BLUEPRINT_PER_TICK = 256;
 
@@ -57,6 +60,9 @@ public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuil
 
     @Nullable
     private BoundingBox box;
+    /** The volume box this table got its area from, if any. */
+    @Nullable
+    private UUID volumeBox;
     /** How far through the scan this is, or -1 if not scanning. */
     private int scanIndex = -1;
     private Snapshot.@Nullable Type scanType;
@@ -90,7 +96,13 @@ public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuil
         super.onPlacedBy(placer, stack);
         if (level == null || level.isClientSide()) return;
         Direction facing = getBlockState().getValue(BlockArchitectTable.FACING);
-        if (level.getBlockEntity(worldPosition.relative(facing.getOpposite())) instanceof IAreaProvider provider) {
+        BlockPos front = worldPosition.relative(facing.getOpposite());
+        VolumeBoxEntity found = VolumeBoxEntity.at(level, front);
+        if (found != null && !found.isLocked()) {
+            box = found.getBox();
+            volumeBox = found.getUUID();
+            found.lock(worldPosition, VolumeBoxEntity.LOCK_READ);
+        } else if (level.getBlockEntity(front) instanceof IAreaProvider provider) {
             box = BoundingBox.fromCorners(provider.min(), provider.max());
             provider.removeFromWorld();
         }
@@ -189,6 +201,12 @@ public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuil
         if (box != null) {
             output.putIntArray("box", new int[] { box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ() });
         }
+        output.storeNullable("volumeBox", UUIDUtil.CODEC, volumeBox);
+    }
+
+    @Override
+    public boolean isUsing(VolumeBoxEntity box) {
+        return box.getUUID().equals(volumeBox);
     }
 
     @Override
@@ -198,6 +216,7 @@ public class TileArchitectTable extends TileBC implements MenuProvider, IHasBuil
         invOut.load(input, "out");
         box = input.getIntArray("box").filter(a -> a.length == 6)
             .map(a -> new BoundingBox(a[0], a[1], a[2], a[3], a[4], a[5])).orElse(null);
+        volumeBox = input.read("volumeBox", UUIDUtil.CODEC).orElse(null);
         // A scan in progress starts again
         resetScan();
     }

@@ -44,4 +44,10 @@ public final class InventoryUtil {
     private static boolean isPipe(Level level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof TilePipeHolder;
     }
+
+    /** Gives an item to a player (dropping it if their inventory is full), unless they're in creative mode. */
+    public static void giveToPlayer(net.minecraft.world.entity.player.Player player, ItemStack stack) {
+        if (player.getAbilities().instabuild || stack.isEmpty()) return;
+        player.getInventory().placeItemBackInInventory(stack, net.minecraft.util.Prediction.SERVER_ONLY);
+    }
 }

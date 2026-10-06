@@ -1061,5 +1061,46 @@ LANG['item.buildcraft.schematic_single.used'] = '%s (%s)'
 LANG['gui.buildcraft.replacer.help'] = ('Put a blueprint in the top slot, a single schematic of the block to replace bottom left, and '
                                         'one of the block to replace it with bottom right.')
 
+# ---------------------------------------------------------------- path markers, the marker connector and volume boxes
+
+tex_exists(f'{NS}:block/marker/path')
+write('models/block/marker_path.json', {'textures': {'particle': f'{NS}:block/marker/path', 'all': f'{NS}:block/marker/path'},
+                                        'elements': TORCH_ELEMENT})
+write('blockstates/marker_path.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/marker_path', **rot} for d, rot in FACING_ROTATIONS.items()}})
+simple_item('marker_path')
+name('block', 'marker_path', 'Path Marker')
+drops_self('marker_path')
+shaped('marker_path', ['g', 't'], {'g': '#c:dyes/green', 't': 'minecraft:redstone_torch'})
+
+handheld_item('marker_connector')
+name('item', 'marker_connector', 'Marker Connector')
+shaped('marker_connector', ['r', 'g', 'w'], {'r': 'minecraft:redstone_torch', 'g': '#c:gears/wood', 'w': f'{NS}:wrench'})
+LANG.update({
+    'chat.buildcraft.marker_connector.selected': 'Marker selected: right click another marker to connect them',
+    'chat.buildcraft.marker_connector.connected': 'Markers connected',
+    'chat.buildcraft.marker_connector.cant_connect': "Those markers can't be connected (selected this one instead)",
+    'chat.buildcraft.volume_box.locked': 'This volume box is being used by a machine',
+    'chat.buildcraft.volume_box.cant_add': "That can't be added to this corner",
+})
+
+LEGACY_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets')
+with open(os.path.join(LEGACY_ASSETS, 'buildcraftcore', 'models', 'item', 'volume_box.json')) as f:
+    volume_box_model = json.load(f)
+volume_box_model['parent'] = 'minecraft:block/block'
+volume_box_model['textures'] = {'main': f'{NS}:block/lasers/marker_volume_connected',
+                                'particle': f'{NS}:block/lasers/marker_volume_connected'}
+write('models/item/volume_box.json', volume_box_model)
+item_def('volume_box')
+name('item', 'volume_box', 'Volume Box')
+shapeless('volume_box', [f'{NS}:marker_volume', 'minecraft:paper'])
+LANG['entity.buildcraft.volume_box'] = 'Volume Box'
+
+write('models/item/filler_planner.json', {'parent': 'minecraft:block/cube_all',
+                                          'textures': {'all': f'{NS}:block/addons/filler_planner'}})
+item_def('filler_planner')
+name('item', 'filler_planner', 'Filler Planner')
+shapeless('filler_planner', ['minecraft:paper', '#c:dyes/yellow', '#c:dyes/black', f'{NS}:marker_volume'])
+
 finish()
 print('Resources generated')

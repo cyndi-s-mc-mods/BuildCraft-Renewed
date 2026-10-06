@@ -3,6 +3,8 @@ package buildcraft.core;
 import net.minecraft.world.item.Item;
 
 import buildcraft.core.item.ItemList;
+import buildcraft.core.item.ItemMarkerConnector;
+import buildcraft.core.item.ItemVolumeBox;
 import buildcraft.core.item.ItemPaintbrush;
 import buildcraft.core.item.ItemWrench;
 import buildcraft.lib.registry.RegistryEntry;
@@ -18,6 +20,8 @@ public final class BCCoreItems {
     public static RegistryEntry<Item, Item> GEAR_DIAMOND;
     public static RegistryEntry<Item, ItemPaintbrush> PAINTBRUSH;
     public static RegistryEntry<Item, ItemList> LIST;
+    public static RegistryEntry<Item, ItemMarkerConnector> MARKER_CONNECTOR;
+    public static RegistryEntry<Item, ItemVolumeBox> VOLUME_BOX;
 
     private BCCoreItems() {}
 
@@ -30,5 +34,7 @@ public final class BCCoreItems {
         GEAR_DIAMOND = item("gear_diamond", Item::new);
         PAINTBRUSH = item("paintbrush", ItemPaintbrush::new);
         LIST = item("list", props -> new ItemList(props.stacksTo(1)));
+        MARKER_CONNECTOR = item("marker_connector", ItemMarkerConnector::new);
+        VOLUME_BOX = item("volume_box", ItemVolumeBox::new);
     }
 }

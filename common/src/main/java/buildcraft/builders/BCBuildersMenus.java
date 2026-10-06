@@ -23,6 +23,7 @@ public final class BCBuildersMenus {
     public static RegistryEntry<MenuType<?>, MenuType<ContainerBuilder>> BUILDER;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerElectronicLibrary>> LIBRARY;
     public static RegistryEntry<MenuType<?>, MenuType<ContainerReplacer>> REPLACER;
+    public static RegistryEntry<MenuType<?>, MenuType<buildcraft.builders.container.ContainerFillerPlanner>> FILLER_PLANNER;
 
     private BCBuildersMenus() {}
 
@@ -32,5 +33,6 @@ public final class BCBuildersMenus {
         BUILDER = menu("builder", ContainerBuilder::new);
         LIBRARY = menu("library", ContainerElectronicLibrary::new);
         REPLACER = menu("replacer", ContainerReplacer::new);
+        FILLER_PLANNER = menu("filler_planner", buildcraft.builders.container.ContainerFillerPlanner::new);
     }
 }

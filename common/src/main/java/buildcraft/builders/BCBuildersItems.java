@@ -19,6 +19,7 @@ public final class BCBuildersItems {
     public static RegistryEntry<Item, ItemSnapshot> TEMPLATE;
     public static RegistryEntry<Item, ItemSnapshot> BLUEPRINT;
     public static RegistryEntry<Item, ItemSchematicSingle> SCHEMATIC_SINGLE;
+    public static RegistryEntry<Item, buildcraft.core.item.ItemVolumeBoxAddon> FILLER_PLANNER;
 
     private BCBuildersItems() {}
 
@@ -26,5 +27,7 @@ public final class BCBuildersItems {
         TEMPLATE = item("template", props -> new ItemSnapshot(props.stacksTo(16), Snapshot.Type.TEMPLATE));
         BLUEPRINT = item("blueprint", props -> new ItemSnapshot(props.stacksTo(16), Snapshot.Type.BLUEPRINT));
         SCHEMATIC_SINGLE = item("schematic_single", ItemSchematicSingle::new);
+        FILLER_PLANNER = item("filler_planner",
+            props -> new buildcraft.core.item.ItemVolumeBoxAddon(props, buildcraft.builders.addon.AddonFillerPlanner::new));
     }
 }

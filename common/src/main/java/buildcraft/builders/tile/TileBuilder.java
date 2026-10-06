@@ -6,6 +6,9 @@
 
 package buildcraft.builders.tile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -17,6 +20,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,6 +38,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 
+import buildcraft.api.core.IPathProvider;
 import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjConnectorProvider;
 import buildcraft.api.mj.IMjReceiver;
@@ -57,7 +62,8 @@ import buildcraft.lib.misc.ChunkLoader;
 import buildcraft.lib.tile.TileBC;
 
 /** Builds the template or blueprint in its slot, in front of it (where the architect table's area was, relative to the
- * table), using the blocks in its inventory. */
+ * table), using the blocks in its inventory. If it's placed next to a path of path markers, it builds the snapshot at
+ * every block along the path instead, one after another. */
 public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate {
     private final ChunkLoader chunkLoader = new ChunkLoader();
     public static final int INV_SIZE = 27;
@@ -75,6 +81,10 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
     @Nullable
     private BoundingBox box;
     private boolean needsRebuild = true;
+    /** Every block along the path being built along (or null to build in front), and how far along it the builder is. */
+    @Nullable
+    private List<BlockPos> path;
+    private int pathIndex = 0;
 
     public TileBuilder(BlockPos pos, BlockState state) {
         super(BCBuildersBlocks.BUILDER_TILE.get(), pos, state);
@@ -95,7 +105,7 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
     }
 
     public boolean isFinished() {
-        return engine != null && engine.isFinished(true);
+        return engine != null && engine.isFinished(true) && (path == null || pathIndex >= path.size() - 1);
     }
 
     public long getStoredPower() {
@@ -110,6 +120,46 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
     private void onSnapshotChanged() {
         needsRebuild = true;
         setChanged();
+    }
+
+    @Override
+    public void onPlacedBy(@Nullable LivingEntity placer, ItemStack stack) {
+        super.onPlacedBy(placer, stack);
+        if (level == null || level.isClientSide()) return;
+        Direction facing = getBlockState().getValue(BlockFacing.FACING);
+        if (level.getBlockEntity(worldPosition.relative(facing.getOpposite())) instanceof IPathProvider provider) {
+            List<BlockPos> markers = provider.getPath();
+            if (markers.size() >= 2) {
+                path = allAlong(markers);
+                pathIndex = 0;
+                provider.removeFromWorld();
+                needsRebuild = true;
+                setChanged();
+            }
+        }
+    }
+
+    /** @return Every block on the straight lines between the given positions, in order. */
+    private static List<BlockPos> allAlong(List<BlockPos> markers) {
+        List<BlockPos> all = new ArrayList<>();
+        all.add(markers.getFirst());
+        for (int i = 1; i < markers.size(); i++) {
+            BlockPos from = markers.get(i - 1), to = markers.get(i);
+            int steps = Math.max(Math.abs(to.getX() - from.getX()), Math.max(Math.abs(to.getY() - from.getY()), Math.abs(to.getZ() - from.getZ())));
+            for (int s = 1; s <= steps; s++) {
+                double t = s / (double) steps;
+                all.add(BlockPos.containing(from.getX() + 0.5 + (to.getX() - from.getX()) * t, from.getY() + 0.5 + (to.getY() - from.getY()) * t,
+                    from.getZ() + 0.5 + (to.getZ() - from.getZ()) * t));
+            }
+        }
+        return all;
+    }
+
+    /** @return Where the builder would be for the snapshot to be built at the current step (the snapshot is built in front
+     *         of this position). */
+    private BlockPos getOrigin(Direction facing) {
+        if (path == null || path.isEmpty()) return worldPosition;
+        return path.get(Math.min(pathIndex, path.size() - 1)).relative(facing);
     }
 
     private void onInventoryChanged() {
@@ -128,16 +178,17 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         Snapshot snapshot = header == null ? null : SnapshotStore.get(serverLevel.getServer(), header.key());
         if (snapshot != null) {
             Direction facing = getBlockState().getValue(BlockFacing.FACING);
-            BoundingBox area = snapshot.getBox(worldPosition, facing);
+            BlockPos origin = getOrigin(facing);
+            BoundingBox area = snapshot.getBox(origin, facing);
             box = area;
-            engine = new BuildEngine(serverLevel, worldPosition, area, createPlan(snapshot, area, facing));
+            engine = new BuildEngine(serverLevel, worldPosition, area, createPlan(snapshot, area, facing, origin));
         }
         if (oldBox == null ? box != null : !oldBox.equals(box)) {
             sendNetworkUpdate();
         }
     }
 
-    private BuildEngine.Plan createPlan(Snapshot snapshot, BoundingBox area, Direction facing) {
+    private BuildEngine.Plan createPlan(Snapshot snapshot, BoundingBox area, Direction facing, BlockPos origin) {
         Rotation rotation = snapshot.rotationTo(facing);
         int sizeX = area.getXSpan(), sizeZ = area.getZSpan();
         int count = sizeX * area.getYSpan() * sizeZ;
@@ -146,7 +197,7 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         BlockState air = Blocks.AIR.defaultBlockState();
         for (int i = 0; i < count; i++) {
             BlockPos pos = new BlockPos(area.minX() + i % sizeX, area.minY() + i / (sizeX * sizeZ), area.minZ() + (i / sizeX) % sizeZ);
-            int index = snapshot.indexOfWorldPos(pos, worldPosition, facing);
+            int index = snapshot.indexOfWorldPos(pos, origin, facing);
             BlockState state = index < 0 ? air : snapshot.getState(index);
             if (state != null && !state.isAir()) {
                 state = state.rotate(rotation);
@@ -186,6 +237,11 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         }
         if (engine != null) {
             engine.tick(battery, inv, true, mode != Mode.OFF);
+            if (engine.isFinished(true) && path != null && pathIndex < path.size() - 1) {
+                pathIndex++;
+                setChanged();
+                rebuild();
+            }
         }
     }
 
@@ -232,6 +288,10 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         if (box != null) {
             output.putIntArray("box", new int[] { box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ() });
         }
+        if (path != null) {
+            output.store("path", BlockPos.CODEC.listOf(), path);
+            output.putInt("pathIndex", pathIndex);
+        }
     }
 
     @Override
@@ -247,6 +307,8 @@ public class TileBuilder extends TileBC implements MenuProvider, IMjConnectorPro
         }
         box = input.getIntArray("box").filter(a -> a.length == 6)
             .map(a -> new BoundingBox(a[0], a[1], a[2], a[3], a[4], a[5])).orElse(null);
+        path = input.read("path", BlockPos.CODEC.listOf()).map(list -> (List<BlockPos>) new ArrayList<>(list)).orElse(null);
+        pathIndex = input.getIntOr("pathIndex", 0);
         needsRebuild = true;
     }
 
