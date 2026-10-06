@@ -229,6 +229,12 @@ it) can pump water from it forever, as the spring keeps refilling the water abov
 Oil springs are found under the spouts of large oil wells. They can't be broken, even in creative mode.
 ''')
 
+page('core/debugger', f'item:{NS}:debugger', '''
+<chapter name="Debugger"/>
+The debugger is a tool for finding out what is going wrong with a machine. Right click any block that has data (such as
+a BuildCraft machine) to see everything it saves, in chat. It can only be had in creative mode.
+''')
+
 page('core/power_tester', f'item:{NS}:power_tester', '''
 <chapter name="Power Tester"/>
 The power tester takes all the power it is given. Right click it to see how much power it received in the last tick:
@@ -614,7 +620,7 @@ none at all. This is the same limit that hitting the pipe with a wrench sets.
 CATEGORIES = [
     ('Introduction', ['core/guide', 'energy/power']),
     ('Tools', ['core/wrench', 'core/paintbrush', 'core/list', 'core/marker_connector', 'core/map_location', 'core/goggles',
-               'core/gate_copier', 'core/fragile_fluid_shard', 'core/power_tester'] +
+               'core/gate_copier', 'core/fragile_fluid_shard', 'core/power_tester', 'core/debugger'] +
      [f'core/gear_{g}' for g in ['wood', 'stone', 'iron', 'gold', 'diamond']]),
     ('Areas', ['core/marker_volume', 'core/marker_path', 'core/volume_box', 'builders/filler_planner']),
     ('Energy', ['energy/engine_redstone', 'energy/engine_stirling', 'energy/engine_combustion', 'energy/engine_creative',

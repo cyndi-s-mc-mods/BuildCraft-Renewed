@@ -30,6 +30,7 @@ public final class BCCoreItems {
     public static RegistryEntry<Item, ItemGoggles> GOGGLES;
     public static RegistryEntry<Item, ItemMapLocation> MAP_LOCATION;
     public static RegistryEntry<Item, buildcraft.lib.item.ItemGuide> GUIDE;
+    public static RegistryEntry<Item, buildcraft.lib.item.ItemDebugger> DEBUGGER;
 
     private BCCoreItems() {}
 
@@ -49,5 +50,6 @@ public final class BCCoreItems {
         GOGGLES = item("goggles", ItemGoggles::new);
         MAP_LOCATION = item("map_location", ItemMapLocation::new);
         GUIDE = item("guide", buildcraft.lib.item.ItemGuide::new);
+        DEBUGGER = item("debugger", buildcraft.lib.item.ItemDebugger::new);
     }
 }

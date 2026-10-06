@@ -30,5 +30,12 @@ setblock 41 -60 8 buildcraft:architect[facing=north,valid=true]{box:[I;40,-60,10
 setblock 51 -60 8 buildcraft:builder[facing=north]{battery:16000000000L,inv:{Items:[{Slot:0b,id:"minecraft:stone",count:8},{Slot:1b,id:"minecraft:furnace",count:1}]}}
 setblock 51 -59 8 buildcraft:engine_creative[facing=down]{currentOutputIndex:8}
 setblock 51 -58 8 minecraft:redstone_block
+# Gate actions on pipes, a volume box with a filler planner, and the zone planner and path markers
+setblock 60 -60 0 buildcraft:pipe_lapis_item{plugs:{up:{id:"buildcraft:gate",variant:{logic:"and",material:"iron",modifier:"no_modifier"},trigger0:{kind:"buildcraft:true"},action0:{kind:"buildcraft:pipe.colour.blue"}}}}
+kill @e[type=buildcraft:volume_box]
+summon buildcraft:volume_box 61 -60 6 {min:[I;60,-60,5],max:[I;62,-59,7],addons:{addon0:{type:"buildcraft:filler_planner",pattern:"buildcraft:filler_box"}}}
+setblock 60 -60 10 buildcraft:zone_planner
+setblock 65 -60 0 buildcraft:marker_path[facing=up]{next:[I;68,-60,0]}
+setblock 68 -60 0 buildcraft:marker_path[facing=up]{prev:[I;65,-60,0]}
 schedule function smoke:copy_blueprint 40t
 schedule function smoke:check 600t

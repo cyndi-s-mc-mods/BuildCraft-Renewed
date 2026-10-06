@@ -1201,5 +1201,10 @@ LANG.update({
     'gate.buildcraft.trigger.energy.low': 'Energy stored low',
 })
 
+# The debugger (a creative tool, with no recipe)
+simple_item('debugger')
+name('item', 'debugger', 'Debugger')
+LANG['chat.buildcraft.debugger'] = '%s at %s:'
+
 finish()
 print('Resources generated')

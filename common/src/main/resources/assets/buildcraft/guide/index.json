@@ -54,6 +54,10 @@
     "item": "buildcraft:power_tester"
    },
    {
+    "page": "core/debugger",
+    "item": "buildcraft:debugger"
+   },
+   {
     "page": "core/gear_wood",
     "item": "buildcraft:gear_wood"
    },
