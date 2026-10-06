@@ -1161,5 +1161,22 @@ LANG.update({
     'chat.buildcraft.gate_copier.cleared': 'Gate copier cleared',
 })
 
+# Zone planner
+cube('zone_planner', particle='zone_planner/default', down='zone_planner/default', up='zone_planner/top', north='zone_planner/front',
+     east='zone_planner/right', south='zone_planner/back', west='zone_planner/left')
+write('blockstates/zone_planner.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/zone_planner', **({'y': y} if y else {})} for d, y in FACINGS}})
+block_item('zone_planner')
+name('block', 'zone_planner', 'Zone Planner')
+drops_self('zone_planner')
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:zone_planner')
+shaped('zone_planner', ['iri', 'gmg', 'idi'], {'i': '#c:ingots/iron', 'r': '#c:dusts/redstone', 'g': '#c:gears/gold',
+                                               'm': 'minecraft:map', 'd': '#c:gears/diamond'})
+LANG.update({
+    'gui.buildcraft.zone_planner.position': 'X: %s Z: %s',
+    'gui.buildcraft.zone_planner.help': 'Drag to move the map, scroll to zoom. Pick up a paintbrush to paint zones.',
+    'gui.buildcraft.zone_planner.paint': 'Drag to add to the zone of this colour; drag with the right button to remove',
+})
+
 finish()
 print('Resources generated')

@@ -83,6 +83,9 @@ public final class BCClient {
     }
 
     public static void registerScreens(ClientRegistrar registrar) {
+        buildcraft.lib.net.BCNetwork.setClientHandler(buildcraft.robotics.zone.ZonePackets.MapData.TYPE,
+            buildcraft.robotics.client.gui.GuiZonePlanner::receive);
+        registrar.screen(buildcraft.robotics.BCRoboticsMenus.ZONE_PLANNER.get(), buildcraft.robotics.client.gui.GuiZonePlanner::new);
         registrar.screen(BCEnergyMenus.ENGINE_STIRLING.get(), GuiEngineStone::new);
         registrar.screen(BCEnergyMenus.ENGINE_COMBUSTION.get(), GuiEngineIron::new);
         registrar.screen(BCTransportMenus.PIPE_DIAMOND.get(), GuiDiamondPipe::new);

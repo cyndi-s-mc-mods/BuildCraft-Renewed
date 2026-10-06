@@ -6,6 +6,8 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -46,5 +48,15 @@ public class NeoForgePlatform implements Platform {
     @Override
     public FlowingFluid createFluid(BCFluidDefinition def, boolean source) {
         return NeoForgeFluids.create(def, source);
+    }
+
+    @Override
+    public void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+        net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player, payload);
+    }
+
+    @Override
+    public void sendToServer(CustomPacketPayload payload) {
+        NeoForgeClientNetwork.send(payload);
     }
 }

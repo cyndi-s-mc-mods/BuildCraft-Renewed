@@ -6,10 +6,13 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 
 import buildcraft.lib.fluid.IFluidHandlerBC;
@@ -40,5 +43,15 @@ public class FabricPlatform implements Platform {
     @Override
     public @Nullable IFluidHandlerBC getFluidHandler(Level level, BlockPos pos, Direction side) {
         return FabricTransfer.getFluidHandler(level, pos, side);
+    }
+
+    @Override
+    public void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+        ServerPlayNetworking.send(player, payload);
+    }
+
+    @Override
+    public void sendToServer(CustomPacketPayload payload) {
+        FabricClientNetwork.send(payload);
     }
 }

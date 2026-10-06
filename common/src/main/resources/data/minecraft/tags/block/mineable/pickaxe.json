@@ -24,6 +24,7 @@
     "buildcraft:power_tester",
     "buildcraft:pump",
     "buildcraft:quarry",
-    "buildcraft:replacer"
+    "buildcraft:replacer",
+    "buildcraft:zone_planner"
   ]
 }

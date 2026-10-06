@@ -54,6 +54,7 @@ public final class BuildCraft {
         BCFactory.init();
         BCBuilders.init();
         BCSilicon.init();
+        buildcraft.robotics.BCRobotics.init();
     }
 
     private static boolean setUp = false;

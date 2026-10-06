@@ -40,6 +40,7 @@ public class BuildCraftFabricClient implements ClientModInitializer {
                 MenuScreens.register(type, constructor);
             }
         };
+        FabricClientNetwork.register();
         BCClient.registerRenderers(registrar);
         BCClient.registerScreens(registrar);
         BCClient.registerSpecialItemRenderers(SpecialModelRenderers.ID_MAPPER::put);

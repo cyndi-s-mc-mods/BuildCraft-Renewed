@@ -20,6 +20,7 @@ public class BuildCraftNeoForge {
         BuildCraft.init();
         modBus.addListener(RegisterEvent.class, BuildCraftNeoForge::register);
         modBus.addListener(RegisterCapabilitiesEvent.class, NeoForgeTransfer::registerCapabilities);
+        modBus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, NeoForgeNetwork::register);
         modBus.addListener(FMLCommonSetupEvent.class, event -> event.enqueueWork(BuildCraft::setup));
     }
 
