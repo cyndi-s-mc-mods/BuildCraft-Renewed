@@ -25,6 +25,7 @@ public final class BCSiliconItems {
     public static RegistryEntry<Item, ItemPluggableLens> LENS;
     public static RegistryEntry<Item, ItemPluggableFacade> FACADE;
     public static RegistryEntry<Item, ItemPluggableLens> FILTER;
+    public static RegistryEntry<Item, buildcraft.silicon.item.ItemGateCopier> GATE_COPIER;
 
     private BCSiliconItems() {}
 
@@ -43,5 +44,6 @@ public final class BCSiliconItems {
         LENS = item("lens", props -> new ItemPluggableLens(props, false));
         FILTER = item("filter", props -> new ItemPluggableLens(props, true));
         FACADE = item("facade", ItemPluggableFacade::new);
+        GATE_COPIER = item("gate_copier", buildcraft.silicon.item.ItemGateCopier::new);
     }
 }

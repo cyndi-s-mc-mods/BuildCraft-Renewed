@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": "#c:dyes/green",
+    "t": "minecraft:redstone_torch"
+  },
+  "pattern": [
+    "g",
+    "t"
+  ],
+  "result": {
+    "id": "buildcraft:marker_path"
+  }
+}

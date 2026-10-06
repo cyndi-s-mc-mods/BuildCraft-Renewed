@@ -34,7 +34,7 @@ import buildcraft.lib.misc.StackUtil;
 import buildcraft.transport.container.ContainerEmzuliPipe;
 
 /** Emzuli pipes extract the items of whichever filter slots are active, painting them that slot's colour. Slots are
- * activated by gates, or (until gates are ported) by a redstone signal, which activates every slot. */
+ * activated by gates, with the extraction preset actions. */
 public class PipeBehaviourEmzuli extends PipeBehaviourWood {
     public enum SlotIndex {
         SQUARE(DyeColor.RED),
@@ -120,11 +120,6 @@ public class PipeBehaviourEmzuli extends PipeBehaviourWood {
         super.onTick();
         if (pipe.getHolder().getPipeWorld().isClientSide()) {
             return;
-        }
-        if (pipe.getHolder().getPipeWorld().hasNeighborSignal(pipe.getHolder().getPipePos())) {
-            for (SlotIndex index : SlotIndex.VALUES) {
-                activate(index);
-            }
         }
         for (SlotIndex index : SlotIndex.VALUES) {
             byte val = activatedTtl[index.ordinal()];

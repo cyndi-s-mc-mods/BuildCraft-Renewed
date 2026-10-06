@@ -328,4 +328,10 @@ public class TileEngineIron extends TileEngineBase implements IFluidHandlerProvi
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new ContainerEngineIron(id, inventory, this);
     }
+
+    @Override
+    public void preRemoveSideEffects(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) buildcraft.core.item.ItemFragileFluidShard.dropFluids(level, pos, tankManager);
+    }
 }

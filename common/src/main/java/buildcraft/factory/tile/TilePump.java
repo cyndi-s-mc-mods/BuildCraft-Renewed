@@ -262,4 +262,10 @@ public class TilePump extends TileMiner implements IFluidHandlerProvider {
         super.loadAdditional(input);
         tank.load(input);
     }
+
+    @Override
+    public void preRemoveSideEffects(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) buildcraft.core.item.ItemFragileFluidShard.dropFluids(level, pos, tank);
+    }
 }

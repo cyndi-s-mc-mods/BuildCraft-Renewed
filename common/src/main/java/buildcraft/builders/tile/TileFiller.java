@@ -8,11 +8,13 @@ package buildcraft.builders.tile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -46,6 +48,9 @@ import buildcraft.api.tiles.IControllable;
 import buildcraft.api.tiles.IHasWork;
 import buildcraft.builders.BCBuildersBlocks;
 import buildcraft.builders.BuildEngine;
+import buildcraft.builders.addon.AddonFillerPlanner;
+import buildcraft.core.marker.IVolumeBoxUser;
+import buildcraft.core.marker.VolumeBoxEntity;
 import buildcraft.builders.block.BlockFiller;
 import buildcraft.builders.container.ContainerFiller;
 import buildcraft.builders.filler.FilledTemplate;
@@ -58,7 +63,8 @@ import buildcraft.lib.misc.ChunkLoader;
 import buildcraft.lib.tile.TileBC;
 
 /** Builds (or clears out) a pattern in the area marked out next to it, using the blocks in its inventory. */
-public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate {
+public class TileFiller extends TileBC
+    implements MenuProvider, IMjConnectorProvider, IHasWork, IControllable, IHasBuildBox, IContainerDelegate, IVolumeBoxUser {
     private final ChunkLoader chunkLoader = new ChunkLoader();
     public static final int PARAM_COUNT = 4;
     public static final int INV_SIZE = 27;
@@ -75,6 +81,9 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     private boolean inverted = false;
     private Mode mode = Mode.UNKNOWN;
     private int lockedTicks = 0;
+    /** The volume box this filler got its area from, if any. */
+    @Nullable
+    private UUID volumeBox;
 
     // Worked out again after loading
     @Nullable
@@ -145,9 +154,27 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         super.onPlacedBy(placer, stack);
         if (level == null || level.isClientSide()) return;
         Direction facing = getBlockState().getValue(BlockFiller.FACING);
-        for (BlockPos areaPos : List.of(worldPosition.relative(facing.getOpposite()), worldPosition.above(), worldPosition.below(),
+        List<BlockPos> around = List.of(worldPosition.relative(facing.getOpposite()), worldPosition.above(), worldPosition.below(),
             worldPosition.relative(facing.getClockWise()), worldPosition.relative(facing.getCounterClockWise()),
-            worldPosition.relative(facing))) {
+            worldPosition.relative(facing));
+        for (BlockPos areaPos : around) {
+            VolumeBoxEntity found = VolumeBoxEntity.at(level, areaPos);
+            if (found != null && !found.isLocked()) {
+                box = found.getBox();
+                volumeBox = found.getUUID();
+                found.lock(worldPosition, VolumeBoxEntity.LOCK_WRITE);
+                AddonFillerPlanner planner = found.getAddon(AddonFillerPlanner.class);
+                if (planner != null) {
+                    pattern = planner.getPattern();
+                    System.arraycopy(planner.getParams(), 0, params, 0, PARAM_COUNT);
+                    inverted = planner.isInverted();
+                }
+                rebuildTemplate();
+                sendNetworkUpdate();
+                return;
+            }
+        }
+        for (BlockPos areaPos : around) {
             if (level.getBlockEntity(areaPos) instanceof IAreaProvider provider) {
                 BlockPos min = provider.min(), max = provider.max();
                 box = BoundingBox.fromCorners(min, max);
@@ -291,6 +318,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         output.putBoolean("excavate", canExcavate);
         output.putBoolean("inverted", inverted);
         output.putString("mode", mode.name());
+        output.storeNullable("volumeBox", UUIDUtil.CODEC, volumeBox);
     }
 
     @Override
@@ -313,6 +341,7 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
         } catch (IllegalArgumentException e) {
             mode = Mode.UNKNOWN;
         }
+        volumeBox = input.read("volumeBox", UUIDUtil.CODEC).orElse(null);
         rebuildTemplate();
     }
 
@@ -348,6 +377,11 @@ public class TileFiller extends TileBC implements MenuProvider, IMjConnectorProv
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
         if (level instanceof ServerLevel serverLevel) chunkLoader.releaseAll(serverLevel);
+    }
+
+    @Override
+    public boolean isUsing(VolumeBoxEntity box) {
+        return box.getUUID().equals(volumeBox);
     }
 
     @Override

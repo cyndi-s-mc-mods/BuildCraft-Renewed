@@ -38,6 +38,11 @@ public class BuildCraftNeoForgeClient {
                 BlockEntityType<? extends T> type, BlockEntityRendererProvider<T, S> provider) {
                 event.registerBlockEntityRenderer(type, provider);
             }
+            @Override
+            public <T extends net.minecraft.world.entity.Entity> void entityRenderer(net.minecraft.world.entity.EntityType<? extends T> type,
+                net.minecraft.client.renderer.entity.EntityRendererProvider<T> provider) {
+                event.registerEntityRenderer(type, provider);
+            }
 
             @Override
             public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void screen(MenuType<? extends M> type,
@@ -49,6 +54,11 @@ public class BuildCraftNeoForgeClient {
             @Override
             public <T extends BlockEntity, S extends BlockEntityRenderState> void blockEntityRenderer(
                 BlockEntityType<? extends T> type, BlockEntityRendererProvider<T, S> provider) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public <T extends net.minecraft.world.entity.Entity> void entityRenderer(net.minecraft.world.entity.EntityType<? extends T> type,
+                net.minecraft.client.renderer.entity.EntityRendererProvider<T> provider) {
                 throw new UnsupportedOperationException();
             }
 

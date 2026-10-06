@@ -25,6 +25,7 @@ public class BuildCraftFabric implements ModInitializer {
             BCRegistry.registerAll(key, (entry, value) -> Registry.register(registry, entry.id(), value));
         }
         FabricTransfer.register();
+        FabricNetwork.register();
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.LAKES,
             BCEnergyWorldGen.OIL_WELL_PLACED);
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,

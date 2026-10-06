@@ -28,6 +28,11 @@ public class BuildCraftFabricClient implements ClientModInitializer {
                 BlockEntityType<? extends T> type, BlockEntityRendererProvider<T, S> provider) {
                 BlockEntityRenderers.register(type, provider);
             }
+            @Override
+            public <T extends net.minecraft.world.entity.Entity> void entityRenderer(net.minecraft.world.entity.EntityType<? extends T> type,
+                net.minecraft.client.renderer.entity.EntityRendererProvider<T> provider) {
+                net.minecraft.client.renderer.entity.EntityRenderers.register(type, provider);
+            }
 
             @Override
             public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void screen(MenuType<? extends M> type,
@@ -35,6 +40,7 @@ public class BuildCraftFabricClient implements ClientModInitializer {
                 MenuScreens.register(type, constructor);
             }
         };
+        FabricClientNetwork.register();
         BCClient.registerRenderers(registrar);
         BCClient.registerScreens(registrar);
         BCClient.registerSpecialItemRenderers(SpecialModelRenderers.ID_MAPPER::put);

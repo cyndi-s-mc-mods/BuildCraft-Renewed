@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "buildcraft:marker_volume",
+    "minecraft:paper"
+  ],
+  "result": {
+    "id": "buildcraft:volume_box"
+  }
+}

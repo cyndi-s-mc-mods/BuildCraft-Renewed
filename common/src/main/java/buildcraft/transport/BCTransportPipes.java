@@ -106,7 +106,8 @@ public final class BCTransportPipes {
         BLOCKS.put(def, block);
     }
 
-    private static PipeDefinition def(String id) {
+    /** @return The pipe with the given id (such as "iron_power"), or null. */
+    public static PipeDefinition def(String id) {
         return DEFINITIONS.get(id);
     }
 

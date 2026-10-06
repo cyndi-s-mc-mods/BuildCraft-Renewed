@@ -13,18 +13,30 @@ Java 25 is needed to build and run it. If it isn't installed, Gradle downloads i
 
 ### What's in it
 
-* **Core:** wrench, gears, paintbrush, list, volume markers, engines (redstone and creative), water and oil springs,
-  power tester and decorated blocks.
+Everything in BuildCraft 7.99:
+
+* **Core:** wrench, gears, paintbrush, list, map location, goggles, marker connector, volume and path markers, volume
+  boxes, engines (redstone and creative), water and oil springs, power tester, fragile fluid shards, debugger and
+  decorated blocks.
 * **Energy:** Stirling and combustion engines, oil and fuels, and oil wells, spouts and lakes in world generation.
 * **Transport:** item, fluid and power pipes of every kind, pipe wires, painting, and pluggables (pipe plugs, power
-  adapters, gates, pulsars, sensors, lenses, filters and facades).
+  adapters, gates, pulsars, sensors, timers, lenses, filters and facades).
 * **Factory:** mining well, pump, flood gate, tank, chute, distiller, heat exchanger, auto workbench and water gel.
-* **Silicon:** laser, assembly table, advanced crafting table, chipsets, and gates with their triggers and actions.
-* **Builders:** quarry, filler (all 19 patterns, which gates can set), architect table, builder, electronic library,
-  replacer, templates, blueprints and single schematics. Quarries, fillers and builders keep the chunks they work in
-  loaded.
+* **Silicon:** laser, assembly table, advanced crafting table, integration table, chipsets, gate copier, and gates with
+  all their triggers and actions.
+* **Builders:** quarry, filler (all 19 patterns, which gates can set), filler planner, architect table, builder (which
+  can build along a path), electronic library, replacer, templates, blueprints and single schematics. Quarries, fillers
+  and builders keep the chunks they work in loaded.
+* **Robotics:** the zone planner. (BuildCraft 7.99 had no robots.)
+* **Guide book:** describes every block, item, trigger and action, with recipes.
 
-Not ported (yet): path markers, map locations, goggles, the zone planner and the guide book.
+A few things work differently from 7.99:
+
+* The zone planner's map is drawn from above, rather than in 3D.
+* Markers are joined by clicking one and then the other with the marker connector, rather than by aiming at the line
+  between them.
+
+As in 7.99, the integration table comes with no recipes of its own: other mods add them (`IntegrationRecipes`).
 
 Settings are in `config/buildcraft.properties`. The game writes it each time it starts, keeping the values set in it and
 adding any missing settings with their defaults.
@@ -46,6 +58,8 @@ and `./gradlew :<loader>:runServer` start the game with the mod.
   energy transfer, world generation, and client setup. They implement `buildcraft.lib.platform.Platform`.
 * `tools/gen_resources.py` generates the block states, models, item models, recipes, loot tables, tags and English
   names in `common/src/main/resources`. Edit it rather than the generated files, and run it after changing it.
+* `tools/gen_guide.py` generates the guide book's pages (most converted from 7.99's guide), contents and recipes. Run it
+  after `gen_resources.py`.
 * `.github/smoke-test` is a datapack that CI uses to check, on every loader, that a dedicated server starts and that a
   few machines work.
 

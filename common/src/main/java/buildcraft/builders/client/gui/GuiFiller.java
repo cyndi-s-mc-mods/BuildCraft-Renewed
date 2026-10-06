@@ -139,7 +139,7 @@ public class GuiFiller extends GuiBC<ContainerFiller> {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         double mx = event.x(), my = event.y();
-        int button = event.button();
+        int button = containerButton(event);
         if (choosing) {
             choosing = false;
             int x0 = leftPos + optionsX(), y0 = topPos + optionsY();

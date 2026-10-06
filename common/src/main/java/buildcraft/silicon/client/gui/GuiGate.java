@@ -227,7 +227,7 @@ public class GuiGate extends GuiBC<ContainerGate> {
         GateLogic logic = logic();
         if (logic == null) return super.mouseClicked(event, doubleClick);
         double mx = event.x(), my = event.y();
-        int button = event.button();
+        int button = containerButton(event);
         if (selectingSlot >= 0) {
             int x0 = leftPos + optionsX(), y0 = topPos + optionsY(logic);
             for (int i = 0; i < options.size(); i++) {

@@ -12,6 +12,7 @@ import buildcraft.api.recipes.AssemblyRecipes;
 import buildcraft.api.recipes.IngredientStack;
 import buildcraft.silicon.gate.GateVariant;
 import buildcraft.core.BCCoreBlocks;
+import buildcraft.core.BCCoreItems;
 import buildcraft.silicon.item.ItemPluggableGate;
 import buildcraft.silicon.item.ItemPluggableLens;
 import buildcraft.transport.BCTransportItems;
@@ -50,6 +51,9 @@ public final class BCSiliconRecipes {
         modifier(100_000, GateVariant.Material.GOLD, GateVariant.Modifier.LAPIS, lapis);
         modifier(140_000, GateVariant.Material.GOLD, GateVariant.Modifier.QUARTZ, quartzChip);
         modifier(180_000, GateVariant.Material.GOLD, GateVariant.Modifier.DIAMOND, diamondChip);
+
+        AssemblyRecipes.register("gate_copier", 500 * MjAPI.MJ, List.of(IngredientStack.of(BCCoreItems.WRENCH.get()), ironChip),
+            BCSiliconItems.GATE_COPIER.get(), 1);
 
         // Pluggables
         AssemblyRecipes.register("plug_pulsar", 1000 * MjAPI.MJ,

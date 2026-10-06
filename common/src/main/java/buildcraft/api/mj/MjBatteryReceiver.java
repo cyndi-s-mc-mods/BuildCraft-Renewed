@@ -1,7 +1,7 @@
 package buildcraft.api.mj;
 
 /** A receiver that puts power into a battery. */
-public class MjBatteryReceiver implements IMjReceiver {
+public class MjBatteryReceiver implements IMjReadable, IMjReceiver {
     private final MjBattery battery;
 
     public MjBatteryReceiver(MjBattery battery) {
@@ -11,6 +11,16 @@ public class MjBatteryReceiver implements IMjReceiver {
     @Override
     public boolean canConnect(IMjConnector other) {
         return true;
+    }
+
+    @Override
+    public long getStored() {
+        return battery.getStored();
+    }
+
+    @Override
+    public long getCapacity() {
+        return battery.getCapacity();
     }
 
     @Override

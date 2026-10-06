@@ -43,7 +43,7 @@ public class GuiEmzuliPipe extends GuiBC<ContainerEmzuliPipe> {
             if (isHovering(pos[0], pos[1], 20, 20, event.x(), event.y())) {
                 int colour = menu.colours[index.ordinal()].getInt();
                 // Cycle through no paint and the 16 colours; right click goes backwards
-                int next = event.button() == 1 ? colour - 1 : colour + 1;
+                int next = containerButton(event) == 1 ? colour - 1 : colour + 1;
                 if (next > 15) next = -1;
                 if (next < -1) next = 15;
                 sendButtonClick(index.ordinal() * 17 + next + 1);

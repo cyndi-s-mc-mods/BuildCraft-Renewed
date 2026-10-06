@@ -25,7 +25,7 @@ import buildcraft.api.transport.pipe.PipeEventItem;
 import buildcraft.transport.block.BlockPipe;
 
 /** Lapis pipes paint the items that go through them. Wrench them to change the colour. */
-public class PipeBehaviourLapis extends PipeBehaviour {
+public class PipeBehaviourLapis extends PipeBehaviour implements IColouredPipe {
     private DyeColor colour = DyeColor.WHITE;
 
     public PipeBehaviourLapis(IPipe pipe) {
@@ -47,6 +47,14 @@ public class PipeBehaviourLapis extends PipeBehaviour {
     @Override
     public BlockState updateBlockState(BlockState state) {
         return state.hasProperty(BlockPipe.COLOUR) ? state.setValue(BlockPipe.COLOUR, colour) : state;
+    }
+
+    @Override
+    public void setColour(DyeColor colour) {
+        if (this.colour == colour) return;
+        this.colour = colour;
+        pipe.getHolder().scheduleBlockStateUpdate();
+        pipe.getHolder().scheduleNetworkUpdate();
     }
 
     @Override

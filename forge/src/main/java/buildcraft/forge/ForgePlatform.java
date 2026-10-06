@@ -6,6 +6,8 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -55,5 +57,15 @@ public class ForgePlatform implements Platform {
     @Override
     public int getBurnTime(ItemStack stack, int vanillaBurnTime) {
         return ForgeEventFactory.getItemBurnTime(stack, vanillaBurnTime, RecipeType.SMELTING);
+    }
+
+    @Override
+    public void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+        ForgeNetwork.channel.send(payload, net.minecraftforge.network.PacketDistributor.PLAYER.with(player));
+    }
+
+    @Override
+    public void sendToServer(CustomPacketPayload payload) {
+        ForgeNetwork.channel.send(payload, net.minecraftforge.network.PacketDistributor.SERVER.noArg());
     }
 }

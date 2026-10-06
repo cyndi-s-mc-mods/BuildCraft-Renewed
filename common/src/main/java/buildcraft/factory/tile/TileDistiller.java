@@ -186,4 +186,10 @@ public class TileDistiller extends TileBC implements IFluidHandlerProvider, IMjC
     public boolean hasWork() {
         return isActive;
     }
+
+    @Override
+    public void preRemoveSideEffects(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) buildcraft.core.item.ItemFragileFluidShard.dropFluids(level, pos, tankIn, tankGasOut, tankLiquidOut);
+    }
 }

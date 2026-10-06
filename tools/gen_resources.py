@@ -719,7 +719,7 @@ shaped('laser', ['rro', 'rdd', 'rro'], {'r': '#c:dusts/redstone', 'd': '#c:gems/
 
 LEGACY_SILICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets',
                               'buildcraftsilicon', 'models', 'block', 'table')
-for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table', 'advanced_crafting')]:
+for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table', 'advanced_crafting'), ('integration_table', 'integration')]:
     with open(os.path.join(LEGACY_SILICON, f'{legacy}.json')) as f:
         model = json.load(f)
     textures = {k: v.replace('buildcraftsilicon:blocks/', f'{NS}:block/') for k, v in model['textures'].items()}
@@ -732,6 +732,9 @@ for table, legacy in [('assembly_table', 'assembly'), ('advanced_crafting_table'
     tag('block', 'minecraft:mineable/pickaxe', f'{NS}:{table}')
 name('block', 'assembly_table', 'Assembly Table')
 name('block', 'advanced_crafting_table', 'Advanced Crafting Table')
+name('block', 'integration_table', 'Integration Table')
+shaped('integration_table', ['OiO', 'OrO', 'OgO'], {'O': 'minecraft:obsidian', 'i': '#c:ingots/gold', 'r': f'{NS}:chipset_iron',
+                                                    'g': '#c:gears/diamond'})
 shaped('assembly_table', ['OdO', 'OrO', 'OgO'], {'O': 'minecraft:obsidian', 'd': '#c:gems/diamond', 'r': '#c:dusts/redstone',
                                                  'g': '#c:gears/diamond'})
 shaped('advanced_crafting_table', ['OtO', 'OcO', 'OrO'], {'O': 'minecraft:obsidian', 't': 'minecraft:crafting_table',
@@ -1060,6 +1063,148 @@ shapeless('schematic_single', ['minecraft:paper', 'minecraft:paper', '#c:gems/la
 LANG['item.buildcraft.schematic_single.used'] = '%s (%s)'
 LANG['gui.buildcraft.replacer.help'] = ('Put a blueprint in the top slot, a single schematic of the block to replace bottom left, and '
                                         'one of the block to replace it with bottom right.')
+
+# ---------------------------------------------------------------- path markers, the marker connector and volume boxes
+
+tex_exists(f'{NS}:block/marker/path')
+write('models/block/marker_path.json', {'textures': {'particle': f'{NS}:block/marker/path', 'all': f'{NS}:block/marker/path'},
+                                        'elements': TORCH_ELEMENT})
+write('blockstates/marker_path.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/marker_path', **rot} for d, rot in FACING_ROTATIONS.items()}})
+simple_item('marker_path')
+name('block', 'marker_path', 'Path Marker')
+drops_self('marker_path')
+shaped('marker_path', ['g', 't'], {'g': '#c:dyes/green', 't': 'minecraft:redstone_torch'})
+
+handheld_item('marker_connector')
+name('item', 'marker_connector', 'Marker Connector')
+shaped('marker_connector', ['r', 'g', 'w'], {'r': 'minecraft:redstone_torch', 'g': '#c:gears/wood', 'w': f'{NS}:wrench'})
+LANG.update({
+    'chat.buildcraft.marker_connector.selected': 'Marker selected: right click another marker to connect them',
+    'chat.buildcraft.marker_connector.connected': 'Markers connected',
+    'chat.buildcraft.marker_connector.cant_connect': "Those markers can't be connected (selected this one instead)",
+    'chat.buildcraft.volume_box.locked': 'This volume box is being used by a machine',
+    'chat.buildcraft.volume_box.cant_add': "That can't be added to this corner",
+})
+
+LEGACY_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'legacy', 'buildcraft_resources', 'assets')
+with open(os.path.join(LEGACY_ASSETS, 'buildcraftcore', 'models', 'item', 'volume_box.json')) as f:
+    volume_box_model = json.load(f)
+volume_box_model['parent'] = 'minecraft:block/block'
+volume_box_model['textures'] = {'main': f'{NS}:block/lasers/marker_volume_connected',
+                                'particle': f'{NS}:block/lasers/marker_volume_connected'}
+write('models/item/volume_box.json', volume_box_model)
+item_def('volume_box')
+name('item', 'volume_box', 'Volume Box')
+shapeless('volume_box', [f'{NS}:marker_volume', 'minecraft:paper'])
+LANG['entity.buildcraft.volume_box'] = 'Volume Box'
+
+write('models/item/filler_planner.json', {'parent': 'minecraft:block/cube_all',
+                                          'textures': {'all': f'{NS}:block/addons/filler_planner'}})
+item_def('filler_planner')
+name('item', 'filler_planner', 'Filler Planner')
+shapeless('filler_planner', ['minecraft:paper', '#c:dyes/yellow', '#c:dyes/black', f'{NS}:marker_volume'])
+
+# Fragile fluid shards, which hold the fluid from broken tanks. The fluid layer is tinted by the colour each shard stores.
+write('models/item/fragile_fluid_shard.json', {'parent': 'minecraft:item/generated', 'textures': {
+    'layer0': f'{NS}:item/fragile_fluid_shard_base', 'layer1': f'{NS}:item/fragile_fluid_shard_fluid'}})
+write('items/fragile_fluid_shard.json', {'model': {'type': 'minecraft:model', 'model': f'{NS}:item/fragile_fluid_shard', 'tints': [
+    {'type': 'minecraft:constant', 'value': -1}, {'type': 'minecraft:custom_model_data', 'index': 0, 'default': 0xFFFFFF}]}})
+LANG['item.buildcraft.fragile_fluid_shard'] = 'Fragile Fluid Shard'
+LANG['item.buildcraft.fragile_fluid_shard.of'] = 'Fragile Fluid Shard (%s)'
+LANG['gui.buildcraft.tank.empty_fluid'] = 'Empty'
+
+# Goggles, which show laser beams when they're hidden in the config
+simple_item('goggles')
+name('item', 'goggles', 'Goggles')
+write('equipment/goggles.json', {'layers': {'humanoid': [{'texture': f'{NS}:goggles'}]}})
+shaped('goggles', ['lll', 'g g'], {'l': 'minecraft:leather', 'g': '#c:glass_panes'})
+
+# Map locations, which show what kind of place they remember
+MAP_TYPES = ['spot', 'area', 'path', 'path_repeating', 'zone']
+for kind in ['clean'] + MAP_TYPES:
+    tex_exists(f'{NS}:item/map/{kind}')
+    write(f'models/item/map_location_{kind}.json', {'parent': 'minecraft:item/generated',
+                                                    'textures': {'layer0': f'{NS}:item/map/{kind}'}})
+write('items/map_location.json', {'model': {
+    'type': 'minecraft:select', 'property': 'minecraft:custom_model_data', 'index': 0,
+    'cases': [{'when': kind, 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/map_location_{kind}'}} for kind in MAP_TYPES],
+    'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/map_location_clean'}}})
+name('item', 'map_location', 'Map Location')
+shaped('map_location', ['ppp', 'pyp', 'ppp'], {'p': 'minecraft:paper', 'y': '#c:dyes/yellow'}, count=1)
+LANG.update({
+    'item.buildcraft.map_location.clean': 'Right click a block, marker or volume box to remember it',
+    'item.buildcraft.map_location.spot': 'Spot: %s (%s side)',
+    'item.buildcraft.map_location.area': 'Area: %s, %s',
+    'item.buildcraft.map_location.path': 'Path: from %s, %s steps',
+    'item.buildcraft.map_location.zone': 'Zone: %s blocks',
+    'item.buildcraft.map_location.clear': 'Sneak right click to clear it',
+    'direction.buildcraft.down': 'bottom', 'direction.buildcraft.up': 'top', 'direction.buildcraft.north': 'north',
+    'direction.buildcraft.south': 'south', 'direction.buildcraft.west': 'west', 'direction.buildcraft.east': 'east',
+})
+
+# Gate copier
+for state in ['empty', 'full']:
+    tex_exists(f'{NS}:item/gatecopier/{state}')
+    write(f'models/item/gate_copier_{state}.json', {'parent': 'minecraft:item/handheld',
+                                                    'textures': {'layer0': f'{NS}:item/gatecopier/{state}'}})
+write('items/gate_copier.json', {'model': {'type': 'minecraft:condition', 'property': 'minecraft:has_component',
+                                           'component': f'{NS}:gate_copy',
+                                           'on_true': {'type': 'minecraft:model', 'model': f'{NS}:item/gate_copier_full'},
+                                           'on_false': {'type': 'minecraft:model', 'model': f'{NS}:item/gate_copier_empty'}}})
+name('item', 'gate_copier', 'Gate Copier')
+LANG.update({
+    'item.buildcraft.gate_copier.empty': 'Right click a gate to copy its settings',
+    'item.buildcraft.gate_copier.full': 'Right click gates to paste the settings; sneak right click to clear',
+    'chat.buildcraft.gate_copier.copied': 'Gate settings copied',
+    'chat.buildcraft.gate_copier.pasted': 'Gate settings pasted',
+    'chat.buildcraft.gate_copier.cleared': 'Gate copier cleared',
+})
+
+# Zone planner
+cube('zone_planner', particle='zone_planner/default', down='zone_planner/default', up='zone_planner/top', north='zone_planner/front',
+     east='zone_planner/right', south='zone_planner/back', west='zone_planner/left')
+write('blockstates/zone_planner.json', {'variants': {
+    f'facing={d}': {'model': f'{NS}:block/zone_planner', **({'y': y} if y else {})} for d, y in FACINGS}})
+block_item('zone_planner')
+name('block', 'zone_planner', 'Zone Planner')
+drops_self('zone_planner')
+tag('block', 'minecraft:mineable/pickaxe', f'{NS}:zone_planner')
+shaped('zone_planner', ['iri', 'gmg', 'idi'], {'i': '#c:ingots/iron', 'r': '#c:dusts/redstone', 'g': '#c:gears/gold',
+                                               'm': 'minecraft:map', 'd': '#c:gears/diamond'})
+LANG.update({
+    'gui.buildcraft.zone_planner.position': 'X: %s Z: %s',
+    'gui.buildcraft.zone_planner.help': 'Drag to move the map, scroll to zoom. Pick up a paintbrush to paint zones.',
+    'gui.buildcraft.zone_planner.paint': 'Drag to add to the zone of this colour; drag with the right button to remove',
+})
+
+# The guide book (its pages are made by tools/gen_guide.py)
+simple_item('guide', 'guide_book')
+name('item', 'guide', 'Guide Book')
+shapeless('guide', ['#c:gears/wood', 'minecraft:paper', 'minecraft:paper', 'minecraft:paper'])
+LANG.update({
+    'gui.buildcraft.guide.search': 'Search',
+    'gui.buildcraft.guide.lore': 'Lore',
+    'gui.buildcraft.guide.no_results': 'Nothing matches the search.',
+    'gui.buildcraft.guide.recipes': 'Made with:',
+    'gui.buildcraft.guide.usages': 'Used to make:',
+    'gui.buildcraft.guide.assembly': 'Assembly table, %s MJ:',
+})
+
+# Gate statements added with the guide book
+LANG.update({
+    'gate.buildcraft.action.pipe.colour': 'Paint items %s',
+    'gate.buildcraft.action.extraction': 'Extract %s filter items',
+    'gate.buildcraft.action.pipe.power_limit': 'Limit power to %s MJ/t',
+    'gate.buildcraft.trigger.pipe.requestsEnergy': 'Power requested',
+    'gate.buildcraft.trigger.energy.high': 'Energy stored high',
+    'gate.buildcraft.trigger.energy.low': 'Energy stored low',
+})
+
+# The debugger (a creative tool, with no recipe)
+simple_item('debugger')
+name('item', 'debugger', 'Debugger')
+LANG['chat.buildcraft.debugger'] = '%s at %s:'
 
 finish()
 print('Resources generated')

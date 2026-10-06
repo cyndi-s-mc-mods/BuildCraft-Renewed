@@ -21,6 +21,7 @@ public class BuildCraftForge {
         BuildCraft.init();
         RegisterEvent.getBus(context.getModBusGroup()).addListener(BuildCraftForge::register);
         ForgeTransfer.register();
+        ForgeNetwork.register();
         FMLCommonSetupEvent.getBus(context.getModBusGroup()).addListener(event -> event.enqueueWork(BuildCraft::setup));
         if (FMLEnvironment.dist == Dist.CLIENT) {
             BuildCraftForgeClient.init(context);

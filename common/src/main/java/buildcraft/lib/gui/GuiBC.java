@@ -94,4 +94,14 @@ public abstract class GuiBC<M extends ContainerBC<?>> extends AbstractContainerS
         double my = mouseY - topPos;
         return mx >= x && mx < x + w && my >= y && my < y + h;
     }
+
+    /** @return The button as menus see it: 0 for left, 1 for right and 2 for middle (the game's own mouse events number
+     *         them 1, 3 and 2). */
+    public static int containerButton(net.minecraft.client.input.MouseButtonEvent event) {
+        return switch (event.button()) {
+            case com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_RIGHT -> 1;
+            case com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_MIDDLE -> 2;
+            default -> 0;
+        };
+    }
 }

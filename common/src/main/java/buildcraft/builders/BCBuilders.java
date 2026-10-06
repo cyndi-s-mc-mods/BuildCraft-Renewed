@@ -8,6 +8,8 @@ public final class BCBuilders {
         BCBuildersBlocks.init();
         BCBuildersItems.init();
         BCBuildersMenus.init();
+        buildcraft.core.marker.VolumeBoxAddon.register(buildcraft.builders.addon.AddonFillerPlanner.TYPE,
+            buildcraft.builders.addon.AddonFillerPlanner::new);
         BCBuildersStatements.init();
     }
 

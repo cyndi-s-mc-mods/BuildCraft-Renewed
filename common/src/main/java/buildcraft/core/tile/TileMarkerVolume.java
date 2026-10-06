@@ -29,6 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import buildcraft.api.tiles.IAreaProvider;
 import buildcraft.core.BCCoreBlocks;
+import buildcraft.core.item.ItemMarkerConnector;
 import buildcraft.lib.tile.TileBC;
 
 /** Volume markers connect to other markers in line with them (up to {@link #MAX_DISTANCE} blocks away) to mark out a
@@ -63,6 +64,9 @@ public class TileMarkerVolume extends TileBC implements IAreaProvider {
 
     @Override
     public InteractionResult onActivated(Player player, InteractionHand hand, ItemStack held, BlockHitResult hit) {
+        if (held.getItem() instanceof ItemMarkerConnector) {
+            return ItemMarkerConnector.useOnMarker(held, player, this);
+        }
         if (level != null && !level.isClientSide()) {
             tryConnect();
         }
@@ -84,6 +88,18 @@ public class TileMarkerVolume extends TileBC implements IAreaProvider {
                 }
             }
         }
+    }
+
+    /** Connects to the given marker, if it's in line with this one and close enough.
+     * @return True if they were connected. */
+    public boolean connectTo(TileMarkerVolume other) {
+        BlockPos diff = other.worldPosition.subtract(worldPosition);
+        int axes = (diff.getX() != 0 ? 1 : 0) + (diff.getY() != 0 ? 1 : 0) + (diff.getZ() != 0 ? 1 : 0);
+        if (axes != 1 || diff.distManhattan(BlockPos.ZERO) > MAX_DISTANCE) return false;
+        Direction.Axis axis = diff.getX() != 0 ? Direction.Axis.X : diff.getY() != 0 ? Direction.Axis.Y : Direction.Axis.Z;
+        if (!canConnect(other, axis)) return false;
+        connect(other);
+        return true;
     }
 
     private boolean canConnect(TileMarkerVolume other, Direction.Axis axis) {

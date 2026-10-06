@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "#c:ingots/iron",
+    "r": "#c:dusts/redstone",
+    "g": "#c:gears/gold",
+    "m": "minecraft:map",
+    "d": "#c:gears/diamond"
+  },
+  "pattern": [
+    "iri",
+    "gmg",
+    "idi"
+  ],
+  "result": {
+    "id": "buildcraft:zone_planner"
+  }
+}

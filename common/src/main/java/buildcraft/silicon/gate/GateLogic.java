@@ -98,6 +98,33 @@ public class GateLogic implements IGate {
         }
     }
 
+    /** Saves just the settings (connections, triggers and actions), for the gate copier. */
+    public void saveConfig(ValueOutput output) {
+        int c = 0;
+        for (int i = 0; i < connections.length; i++) {
+            if (connections[i]) c |= 1 << i;
+        }
+        output.putInt("connections", c);
+        for (int i = 0; i < triggers.length; i++) {
+            if (triggers[i] != null) triggers[i].save(output.child("trigger" + i));
+            if (actions[i] != null) actions[i].save(output.child("action" + i));
+        }
+    }
+
+    /** Loads settings saved by {@link #saveConfig}, from a gate that may have had more or fewer slots. */
+    public void loadConfig(ValueInput input) {
+        int c = input.getIntOr("connections", 0);
+        for (int i = 0; i < connections.length; i++) {
+            connections[i] = ((c >>> i) & 1) == 1;
+        }
+        for (int i = 0; i < triggers.length; i++) {
+            triggers[i] = input.child("trigger" + i).map(t -> StatementWrapper.load(t, variant.numTriggerParams())).orElse(null);
+            actions[i] = input.child("action" + i).map(a -> StatementWrapper.load(a, variant.numActionParams())).orElse(null);
+            triggerOn[i] = false;
+            actionOn[i] = false;
+        }
+    }
+
     // IGate
 
     @Override

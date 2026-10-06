@@ -60,6 +60,8 @@ public final class BCClient {
         registrar.blockEntityRenderer(BCEnergyBlocks.ENGINE_COMBUSTION_TILE.get(), ctx -> new RenderEngine<>(ctx, "iron"));
         registrar.blockEntityRenderer(BCTransportBlocks.PIPE_HOLDER.get(), RenderPipeHolder::new);
         registrar.blockEntityRenderer(BCCoreBlocks.MARKER_VOLUME_TILE.get(), RenderMarkerVolume::new);
+        registrar.blockEntityRenderer(BCCoreBlocks.MARKER_PATH_TILE.get(), buildcraft.core.client.render.RenderMarkerPath::new);
+        registrar.entityRenderer(buildcraft.core.BCCoreEntities.VOLUME_BOX.get(), buildcraft.core.client.render.RenderVolumeBox::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.QUARRY_TILE.get(), RenderQuarry::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.FILLER_TILE.get(), RenderBuildBox::new);
         registrar.blockEntityRenderer(BCBuildersBlocks.BUILDER_TILE.get(), RenderBuildBox::new);
@@ -81,6 +83,11 @@ public final class BCClient {
     }
 
     public static void registerScreens(ClientRegistrar registrar) {
+        buildcraft.lib.BCClientHooks.openGuide = () -> net.minecraft.client.Minecraft.getInstance().gui
+            .setScreen(new buildcraft.lib.client.guide.GuiGuide());
+        buildcraft.lib.net.BCNetwork.setClientHandler(buildcraft.robotics.zone.ZonePackets.MapData.TYPE,
+            buildcraft.robotics.client.gui.GuiZonePlanner::receive);
+        registrar.screen(buildcraft.robotics.BCRoboticsMenus.ZONE_PLANNER.get(), buildcraft.robotics.client.gui.GuiZonePlanner::new);
         registrar.screen(BCEnergyMenus.ENGINE_STIRLING.get(), GuiEngineStone::new);
         registrar.screen(BCEnergyMenus.ENGINE_COMBUSTION.get(), GuiEngineIron::new);
         registrar.screen(BCTransportMenus.PIPE_DIAMOND.get(), GuiDiamondPipe::new);
@@ -92,11 +99,13 @@ public final class BCClient {
         registrar.screen(BCSiliconMenus.ASSEMBLY_TABLE.get(), GuiAssemblyTable::new);
         registrar.screen(BCSiliconMenus.ADVANCED_CRAFTING_TABLE.get(), GuiAdvancedCraftingTable::new);
         registrar.screen(BCSiliconMenus.GATE.get(), GuiGate::new);
+        registrar.screen(BCSiliconMenus.INTEGRATION_TABLE.get(), buildcraft.silicon.client.gui.GuiIntegrationTable::new);
         registrar.screen(BCBuildersMenus.FILLER.get(), GuiFiller::new);
         registrar.screen(buildcraft.core.BCCoreMenus.LIST.get(), buildcraft.core.client.gui.GuiList::new);
         registrar.screen(BCBuildersMenus.ARCHITECT.get(), GuiArchitectTable::new);
         registrar.screen(BCBuildersMenus.BUILDER.get(), GuiBuilder::new);
         registrar.screen(BCBuildersMenus.LIBRARY.get(), GuiElectronicLibrary::new);
         registrar.screen(BCBuildersMenus.REPLACER.get(), buildcraft.builders.client.gui.GuiReplacer::new);
+        registrar.screen(BCBuildersMenus.FILLER_PLANNER.get(), buildcraft.builders.client.gui.GuiFillerPlanner::new);
     }
 }

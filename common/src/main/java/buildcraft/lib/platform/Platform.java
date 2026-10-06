@@ -48,4 +48,10 @@ public interface Platform {
     default int getBurnTime(ItemStack stack, int vanillaBurnTime) {
         return vanillaBurnTime;
     }
+
+    /** Sends one of BuildCraft's packets (see {@link buildcraft.lib.net.BCNetwork}) to a player. */
+    void sendToPlayer(net.minecraft.server.level.ServerPlayer player, net.minecraft.network.protocol.common.custom.CustomPacketPayload payload);
+
+    /** Sends one of BuildCraft's packets to the server. Only call this on the client. */
+    void sendToServer(net.minecraft.network.protocol.common.custom.CustomPacketPayload payload);
 }
