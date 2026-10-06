@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "minecraft:paper",
+    "y": "#c:dyes/yellow"
+  },
+  "pattern": [
+    "ppp",
+    "pyp",
+    "ppp"
+  ],
+  "result": {
+    "id": "buildcraft:map_location"
+  }
+}

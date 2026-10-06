@@ -1102,5 +1102,43 @@ item_def('filler_planner')
 name('item', 'filler_planner', 'Filler Planner')
 shapeless('filler_planner', ['minecraft:paper', '#c:dyes/yellow', '#c:dyes/black', f'{NS}:marker_volume'])
 
+# Fragile fluid shards, which hold the fluid from broken tanks. The fluid layer is tinted by the colour each shard stores.
+write('models/item/fragile_fluid_shard.json', {'parent': 'minecraft:item/generated', 'textures': {
+    'layer0': f'{NS}:item/fragile_fluid_shard_base', 'layer1': f'{NS}:item/fragile_fluid_shard_fluid'}})
+write('items/fragile_fluid_shard.json', {'model': {'type': 'minecraft:model', 'model': f'{NS}:item/fragile_fluid_shard', 'tints': [
+    {'type': 'minecraft:constant', 'value': -1}, {'type': 'minecraft:custom_model_data', 'index': 0, 'default': 0xFFFFFF}]}})
+LANG['item.buildcraft.fragile_fluid_shard'] = 'Fragile Fluid Shard'
+LANG['item.buildcraft.fragile_fluid_shard.of'] = 'Fragile Fluid Shard (%s)'
+LANG['gui.buildcraft.tank.empty_fluid'] = 'Empty'
+
+# Goggles, which show laser beams when they're hidden in the config
+simple_item('goggles')
+name('item', 'goggles', 'Goggles')
+write('equipment/goggles.json', {'layers': {'humanoid': [{'texture': f'{NS}:goggles'}]}})
+shaped('goggles', ['lll', 'g g'], {'l': 'minecraft:leather', 'g': '#c:glass_panes'})
+
+# Map locations, which show what kind of place they remember
+MAP_TYPES = ['spot', 'area', 'path', 'path_repeating', 'zone']
+for kind in ['clean'] + MAP_TYPES:
+    tex_exists(f'{NS}:item/map/{kind}')
+    write(f'models/item/map_location_{kind}.json', {'parent': 'minecraft:item/generated',
+                                                    'textures': {'layer0': f'{NS}:item/map/{kind}'}})
+write('items/map_location.json', {'model': {
+    'type': 'minecraft:select', 'property': 'minecraft:custom_model_data', 'index': 0,
+    'cases': [{'when': kind, 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/map_location_{kind}'}} for kind in MAP_TYPES],
+    'fallback': {'type': 'minecraft:model', 'model': f'{NS}:item/map_location_clean'}}})
+name('item', 'map_location', 'Map Location')
+shaped('map_location', ['ppp', 'pyp', 'ppp'], {'p': 'minecraft:paper', 'y': '#c:dyes/yellow'}, count=1)
+LANG.update({
+    'item.buildcraft.map_location.clean': 'Right click a block, marker or volume box to remember it',
+    'item.buildcraft.map_location.spot': 'Spot: %s (%s side)',
+    'item.buildcraft.map_location.area': 'Area: %s, %s',
+    'item.buildcraft.map_location.path': 'Path: from %s, %s steps',
+    'item.buildcraft.map_location.zone': 'Zone: %s blocks',
+    'item.buildcraft.map_location.clear': 'Sneak right click to clear it',
+    'direction.buildcraft.down': 'bottom', 'direction.buildcraft.up': 'top', 'direction.buildcraft.north': 'north',
+    'direction.buildcraft.south': 'south', 'direction.buildcraft.west': 'west', 'direction.buildcraft.east': 'east',
+})
+
 finish()
 print('Resources generated')

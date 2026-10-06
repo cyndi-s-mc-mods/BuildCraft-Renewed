@@ -45,6 +45,7 @@ public final class BuildCraft {
         config.put("factory", BCFactoryConfig.class);
         config.put("builders", BCBuildersConfig.class);
         config.put("transport", BCTransportConfig.class);
+        config.put("silicon", buildcraft.silicon.BCSiliconConfig.class);
         BCConfig.load(Platform.INSTANCE.configDir().resolve("buildcraft.properties"), config);
         BCLib.init();
         BCCore.init();

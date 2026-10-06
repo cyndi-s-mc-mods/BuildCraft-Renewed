@@ -61,6 +61,15 @@ public final class FluidUtilBC {
     public static boolean interactWithHandler(Player player, InteractionHand hand, IFluidHandlerBC handler) {
         ItemStack held = player.getItemInHand(hand);
         if (held.isEmpty()) return false;
+        if (held.getItem() instanceof buildcraft.core.item.ItemFragileFluidShard) {
+            if (buildcraft.core.item.ItemFragileFluidShard.emptyInto(held, handler, true) == null) return false;
+            ItemStack rest = player.level().isClientSide() ? null : buildcraft.core.item.ItemFragileFluidShard.emptyInto(held, handler, false);
+            if (rest != null) {
+                player.setItemInHand(hand, rest);
+                player.level().playSound(null, player.blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1, 1);
+            }
+            return true;
+        }
         Fluid inBucket = getBucketFluid(held);
         if (inBucket != Fluids.EMPTY) {
             BCFluidStack stack = BCFluidStack.of(inBucket, BCFluidStack.BUCKET);

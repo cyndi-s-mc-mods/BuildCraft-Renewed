@@ -18,7 +18,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraft.client.Minecraft;
+
 import buildcraft.BuildCraft;
+import buildcraft.core.item.ItemGoggles;
+import buildcraft.silicon.BCSiliconConfig;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.client.render.LaserRenderer;
 import buildcraft.silicon.block.BlockLaser;
@@ -54,6 +58,7 @@ public class RenderLaser implements BlockEntityRenderer<TileLaser, RenderLaser.S
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
         state.to = null;
+        if (!BCSiliconConfig.renderLaserBeams && !ItemGoggles.isWearing(Minecraft.getInstance().player)) return;
         Vec3 target = tile.laserPos;
         if (target == null || tile.getTargetPos() == null) return;
         Direction facing = tile.getBlockState().hasProperty(BlockLaser.FACING) ? tile.getBlockState().getValue(BlockLaser.FACING)

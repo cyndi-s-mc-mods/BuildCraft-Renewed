@@ -5,7 +5,14 @@ import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -18,6 +25,11 @@ import net.minecraft.world.level.storage.ValueOutput;
 public final class BCFluidStack {
     public static final int BUCKET = 1000;
     public static final BCFluidStack EMPTY = new BCFluidStack(Fluids.EMPTY, 0);
+    public static final Codec<BCFluidStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(BCFluidStack::getFluid),
+        Codec.INT.fieldOf("amount").forGetter(BCFluidStack::getAmount)).apply(instance, BCFluidStack::of));
+    public static final StreamCodec<RegistryFriendlyByteBuf, BCFluidStack> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.FLUID), BCFluidStack::getFluid, ByteBufCodecs.VAR_INT, BCFluidStack::getAmount, BCFluidStack::of);
 
     private final Fluid fluid;
     private final int amount;

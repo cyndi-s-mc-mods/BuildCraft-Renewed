@@ -283,4 +283,10 @@ public class TileHeatExchange extends TileBC implements IFluidHandlerProvider {
         running = input.getBooleanOr("running", false);
         checkStructure = true;
     }
+
+    @Override
+    public void preRemoveSideEffects(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) buildcraft.core.item.ItemFragileFluidShard.dropFluids(level, pos, tankInput, tankOutput);
+    }
 }

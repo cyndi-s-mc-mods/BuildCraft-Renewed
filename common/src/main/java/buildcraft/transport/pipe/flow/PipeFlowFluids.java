@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -456,6 +457,17 @@ public class PipeFlowFluids extends PipeFlow implements IFlowFluid {
     }
 
     /** One of the seven parts of a pipe that fluid is held in. Other blocks fill the pipe through the sides. */
+    @Override
+    public void addDrops(List<ItemStack> toDrop) {
+        int total = 0;
+        for (Section section : sections.values()) {
+            total += section.amount;
+        }
+        if (total > 0 && !currentFluid.isEmpty()) {
+            buildcraft.core.item.ItemFragileFluidShard.addDrops(toDrop, currentFluid.withAmount(total));
+        }
+    }
+
     class Section implements IFluidHandlerBC, ISnapshotable {
         final EnumPipePart part;
         int amount = 0;
